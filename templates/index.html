@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home | HopeConnect
+{% endblock %}
+
+{% block content %}
+
+<div class="text-center py-5">
+
+    <h1 class="display-4 fw-bold">
+        Welcome to HopeConnect
+    </h1>
+
+    <p class="lead mt-3">
+        Donating Hope, Delivering Smiles.
+    </p>
+
+    <p class="mt-4">
+        HopeConnect is a community donation platform that connects donors
+        with verified NGOs and volunteers to reduce food waste and help
+        people in need.
+    </p>
+
+    <a href="{% url 'services' %}" class="btn btn-success btn-lg mt-3">
+        Explore Services
+    </a>
+
+</div>
+
+{% endblock %}
