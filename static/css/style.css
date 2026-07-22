@@ -48,3 +48,32 @@ footer {
     margin-top: 60px;
     font-size: 0.95rem;
 }
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #198754, #43a047);
+    color: white;
+    padding: 100px 20px;
+    border-radius: 15px;
+    margin-bottom: 50px;
+}
+
+.hero .btn {
+    margin-top: 15px;
+}
+
+/* Section Titles */
+section h2 {
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* Service Cards */
+.card h4 {
+    color: #198754;
+}
+
+/* Call to Action */
+section:last-child {
+    background-color: #ffffff;
+}

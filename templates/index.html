@@ -6,26 +6,135 @@ Home | HopeConnect
 
 {% block content %}
 
-<div class="text-center py-5">
+<!-- Hero Section -->
+<section class="hero text-center py-5">
+    <div class="container">
+        <h1 class="display-3 fw-bold">
+            Donate Today, Change Tomorrow
+        </h1>
 
-    <h1 class="display-4 fw-bold">
-        Welcome to HopeConnect
-    </h1>
+        <p class="lead mt-3">
+            Connecting generous donors with verified NGOs and volunteers to
+            reduce food waste and support communities.
+        </p>
 
-    <p class="lead mt-3">
-        Donating Hope, Delivering Smiles.
-    </p>
+        <div class="mt-4">
+            <a href="#" class="btn btn-success btn-lg me-3">
+                Donate Now
+            </a>
 
-    <p class="mt-4">
-        HopeConnect is a community donation platform that connects donors
-        with verified NGOs and volunteers to reduce food waste and help
-        people in need.
-    </p>
+            <a href="{% url 'about' %}" class="btn btn-outline-success btn-lg">
+                Learn More
+            </a>
+        </div>
+    </div>
+</section>
 
-    <a href="{% url 'services' %}" class="btn btn-success btn-lg mt-3">
-        Explore Services
-    </a>
+<!-- Features -->
+<section class="py-5">
+    <div class="container">
 
-</div>
+        <h2 class="text-center mb-5">
+            Why Choose HopeConnect?
+        </h2>
+
+        <div class="row text-center">
+
+            <div class="col-md-3">
+                <div class="card h-100 p-3">
+                    <h4>Verified NGOs</h4>
+                    <p>Trusted organizations ensure donations reach the right people.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 p-3">
+                    <h4>Easy Donations</h4>
+                    <p>Create and schedule donations in just a few clicks.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 p-3">
+                    <h4>Secure Platform</h4>
+                    <p>Role-based access and secure user authentication.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 p-3">
+                    <h4>Track Donations</h4>
+                    <p>Monitor every donation from creation to delivery.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- Services -->
+<section class="py-5 bg-light">
+
+    <div class="container">
+
+        <h2 class="text-center mb-5">
+            What Can You Donate?
+        </h2>
+
+        <div class="row text-center">
+
+            <div class="col-md-3">
+                <div class="card p-4">
+                    <h4>🍲 Food</h4>
+                    <p>Donate surplus food safely.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card p-4">
+                    <h4>👕 Clothes</h4>
+                    <p>Help families with reusable clothes.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card p-4">
+                    <h4>📚 Books</h4>
+                    <p>Support education through book donations.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card p-4">
+                    <h4>🧸 Toys</h4>
+                    <p>Bring joy to children with donated toys.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Call to Action -->
+<section class="text-center py-5">
+
+    <div class="container">
+
+        <h2>Join Our Mission Today</h2>
+
+        <p class="lead">
+            Together, we can reduce waste and make a positive impact in our communities.
+        </p>
+
+        <a href="#" class="btn btn-success btn-lg">
+            Get Started
+        </a>
+
+    </div>
+
+</section>
 
 {% endblock %}
