@@ -1,0 +1,50 @@
+/* ========================================
+   HopeConnect - Global Styles
+======================================== */
+
+/* General */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffe082 !important;
+}
+
+/* Buttons */
+.btn-success {
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-weight: 600;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer */
+footer {
+    margin-top: 60px;
+    font-size: 0.95rem;
+}
