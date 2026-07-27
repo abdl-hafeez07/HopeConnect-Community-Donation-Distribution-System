@@ -77,3 +77,12 @@ section h2 {
 section:last-child {
     background-color: #ffffff;
 }
+
+.btn-success {
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
