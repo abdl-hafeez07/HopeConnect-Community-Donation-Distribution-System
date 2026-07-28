@@ -7,31 +7,99 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #f8f9fa;
     color: #333;
+    line-height: 1.6;
 }
 
-/* Navbar */
+/* ========================================
+   Navigation Bar
+======================================== */
+
+.navbar {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+}
+
 .navbar-brand {
     font-size: 1.6rem;
-    font-weight: bold;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
-.nav-link {
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+    margin-left: 10px;
+    padding-bottom: 5px;
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
-.nav-link:hover {
+.navbar-nav .nav-link:hover {
     color: #ffe082 !important;
 }
 
-/* Buttons */
+.navbar-nav .nav-link.active {
+    color: #ffffff !important;
+    font-weight: 700;
+    border-bottom: 3px solid #ffffff;
+}
+
+/* ========================================
+   Buttons
+======================================== */
+
 .btn-success {
     border-radius: 30px;
     padding: 10px 25px;
     font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-/* Cards */
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   Hero Section
+======================================== */
+
+.hero {
+    background: linear-gradient(135deg, #198754, #43a047);
+    color: white;
+    padding: 100px 20px;
+    border-radius: 15px;
+    margin-bottom: 50px;
+}
+
+.hero h1 {
+    font-weight: 700;
+}
+
+.hero p {
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.hero .btn {
+    margin-top: 15px;
+}
+
+/* ========================================
+   Sections
+======================================== */
+
+section {
+    padding: 60px 0;
+}
+
+section h2 {
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* ========================================
+   Cards
+======================================== */
+
 .card {
     border: none;
     border-radius: 12px;
@@ -43,46 +111,43 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Footer */
+.card h4 {
+    color: #198754;
+    font-weight: 600;
+}
+
+/* ========================================
+   Footer
+======================================== */
+
 footer {
     margin-top: 60px;
     font-size: 0.95rem;
 }
 
-/* Hero Section */
-.hero {
-    background: linear-gradient(135deg, #198754, #43a047);
-    color: white;
-    padding: 100px 20px;
-    border-radius: 15px;
-    margin-bottom: 50px;
-}
-
-.hero .btn {
-    margin-top: 15px;
-}
-
-/* Section Titles */
-section h2 {
+footer h5 {
     font-weight: bold;
-    margin-bottom: 30px;
 }
 
-/* Service Cards */
-.card h4 {
-    color: #198754;
-}
+/* ========================================
+   Responsive
+======================================== */
 
-/* Call to Action */
-section:last-child {
-    background-color: #ffffff;
-}
+@media (max-width: 768px) {
 
-.btn-success {
-    transition: all 0.3s ease;
-}
+    .hero {
+        padding: 70px 20px;
+    }
 
-.btn-success:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .navbar-nav .nav-link {
+        margin: 8px 0;
+    }
 }
