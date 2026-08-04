@@ -2,12 +2,21 @@
    HopeConnect - Global Styles
 ======================================== */
 
-/* General */
+/* ========================================
+   General Styles
+======================================== */
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #f8f9fa;
     color: #333;
     line-height: 1.6;
+    margin: 0;
+    padding: 0;
 }
 
 /* ========================================
@@ -19,14 +28,14 @@ body {
 }
 
 .navbar-brand {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
     font-weight: 700;
     letter-spacing: 0.5px;
 }
 
 .navbar-nav .nav-link {
     color: #ffffff !important;
-    margin-left: 10px;
+    margin-left: 12px;
     padding-bottom: 5px;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -43,22 +52,6 @@ body {
 }
 
 /* ========================================
-   Buttons
-======================================== */
-
-.btn-success {
-    border-radius: 30px;
-    padding: 10px 25px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.btn-success:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* ========================================
    Hero Section
 ======================================== */
 
@@ -68,19 +61,22 @@ body {
     padding: 100px 20px;
     border-radius: 15px;
     margin-bottom: 50px;
+    text-align: center;
 }
 
 .hero h1 {
     font-weight: 700;
+    margin-bottom: 20px;
 }
 
 .hero p {
     max-width: 750px;
-    margin: 0 auto;
+    margin: auto;
+    font-size: 1.1rem;
 }
 
 .hero .btn {
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 /* ========================================
@@ -94,6 +90,24 @@ section {
 section h2 {
     font-weight: bold;
     margin-bottom: 30px;
+    text-align: center;
+}
+
+/* ========================================
+   Buttons
+======================================== */
+
+.btn-success,
+.btn-outline-success {
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* ========================================
@@ -103,17 +117,22 @@ section h2 {
 .card {
     border: none;
     border-radius: 12px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.card h4 {
+.card h4,
+.card h5 {
     color: #198754;
     font-weight: 600;
+}
+
+.card-body {
+    text-align: center;
 }
 
 /* ========================================
@@ -122,16 +141,60 @@ section h2 {
 
 footer {
     margin-top: 60px;
-    font-size: 0.95rem;
 }
 
 footer h5 {
     font-weight: bold;
 }
 
+footer p,
+footer small {
+    margin: 0;
+}
+
 /* ========================================
-   Responsive
+   Back To Top Button
 ======================================== */
+
+#topBtn {
+    display: none;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 999;
+    width: 50px;
+    height: 50px;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    background-color: #198754;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#topBtn:hover {
+    background-color: #157347;
+    transform: scale(1.1);
+}
+
+/* ========================================
+   Responsive Design
+======================================== */
+
+@media (max-width: 992px) {
+
+    .navbar-nav {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .navbar-nav .nav-link {
+        margin: 8px 0;
+    }
+
+}
 
 @media (max-width: 768px) {
 
@@ -143,11 +206,38 @@ footer h5 {
         font-size: 2.2rem;
     }
 
-    .navbar-nav {
-        text-align: center;
+    .hero p {
+        font-size: 1rem;
     }
 
-    .navbar-nav .nav-link {
-        margin: 8px 0;
+    section {
+        padding: 40px 0;
     }
+
+    #topBtn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    .navbar-brand {
+        font-size: 1.4rem;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .btn-success,
+    .btn-outline-success {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
 }
