@@ -253,3 +253,27 @@ footer h5 {
 footer h5:hover {
     transform: scale(1.05);
 }
+
+/* ========================================
+   Navbar Link Enhancement
+======================================== */
+
+.navbar-nav .nav-link {
+    position: relative;
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffe082;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 70%;
+}
