@@ -277,3 +277,13 @@ footer h5:hover {
 .navbar-nav .nav-link:hover::after {
     width: 70%;
 }
+
+/* ========================================
+   Button Focus Effect
+======================================== */
+
+.btn-success:focus,
+.btn-outline-success:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.2);
+}
