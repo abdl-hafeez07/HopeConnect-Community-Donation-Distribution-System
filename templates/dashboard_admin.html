@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admin Console | HopeConnect
+{% endblock %}
+
+{% block content %}
+
+<div class="py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <span class="role-badge-tag mb-1"><i class="bi bi-shield-lock"></i> Central Admin Console</span>
+            <h2 class="fw-bold mb-0">Platform Overview & Verification Control</h2>
+        </div>
+        <button class="btn btn-outline-success" onclick="alert('Exporting platform audit and report CSV...')">
+            <i class="bi bi-download me-1"></i> Export Reports & Analytics
+        </button>
+    </div>
+
+    <!-- Admin KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="metric-widget">
+                <div class="metric-widget-icon"><i class="bi bi-people-fill text-primary"></i></div>
+                <div>
+                    <div class="metric-widget-val">1,840</div>
+                    <div class="metric-widget-lbl">Total Registered Users</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-widget">
+                <div class="metric-widget-icon"><i class="bi bi-building-check text-success"></i></div>
+                <div>
+                    <div class="metric-widget-val">124</div>
+                    <div class="metric-widget-lbl">Verified NGOs</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-widget">
+                <div class="metric-widget-icon"><i class="bi bi-box2-heart-fill text-success"></i></div>
+                <div>
+                    <div class="metric-widget-val">6,420</div>
+                    <div class="metric-widget-lbl">Completed Donations</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-widget">
+                <div class="metric-widget-icon"><i class="bi bi-graph-up-arrow text-warning"></i></div>
+                <div>
+                    <div class="metric-widget-val">98.6%</div>
+                    <div class="metric-widget-lbl">Fulfillment Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verification Queue -->
+    <div class="custom-card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">Pending NGO & Volunteer Verifications</h4>
+            <span class="badge bg-warning text-dark fw-bold">2 Pending</span>
+        </div>
+
+        <div class="custom-table-wrapper">
+            <div class="table-responsive">
+                <table class="table table-custom">
+                    <thead>
+                        <tr>
+                            <th>Entity / User Name</th>
+                            <th>Role</th>
+                            <th>Registration ID / License</th>
+                            <th>Location</th>
+                            <th>Applied On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">Sneha Orphanage Care Trust</td>
+                            <td><span class="badge bg-primary-subtle text-primary">NGO</span></td>
+                            <td>REG-KL-8921-2024</td>
+                            <td>Kochi, Kerala</td>
+                            <td>Aug 23, 2026</td>
+                            <td>
+                                <button class="btn btn-success btn-sm py-1 px-2 me-1" onclick="alert('NGO Verified Successfully!')"><i class="bi bi-check-lg"></i> Approve</button>
+                                <button class="btn btn-outline-danger btn-sm py-1 px-2" onclick="alert('Verification rejected.')"><i class="bi bi-x-lg"></i> Reject</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Vipin Kumar (Field Volunteer)</td>
+                            <td><span class="badge bg-warning-subtle text-warning">Volunteer</span></td>
+                            <td>DL-KL-07-2022-88</td>
+                            <td>Kochi North</td>
+                            <td>Aug 24, 2026</td>
+                            <td>
+                                <button class="btn btn-success btn-sm py-1 px-2 me-1" onclick="alert('Volunteer Approved!')"><i class="bi bi-check-lg"></i> Approve</button>
+                                <button class="btn btn-outline-danger btn-sm py-1 px-2" onclick="alert('Verification rejected.')"><i class="bi bi-x-lg"></i> Reject</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Register | HopeConnect
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-7 col-lg-6">
+        <div class="custom-card p-4 p-md-5 shadow-lg">
+            <div class="text-center mb-4">
+                <span class="brand-icon mx-auto mb-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
+                    <i class="bi bi-person-plus-fill"></i>
+                </span>
+                <h3 class="fw-bold">Join the HopeConnect Network</h3>
+                <p class="text-secondary small">Register as a Donor, NGO Partner, or Volunteer Hero.</p>
+            </div>
+
+            <form onsubmit="event.preventDefault(); alert('Registration UI preview. Account will be created in future backend integration.');">
+                <div class="mb-3">
+                    <label class="form-label small">Select Account Type</label>
+                    <select class="form-select" id="pageRegRole">
+                        <option value="donor" selected>🧑‍💼 Donor (Individual / Restaurant / Event Organizer)</option>
+                        <option value="ngo">🏢 Verified NGO / Charitable Trust</option>
+                        <option value="volunteer">🚴 Field Volunteer (Pickup & Transport)</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="pageRegName" class="form-label">Full Name / Organization Name</label>
+                    <input type="text" class="form-control" id="pageRegName" placeholder="e.g. John Doe / Care Foundation" required>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="pageRegEmail" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="pageRegEmail" placeholder="name@example.com" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="pageRegPhone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="pageRegPhone" placeholder="+91 98765 00000" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="pageRegCity" class="form-label">City / Operating Location</label>
+                    <input type="text" class="form-control" id="pageRegCity" placeholder="e.g. Kochi, Kerala" required>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="pageRegPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="pageRegPassword" placeholder="••••••••" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="pageRegConfirm" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="pageRegConfirm" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="pageTermsCheck" required>
+                    <label class="form-check-label small text-secondary" for="pageTermsCheck">
+                        I agree to the Community Guidelines & Terms of HopeConnect
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100 mb-3">
+                    <i class="bi bi-check-circle-fill me-1"></i> Complete Registration
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">Already have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="text-success fw-bold">Sign in</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

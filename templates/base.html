@@ -66,16 +66,40 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}#workflow">
+                            Workflow
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
                             href="{% url 'contact' %}">
                             Contact
                         </a>
                     </li>
 
-                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                        <a href="{% url 'home' %}#get-started" class="btn btn-success nav-cta-btn">
-                            <i class="bi bi-gift-fill me-1"></i>Donate Now
+                    <!-- Role Portals Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="portalsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-grid-fill me-1"></i>Role Portals
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 mt-2" aria-labelledby="portalsDropdown">
+                            <li><a class="dropdown-item py-2" href="{% url 'home' %}#dashboards" onclick="switchDashboardTab('donor-tab')"><i class="bi bi-person-heart text-success me-2"></i>Donor Dashboard</a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'home' %}#dashboards" onclick="switchDashboardTab('ngo-tab')"><i class="bi bi-building text-primary me-2"></i>NGO Portal</a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'home' %}#dashboards" onclick="switchDashboardTab('volunteer-tab')"><i class="bi bi-bicycle text-warning me-2"></i>Volunteer Portal</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'home' %}#dashboards" onclick="switchDashboardTab('admin-tab')"><i class="bi bi-shield-lock text-danger me-2"></i>Admin Dashboard</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Authentication Buttons -->
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0 d-flex gap-2">
+                        <button type="button" class="btn btn-outline-success nav-auth-btn" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                        </button>
+                        <button type="button" class="btn btn-success nav-auth-btn" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            <i class="bi bi-person-plus me-1"></i>Register
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -91,43 +115,191 @@
     </main>
 
     <!-- ======================================================================
+         Login Modal (Frontend Preview)
+    ====================================================================== -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-success" id="loginModalLabel">
+                        <i class="bi bi-lock-fill me-2"></i>Sign In to HopeConnect
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-secondary small mb-4">Select your role and sign in to access your designated dashboard.</p>
+                    
+                    <form onsubmit="event.preventDefault(); alert('Login UI preview. In future backend integration, authentication logic will verify credentials.');">
+                        <div class="mb-3">
+                            <label class="form-label small">Select Your Role</label>
+                            <div class="d-flex gap-2">
+                                <input type="radio" class="btn-check" name="loginRole" id="roleDonor" autocomplete="off" checked>
+                                <label class="btn btn-outline-success btn-sm flex-fill" for="roleDonor">Donor</label>
+
+                                <input type="radio" class="btn-check" name="loginRole" id="roleNgo" autocomplete="off">
+                                <label class="btn btn-outline-success btn-sm flex-fill" for="roleNgo">NGO</label>
+
+                                <input type="radio" class="btn-check" name="loginRole" id="roleVolunteer" autocomplete="off">
+                                <label class="btn btn-outline-success btn-sm flex-fill" for="roleVolunteer">Volunteer</label>
+
+                                <input type="radio" class="btn-check" name="loginRole" id="roleAdmin" autocomplete="off">
+                                <label class="btn btn-outline-success btn-sm flex-fill" for="roleAdmin">Admin</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="loginEmail" placeholder="user@example.com" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <label class="form-check-label small text-secondary" for="rememberMe">Remember me</label>
+                            </div>
+                            <a href="#" class="small text-success text-decoration-none">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-2">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <small class="text-muted">Don't have an account? <a href="#" data-bs-target="#registerModal" data-bs-toggle="modal" class="text-success fw-bold">Register here</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================
+         Register Modal (Frontend Preview)
+    ====================================================================== -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-success" id="registerModalLabel">
+                        <i class="bi bi-person-plus-fill me-2"></i>Join HopeConnect
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-secondary small mb-3">Create your account to start donating, requesting, or volunteering.</p>
+                    
+                    <form onsubmit="event.preventDefault(); alert('Registration UI preview. Account will be created in future backend integration.');">
+                        <div class="mb-3">
+                            <label class="form-label small">I want to join as a:</label>
+                            <select class="form-select" id="registerRoleSelect">
+                                <option value="donor" selected>Donor (Individual or Business)</option>
+                                <option value="ngo">NGO (Non-Profit Organization)</option>
+                                <option value="volunteer">Volunteer (Pickup & Delivery Partner)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="regName" class="form-label">Full Name / Organization Name</label>
+                            <input type="text" class="form-control" id="regName" placeholder="e.g. Green Earth Foundation" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="regEmail" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="regEmail" placeholder="contact@example.com" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="regPhone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="regPhone" placeholder="+91 98765 00000" required>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label for="regPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="regPassword" placeholder="••••••••" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="regConfirmPassword" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="regConfirmPassword" placeholder="••••••••" required>
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                            <label class="form-check-label small text-secondary" for="termsCheck">
+                                I agree to the Community Guidelines & Terms of HopeConnect
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-2">
+                            <i class="bi bi-check-circle-fill me-1"></i> Create Account
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <small class="text-muted">Already registered? <a href="#" data-bs-target="#loginModal" data-bs-toggle="modal" class="text-success fw-bold">Sign in here</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================
          Footer
     ====================================================================== -->
     <footer class="footer-custom">
         <div class="container">
             <div class="row g-4">
                 <!-- Brand Summary -->
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-3 col-md-6">
                     <a class="navbar-brand text-white mb-3 d-inline-flex" href="{% url 'home' %}">
                         <span class="brand-icon">
                             <i class="bi bi-heart-pulse-fill"></i>
                         </span>
                         <span class="text-white">HopeConnect</span>
                     </a>
-                    <p class="pe-lg-4">
-                        A community-centered donation and distribution platform bridging the gap between generous donors, volunteers, and verified NGOs to reduce waste and bring hope.
+                    <p class="pe-lg-3">
+                        A structured community donation & distribution ecosystem connecting donors, verified NGOs, and volunteers with total transparency.
                     </p>
                 </div>
 
-                <!-- Quick Navigation Links -->
+                <!-- Quick Links -->
                 <div class="col-lg-2 col-md-6 col-6">
-                    <h5>Quick Links</h5>
+                    <h5>Navigation</h5>
                     <ul class="footer-links">
                         <li><a href="{% url 'home' %}"><i class="bi bi-chevron-right small"></i> Home</a></li>
                         <li><a href="{% url 'about' %}"><i class="bi bi-chevron-right small"></i> About Us</a></li>
                         <li><a href="{% url 'services' %}"><i class="bi bi-chevron-right small"></i> Services</a></li>
+                        <li><a href="{% url 'home' %}#workflow"><i class="bi bi-chevron-right small"></i> Workflow</a></li>
                         <li><a href="{% url 'contact' %}"><i class="bi bi-chevron-right small"></i> Contact</a></li>
                     </ul>
                 </div>
 
-                <!-- Donation Categories -->
-                <div class="col-lg-3 col-md-6 col-6">
-                    <h5>Donation Areas</h5>
+                <!-- Role Portals -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h5>Role Portals</h5>
                     <ul class="footer-links">
-                        <li><a href="{% url 'services' %}"><i class="bi bi-chevron-right small"></i> Food Rescue</a></li>
-                        <li><a href="{% url 'services' %}"><i class="bi bi-chevron-right small"></i> Clothing Drive</a></li>
-                        <li><a href="{% url 'services' %}"><i class="bi bi-chevron-right small"></i> Books & Education</a></li>
-                        <li><a href="{% url 'services' %}"><i class="bi bi-chevron-right small"></i> Toys & Child Support</a></li>
+                        <li><a href="{% url 'home' %}#dashboards" onclick="switchDashboardTab('donor-tab')"><i class="bi bi-person-heart small"></i> Donor Portal</a></li>
+                        <li><a href="{% url 'home' %}#dashboards" onclick="switchDashboardTab('ngo-tab')"><i class="bi bi-building small"></i> NGO Portal</a></li>
+                        <li><a href="{% url 'home' %}#dashboards" onclick="switchDashboardTab('volunteer-tab')"><i class="bi bi-bicycle small"></i> Volunteer Hub</a></li>
+                        <li><a href="{% url 'home' %}#dashboards" onclick="switchDashboardTab('admin-tab')"><i class="bi bi-shield-lock small"></i> Admin Console</a></li>
+                    </ul>
+                </div>
+
+                <!-- Status Indicators Guide -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h5>Lifecycle Status</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'home' %}#status-guide"><span class="status-badge status-available py-0 px-2">Available</span></a></li>
+                        <li><a href="{% url 'home' %}#status-guide"><span class="status-badge status-requested py-0 px-2">Requested</span></a></li>
+                        <li><a href="{% url 'home' %}#status-guide"><span class="status-badge status-approved py-0 px-2">Approved</span></a></li>
+                        <li><a href="{% url 'home' %}#status-guide"><span class="status-badge status-scheduled py-0 px-2">Scheduled</span></a></li>
+                        <li><a href="{% url 'home' %}#status-guide"><span class="status-badge status-delivered py-0 px-2">Delivered</span></a></li>
                     </ul>
                 </div>
 
@@ -169,7 +341,7 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Back to Top Script -->
+    <!-- UI Helper Scripts -->
     <script>
         const topBtn = document.getElementById("topBtn");
 
@@ -188,6 +360,14 @@
                 top: 0,
                 behavior: "smooth"
             });
+        }
+
+        function switchDashboardTab(tabId) {
+            const triggerEl = document.getElementById(tabId);
+            if (triggerEl) {
+                const tab = new bootstrap.Tab(triggerEl);
+                tab.show();
+            }
         }
     </script>
 </body>

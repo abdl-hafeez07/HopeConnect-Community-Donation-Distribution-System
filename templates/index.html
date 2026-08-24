@@ -1,62 +1,62 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Home | HopeConnect - Community Donation Platform
+Home | HopeConnect - Community Donation & Distribution Platform
 {% endblock %}
 
 {% block content %}
 
 <!-- ==========================================================================
-     Hero Section
+     1. Hero Section
      ========================================================================== -->
 <section class="hero-wrapper text-center">
     <div class="container position-relative" style="z-index: 2;">
         <div class="hero-badge">
-            <i class="bi bi-stars"></i> Verified Community Donation Network
+            <i class="bi bi-patch-check-fill"></i> Verified Community Donation & Distribution Network
         </div>
 
         <h1 class="hero-title">
-            Donate Today,<br class="d-none d-md-inline"> Change Tomorrow
+            Connecting Donors, NGOs & Volunteers<br class="d-none d-md-inline"> For Zero Waste & Direct Impact
         </h1>
 
         <p class="hero-lead">
-            Connecting generous donors with verified NGOs and dedicated volunteers to reduce waste, fight hunger, and support local communities.
+            From donation creation and safe food scheduling to NGO verification and volunteer delivery proof—experience a transparent, role-based community distribution platform.
         </p>
 
         <div class="d-flex flex-wrap justify-content-center gap-3 hero-btn-group">
-            <a href="{% url 'services' %}" class="btn btn-white btn-lg">
-                <i class="bi bi-heart-fill text-success me-1"></i> Donate Now
+            <a href="#dashboards" onclick="switchDashboardTab('donor-tab')" class="btn btn-white btn-lg">
+                <i class="bi bi-plus-circle-fill text-success me-1"></i> Create Donation
             </a>
 
-            <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-info-circle me-1"></i> Learn More
+            <a href="#workflow" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-diagram-3-fill me-1"></i> View Platform Workflow
             </a>
         </div>
     </div>
 </section>
 
 <!-- ==========================================================================
-     Impact & Trust Metrics
+     2. Platform Impact Metrics
      ========================================================================== -->
 <section class="mb-5">
     <div class="row g-3">
         <div class="col-6 col-lg-3">
             <div class="stat-card">
-                <div class="stat-number">100+</div>
+                <div class="stat-number">120+</div>
                 <div class="stat-label">Verified NGOs</div>
             </div>
         </div>
 
         <div class="col-6 col-lg-3">
             <div class="stat-card">
-                <div class="stat-number">5,000+</div>
-                <div class="stat-label">Meals Shared</div>
+                <div class="stat-number">6,400+</div>
+                <div class="stat-label">Meals & Items Rescued</div>
             </div>
         </div>
 
         <div class="col-6 col-lg-3">
             <div class="stat-card">
-                <div class="stat-number">1,200+</div>
+                <div class="stat-number">1,500+</div>
                 <div class="stat-label">Active Donors</div>
             </div>
         </div>
@@ -64,61 +64,93 @@ Home | HopeConnect - Community Donation Platform
         <div class="col-6 col-lg-3">
             <div class="stat-card">
                 <div class="stat-number">100%</div>
-                <div class="stat-label">Direct Impact</div>
+                <div class="stat-label">Verified Deliveries</div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ==========================================================================
-     Why Choose HopeConnect (Features)
+     3. Complete HopeConnect Workflow Stepper (Public -> Completion)
      ========================================================================== -->
-<section class="section-wrapper text-center">
+<section id="workflow" class="section-wrapper text-center">
     <div class="container">
-        <span class="section-tag">Key Benefits</span>
-        <h2 class="section-title">Why Choose HopeConnect?</h2>
+        <span class="section-tag">End-to-End Process</span>
+        <h2 class="section-title">How HopeConnect Works</h2>
         <p class="section-subtitle">
-            We ensure every contribution is verified, safe, and quickly distributed to those who need it most.
+            A seamless, transparent 10-step lifecycle ensuring every donation is safely scheduled, verified, and delivered.
         </p>
 
-        <div class="row g-4 text-start">
-            <div class="col-md-6 col-lg-3">
-                <div class="custom-card">
-                    <div class="card-icon-box">
-                        <i class="bi bi-patch-check-fill"></i>
-                    </div>
-                    <h4>Verified NGOs</h4>
-                    <p>Trusted, vetted organizations guarantee your donations reach genuine beneficiaries.</p>
+        <div class="lifecycle-wrapper">
+            <div class="lifecycle-track">
+                <!-- Step 1 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-globe2"></i></div>
+                    <div class="lifecycle-title">1. Public Portal</div>
+                    <div class="lifecycle-subtitle">Explore causes</div>
                 </div>
-            </div>
 
-            <div class="col-md-6 col-lg-3">
-                <div class="custom-card">
-                    <div class="card-icon-box">
-                        <i class="bi bi-lightning-charge-fill"></i>
-                    </div>
-                    <h4>Easy Donations</h4>
-                    <p>Schedule your donations in just a few clicks with a streamlined submission workflow.</p>
+                <!-- Step 2 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-person-badge"></i></div>
+                    <div class="lifecycle-title">2. Auth / Register</div>
+                    <div class="lifecycle-subtitle">Select role</div>
                 </div>
-            </div>
 
-            <div class="col-md-6 col-lg-3">
-                <div class="custom-card">
-                    <div class="card-icon-box">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
-                    <h4>Secure Platform</h4>
-                    <p>Role-based access control and transparent community guidelines keep all data safe.</p>
+                <!-- Step 3 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-speedometer2"></i></div>
+                    <div class="lifecycle-title">3. Dashboard</div>
+                    <div class="lifecycle-subtitle">Role workspace</div>
                 </div>
-            </div>
 
-            <div class="col-md-6 col-lg-3">
-                <div class="custom-card">
-                    <div class="card-icon-box">
-                        <i class="bi bi-geo-alt-fill"></i>
-                    </div>
-                    <h4>Track Progress</h4>
-                    <p>Monitor your donation status in real-time from pickup preparation to successful delivery.</p>
+                <!-- Step 4 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-bag-plus"></i></div>
+                    <div class="lifecycle-title">4. Create Donation</div>
+                    <div class="lifecycle-subtitle">List items</div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-calendar-check"></i></div>
+                    <div class="lifecycle-title">5. Food Scheduling</div>
+                    <div class="lifecycle-subtitle">Set pickup slot</div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-building-check"></i></div>
+                    <div class="lifecycle-title">6. NGO Request</div>
+                    <div class="lifecycle-subtitle">Claim item</div>
+                </div>
+
+                <!-- Step 7 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-hand-thumbs-up"></i></div>
+                    <div class="lifecycle-title">7. Donor Approval</div>
+                    <div class="lifecycle-subtitle">Confirm match</div>
+                </div>
+
+                <!-- Step 8 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-bicycle"></i></div>
+                    <div class="lifecycle-title">8. Volunteer Pickup</div>
+                    <div class="lifecycle-subtitle">Transit & collect</div>
+                </div>
+
+                <!-- Step 9 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-camera"></i></div>
+                    <div class="lifecycle-title">9. Delivery Proof</div>
+                    <div class="lifecycle-subtitle">Verify handover</div>
+                </div>
+
+                <!-- Step 10 -->
+                <div class="lifecycle-node">
+                    <div class="lifecycle-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                    <div class="lifecycle-title">10. Completed & Report</div>
+                    <div class="lifecycle-subtitle">Impact logged</div>
                 </div>
             </div>
         </div>
@@ -126,12 +158,544 @@ Home | HopeConnect - Community Donation Platform
 </section>
 
 <!-- ==========================================================================
-     What Can You Donate? (Categories)
+     4. Lifecycle Status Indicators Guide
+     ========================================================================== -->
+<section id="status-guide" class="section-wrapper bg-white rounded-4 p-4 p-md-5 my-4 border border-1" style="border-color: var(--border-subtle) !important;">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="section-tag">Status Transparency</span>
+            <h2 class="section-title">Donation Lifecycle Statuses</h2>
+            <p class="section-subtitle mb-3">
+                Every item is tracked in real-time with standardized status badges across all dashboards.
+            </p>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-4 col-lg-3">
+                <div class="p-3 rounded-3 border bg-light h-100">
+                    <div class="mb-2"><span class="status-badge status-available">Available</span></div>
+                    <div class="fw-bold small text-dark">Item Listed</div>
+                    <p class="small text-secondary mb-0">Created by donor and open for verified NGO requests.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3">
+                <div class="p-3 rounded-3 border bg-light h-100">
+                    <div class="mb-2"><span class="status-badge status-requested">Requested</span></div>
+                    <div class="fw-bold small text-dark">NGO Claimed</div>
+                    <p class="small text-secondary mb-0">An NGO has requested this item, awaiting donor confirmation.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3">
+                <div class="p-3 rounded-3 border bg-light h-100">
+                    <div class="mb-2"><span class="status-badge status-approved">Approved</span></div>
+                    <div class="fw-bold small text-dark">Donor Accepted</div>
+                    <p class="small text-secondary mb-0">Donor approved the request, ready for volunteer dispatch.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3">
+                <div class="p-3 rounded-3 border bg-light h-100">
+                    <div class="mb-2"><span class="status-badge status-scheduled">Pickup Scheduled</span></div>
+                    <div class="fw-bold small text-dark">Time Slot Fixed</div>
+                    <p class="small text-secondary mb-0">Volunteer assigned and pickup time slot finalized.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3">
+                <div class="p-3 rounded-3 border bg-light h-100">
+                    <div class="mb-2"><span class="status-badge status-pickedup">Picked Up</span></div>
+                    <div class="fw-bold small text-dark">In Transit</div>
+                    <p class="small text-secondary mb-0">Volunteer has collected the donation and is on the way.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3">
+                <div class="p-3 rounded-3 border bg-light h-100">
+                    <div class="mb-2"><span class="status-badge status-delivered">Delivered</span></div>
+                    <div class="fw-bold small text-dark">Proof Uploaded</div>
+                    <p class="small text-secondary mb-0">Reached NGO or beneficiaries with photo/acknowledgement.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-6">
+                <div class="p-3 rounded-3 border bg-light h-100">
+                    <div class="mb-2"><span class="status-badge status-completed">Completed</span></div>
+                    <div class="fw-bold small text-dark">Lifecycle Closed & Impact Logged</div>
+                    <p class="small text-secondary mb-0">Verified by Admin/NGO. Analytics and social impact metrics updated on platform.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     5. Role-Based Dashboards Preview
+     ========================================================================== -->
+<section id="dashboards" class="section-wrapper">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="section-tag">Role-Based Experience</span>
+            <h2 class="section-title">Explore Role-Based Dashboards</h2>
+            <p class="section-subtitle">
+                Tailored workflows and tools for Donors, NGOs, Volunteers, and System Administrators.
+            </p>
+
+            <div class="role-tabs">
+                <ul class="nav nav-pills justify-content-center" id="dashboardTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="donor-tab" data-bs-toggle="pill" data-bs-target="#donor-pane" type="button" role="tab" aria-controls="donor-pane" aria-selected="true">
+                            <i class="bi bi-person-heart me-1"></i> Donor Dashboard
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="ngo-tab" data-bs-toggle="pill" data-bs-target="#ngo-pane" type="button" role="tab" aria-controls="ngo-pane" aria-selected="false">
+                            <i class="bi bi-building me-1"></i> NGO Portal
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="volunteer-tab" data-bs-toggle="pill" data-bs-target="#volunteer-pane" type="button" role="tab" aria-controls="volunteer-pane" aria-selected="false">
+                            <i class="bi bi-bicycle me-1"></i> Volunteer Hub
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="admin-tab" data-bs-toggle="pill" data-bs-target="#admin-pane" type="button" role="tab" aria-controls="admin-pane" aria-selected="false">
+                            <i class="bi bi-shield-lock me-1"></i> Admin Console
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tab-content" id="dashboardTabContent">
+            
+            <!-- --------------------------------------------------------------
+                 Tab 1: Donor Dashboard
+                 -------------------------------------------------------------- -->
+            <div class="tab-pane fade show active" id="donor-pane" role="tabpanel" aria-labelledby="donor-tab">
+                <div class="dashboard-panel">
+                    <div class="dashboard-header-bar">
+                        <div>
+                            <span class="role-badge-tag mb-1"><i class="bi bi-person-heart"></i> Donor Portal</span>
+                            <h4 class="mb-0">Welcome, Community Hero!</h4>
+                        </div>
+                        <button class="btn btn-success btn-sm" data-bs-toggle="collapse" data-bs-target="#createDonationBox">
+                            <i class="bi bi-plus-lg me-1"></i> + Create New Donation
+                        </button>
+                    </div>
+
+                    <!-- Donor Quick Stats -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="metric-widget">
+                                <div class="metric-widget-icon"><i class="bi bi-gift-fill"></i></div>
+                                <div>
+                                    <div class="metric-widget-val">8</div>
+                                    <div class="metric-widget-lbl">Total Donations Created</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="metric-widget">
+                                <div class="metric-widget-icon"><i class="bi bi-bell-fill text-warning"></i></div>
+                                <div>
+                                    <div class="metric-widget-val">2</div>
+                                    <div class="metric-widget-lbl">Pending NGO Requests</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="metric-widget">
+                                <div class="metric-widget-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
+                                <div>
+                                    <div class="metric-widget-val">6</div>
+                                    <div class="metric-widget-lbl">Successfully Delivered</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Create Donation Collapse Form -->
+                    <div class="collapse mb-4" id="createDonationBox">
+                        <div class="p-4 rounded-3 border bg-light">
+                            <h5 class="fw-bold text-success mb-3"><i class="bi bi-box2-heart me-1"></i> Donation Creation & Food Scheduling Form</h5>
+                            <form onsubmit="event.preventDefault(); alert('Donation creation UI preview. In backend integration, this will persist to database.');">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Donation Category</label>
+                                        <select class="form-select">
+                                            <option>🍲 Cooked Food / Rations</option>
+                                            <option>👕 Clothes & Blankets</option>
+                                            <option>📚 Books & Stationery</option>
+                                            <option>🧸 Toys & Games</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Item Name / Title</label>
+                                        <input type="text" class="form-control" placeholder="e.g. 50 Fresh Meal Packets" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Quantity / Servings</label>
+                                        <input type="text" class="form-control" placeholder="e.g. 50 Servings / 10 Boxes" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Food Cooked Time / Expiry (if applicable)</label>
+                                        <input type="datetime-local" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Preferred Pickup Window</label>
+                                        <input type="text" class="form-control" placeholder="e.g. Today between 4:00 PM - 7:00 PM" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Pickup Address & Landmark</label>
+                                        <input type="text" class="form-control" placeholder="Street, Area, Landmark, Kochi" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Publish Donation (Set as Available)
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- My Donations Table -->
+                    <h5 class="fw-bold mb-3">My Donation Records & Live Status</h5>
+                    <div class="custom-table-wrapper">
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Item Title</th>
+                                        <th>Category</th>
+                                        <th>Quantity</th>
+                                        <th>Scheduled Slot</th>
+                                        <th>Current Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold">Wedding Buffet Surplus</td>
+                                        <td>🍲 Food</td>
+                                        <td>60 Meals</td>
+                                        <td>Today, 5:00 PM</td>
+                                        <td><span class="status-badge status-requested">Requested</span></td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm py-1 px-2" onclick="alert('Donor Approval Confirmed!')">
+                                                <i class="bi bi-check-lg"></i> Approve NGO
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Children's Storybooks</td>
+                                        <td>📚 Books</td>
+                                        <td>35 Books</td>
+                                        <td>Tomorrow, 11:00 AM</td>
+                                        <td><span class="status-badge status-scheduled">Pickup Scheduled</span></td>
+                                        <td>
+                                            <span class="small text-muted">Volunteer Assigned</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Winter Blankets & Sweaters</td>
+                                        <td>👕 Clothes</td>
+                                        <td>20 Items</td>
+                                        <td>Aug 22, 2026</td>
+                                        <td><span class="status-badge status-completed">Completed</span></td>
+                                        <td>
+                                            <button class="btn btn-outline-success btn-sm py-1 px-2" onclick="alert('Viewing Verified Delivery Proof!')">
+                                                <i class="bi bi-receipt"></i> View Proof
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --------------------------------------------------------------
+                 Tab 2: NGO Portal
+                 -------------------------------------------------------------- -->
+            <div class="tab-pane fade" id="ngo-pane" role="tabpanel" aria-labelledby="ngo-tab">
+                <div class="dashboard-panel">
+                    <div class="dashboard-header-bar">
+                        <div>
+                            <span class="role-badge-tag mb-1"><i class="bi bi-building"></i> Verified NGO Portal</span>
+                            <h4 class="mb-0">Care & Share Foundation</h4>
+                        </div>
+                        <span class="badge bg-success-subtle text-success fw-bold p-2"><i class="bi bi-patch-check-fill me-1"></i> Verified Partner</span>
+                    </div>
+
+                    <!-- Search & Filter Bar -->
+                    <div class="search-filter-box">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control form-control-sm" placeholder="🔍 Search by food, clothes, location...">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select form-select-sm">
+                                    <option selected>All Categories</option>
+                                    <option>🍲 Food Rescue</option>
+                                    <option>👕 Clothes</option>
+                                    <option>📚 Books</option>
+                                    <option>🧸 Toys</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select form-select-sm">
+                                    <option selected>All Radius (Within 10 km)</option>
+                                    <option>Within 2 km</option>
+                                    <option>Within 5 km</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-success btn-sm w-100">Filter</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Available Donations Feed -->
+                    <h5 class="fw-bold mb-3">Available Community Donations Ready for Request</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="custom-card p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="status-badge status-available">Available</span>
+                                    <small class="text-danger fw-bold"><i class="bi bi-clock-history"></i> Expires in 3 hrs</small>
+                                </div>
+                                <h5 class="mb-1">45 Fresh Vegetable Biryani Packets</h5>
+                                <p class="small text-secondary mb-2"><i class="bi bi-geo-alt me-1"></i> Grand Plaza Hotel, MG Road, Kochi</p>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <span class="badge bg-light text-dark border">45 Servings</span>
+                                    <button class="btn btn-success btn-sm" onclick="alert('Donation Request Sent to Donor for Approval!')">
+                                        <i class="bi bi-hand-index-thumb me-1"></i> Request Item
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="custom-card p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="status-badge status-available">Available</span>
+                                    <small class="text-success fw-bold"><i class="bi bi-check2"></i> Non-perishable</small>
+                                </div>
+                                <h5 class="mb-1">Primary School Math & English Books</h5>
+                                <p class="small text-secondary mb-2"><i class="bi bi-geo-alt me-1"></i> Kadavanthra, Kochi</p>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <span class="badge bg-light text-dark border">30 Books</span>
+                                    <button class="btn btn-success btn-sm" onclick="alert('Donation Request Sent to Donor for Approval!')">
+                                        <i class="bi bi-hand-index-thumb me-1"></i> Request Item
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NGO Request History -->
+                    <h5 class="fw-bold mb-3">Our Request History & Pickup Tracking</h5>
+                    <div class="custom-table-wrapper">
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Item Title</th>
+                                        <th>Donor</th>
+                                        <th>Request Date</th>
+                                        <th>Status</th>
+                                        <th>Volunteer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Bakery Bread & Pastries</td>
+                                        <td>BakeHub Central</td>
+                                        <td>Today, 2:00 PM</td>
+                                        <td><span class="status-badge status-approved">Approved</span></td>
+                                        <td><span class="text-primary fw-semibold">Rahul M. (Assigning)</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>50 School Bags & Kits</td>
+                                        <td>Corporate Giving Club</td>
+                                        <td>Aug 21, 2026</td>
+                                        <td><span class="status-badge status-completed">Completed</span></td>
+                                        <td><span class="text-success fw-semibold">Arun K. (Verified)</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --------------------------------------------------------------
+                 Tab 3: Volunteer Hub
+                 -------------------------------------------------------------- -->
+            <div class="tab-pane fade" id="volunteer-pane" role="tabpanel" aria-labelledby="volunteer-tab">
+                <div class="dashboard-panel">
+                    <div class="dashboard-header-bar">
+                        <div>
+                            <span class="role-badge-tag mb-1"><i class="bi bi-bicycle"></i> Volunteer Field Portal</span>
+                            <h4 class="mb-0">Hello, Volunteer Rahul!</h4>
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary fw-bold p-2"><i class="bi bi-geo-alt-fill me-1"></i> Active in Kochi North</span>
+                    </div>
+
+                    <!-- Assigned Pickup Card -->
+                    <h5 class="fw-bold mb-3">Active Assigned Pickups</h5>
+                    <div class="custom-card p-4 mb-4 border-2" style="border-color: var(--primary-green) !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="status-badge status-scheduled">Pickup Scheduled</span>
+                            <span class="text-muted small">Pickup Code: #HC-8821</span>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <h5 class="fw-bold mb-1">Bakery Bread & Pastries (40 Packs)</h5>
+                                <p class="text-secondary small mb-2"><strong>Donor:</strong> BakeHub Central (+91 98765 11223)</p>
+                                <p class="text-secondary small mb-0"><i class="bi bi-geo-alt text-danger"></i> Pickup: Marine Drive, Kochi</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="text-secondary small mb-2"><strong>Destination NGO:</strong> Care & Share Shelter</p>
+                                <p class="text-secondary small mb-3"><i class="bi bi-geo-alt text-success"></i> Delivery: Panampilly Nagar, Kochi</p>
+                                
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-warning btn-sm" onclick="alert('Status updated to Picked Up (In Transit)!')">
+                                        <i class="bi bi-box-seam me-1"></i> Mark Picked Up
+                                    </button>
+                                    <button class="btn btn-success btn-sm" onclick="alert('Status updated to Delivered! Ready for proof.')">
+                                        <i class="bi bi-check2-circle me-1"></i> Mark Delivered
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Proof Upload Simulation -->
+                        <div class="mt-4 pt-3 border-top">
+                            <h6 class="fw-bold mb-2"><i class="bi bi-camera-fill text-success me-1"></i> Upload Handover Proof (Photo or Signature)</h6>
+                            <div class="proof-upload-box" onclick="alert('Delivery proof image selected!')">
+                                <i class="bi bi-cloud-arrow-up text-success fs-2 d-block mb-1"></i>
+                                <span class="fw-bold text-dark">Tap to Upload Delivery Photo / Beneficiary Receipt</span>
+                                <p class="small text-muted mb-0">Supports JPG, PNG (Max 5MB)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --------------------------------------------------------------
+                 Tab 4: Admin Console
+                 -------------------------------------------------------------- -->
+            <div class="tab-pane fade" id="admin-pane" role="tabpanel" aria-labelledby="admin-tab">
+                <div class="dashboard-panel">
+                    <div class="dashboard-header-bar">
+                        <div>
+                            <span class="role-badge-tag mb-1"><i class="bi bi-shield-lock"></i> Central Admin Console</span>
+                            <h4 class="mb-0">HopeConnect Platform Administration</h4>
+                        </div>
+                        <button class="btn btn-outline-success btn-sm" onclick="alert('Exporting full platform analytics report (CSV/PDF)...')">
+                            <i class="bi bi-download me-1"></i> Export Reports
+                        </button>
+                    </div>
+
+                    <!-- Admin KPI Metrics -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="metric-widget">
+                                <div class="metric-widget-icon"><i class="bi bi-people"></i></div>
+                                <div>
+                                    <div class="metric-widget-val">1,840</div>
+                                    <div class="metric-widget-lbl">Registered Users</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-widget">
+                                <div class="metric-widget-icon"><i class="bi bi-building-check text-primary"></i></div>
+                                <div>
+                                    <div class="metric-widget-val">124</div>
+                                    <div class="metric-widget-lbl">Verified NGOs</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-widget">
+                                <div class="metric-widget-icon"><i class="bi bi-box2-heart text-success"></i></div>
+                                <div>
+                                    <div class="metric-widget-val">6,420</div>
+                                    <div class="metric-widget-lbl">Donations Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-widget">
+                                <div class="metric-widget-icon"><i class="bi bi-graph-up-arrow text-warning"></i></div>
+                                <div>
+                                    <div class="metric-widget-val">98.6%</div>
+                                    <div class="metric-widget-lbl">Fulfillment Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Verification Requests Pipeline -->
+                    <h5 class="fw-bold mb-3">Pending NGO & Volunteer Verifications</h5>
+                    <div class="custom-table-wrapper mb-4">
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Entity Name</th>
+                                        <th>Role Type</th>
+                                        <th>Registration Reg No. / ID</th>
+                                        <th>Applied On</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold">Sneha Orphanage Care</td>
+                                        <td><span class="badge bg-primary-subtle text-primary">NGO</span></td>
+                                        <td>REG-KL-8921-2024</td>
+                                        <td>Aug 23, 2026</td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm py-1 px-2 me-1" onclick="alert('NGO Verified Successfully!')"><i class="bi bi-check-lg"></i> Approve</button>
+                                            <button class="btn btn-outline-danger btn-sm py-1 px-2" onclick="alert('Application rejected.')"><i class="bi bi-x-lg"></i> Reject</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Vipin Kumar (Two-wheeler)</td>
+                                        <td><span class="badge bg-warning-subtle text-warning">Volunteer</span></td>
+                                        <td>DL-KL-07-2022-88</td>
+                                        <td>Aug 24, 2026</td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm py-1 px-2 me-1" onclick="alert('Volunteer Approved!')"><i class="bi bi-check-lg"></i> Approve</button>
+                                            <button class="btn btn-outline-danger btn-sm py-1 px-2" onclick="alert('Application rejected.')"><i class="bi bi-x-lg"></i> Reject</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     6. What Can You Donate?
      ========================================================================== -->
 <section class="section-wrapper bg-white rounded-4 p-4 p-md-5 my-4 border border-1" style="border-color: var(--border-subtle) !important;">
     <div class="container">
         <div class="text-center">
-            <span class="section-tag">Donation Categories</span>
+            <span class="section-tag">Accepted Categories</span>
             <h2 class="section-title">What Can You Donate?</h2>
             <p class="section-subtitle">
                 Every essential item you share brings immediate relief and comfort to a family.
@@ -143,7 +707,7 @@ Home | HopeConnect - Community Donation Platform
                 <div class="donation-category-card">
                     <span class="donation-emoji-icon">🍲</span>
                     <h4>Food</h4>
-                    <p>Surplus edible meals, fresh groceries, and packaged rations safely distributed.</p>
+                    <p>Surplus edible meals, fresh groceries, and packaged rations safely scheduled.</p>
                 </div>
             </div>
 
@@ -175,60 +739,21 @@ Home | HopeConnect - Community Donation Platform
 </section>
 
 <!-- ==========================================================================
-     How It Works (3 Simple Steps)
-     ========================================================================== -->
-<section class="section-wrapper text-center">
-    <div class="container">
-        <span class="section-tag">Simple Process</span>
-        <h2 class="section-title">How HopeConnect Works</h2>
-        <p class="section-subtitle">
-            Making an impact in your community takes less than three simple steps.
-        </p>
-
-        <div class="row g-4 text-start">
-            <div class="col-md-4">
-                <div class="custom-card text-center">
-                    <div><span class="step-number">1</span></div>
-                    <h4>List Your Donation</h4>
-                    <p>Select what you wish to donate, specify the quantity, and provide your pickup details.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="custom-card text-center">
-                    <div><span class="step-number">2</span></div>
-                    <h4>NGO Match & Pickup</h4>
-                    <p>A nearby verified NGO accepts your request and coordinates pickup or collection.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="custom-card text-center">
-                    <div><span class="step-number">3</span></div>
-                    <h4>Delivering Smiles</h4>
-                    <p>Items are directly handed over to beneficiaries with total transparency and care.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ==========================================================================
-     Call To Action Banner
+     7. Call To Action Banner
      ========================================================================== -->
 <section id="get-started" class="cta-banner">
     <div class="container">
-        <h2>Join Our Community Mission Today</h2>
+        <h2>Ready to Make an Impact?</h2>
         <p>
-            Together, we can bridge surplus resources with real needs, ensuring no usable item goes to waste.
+            Join thousands of active donors, certified NGOs, and volunteer heroes creating a hunger-free, zero-waste community.
         </p>
 
         <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a href="{% url 'contact' %}" class="btn btn-white btn-lg">
-                <i class="bi bi-chat-heart me-1"></i> Get In Touch
-            </a>
-            <a href="{% url 'services' %}" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-box2-heart me-1"></i> View Services
+            <button type="button" class="btn btn-white btn-lg" data-bs-toggle="modal" data-bs-target="#registerModal">
+                <i class="bi bi-person-plus-fill me-1"></i> Register Free
+            </button>
+            <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-chat-heart me-1"></i> Contact Support
             </a>
         </div>
     </div>

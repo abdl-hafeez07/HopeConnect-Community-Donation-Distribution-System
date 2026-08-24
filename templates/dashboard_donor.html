@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Donor Dashboard | HopeConnect
+{% endblock %}
+
+{% block content %}
+
+<div class="py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <span class="role-badge-tag mb-1"><i class="bi bi-person-heart"></i> Donor Portal</span>
+            <h2 class="fw-bold mb-0">Donor Overview & Management</h2>
+        </div>
+        <button class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#createDonationBox">
+            <i class="bi bi-plus-lg me-1"></i> + Create New Donation
+        </button>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="metric-widget">
+                <div class="metric-widget-icon"><i class="bi bi-gift-fill text-success"></i></div>
+                <div>
+                    <div class="metric-widget-val">12</div>
+                    <div class="metric-widget-lbl">Total Donations</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-widget">
+                <div class="metric-widget-icon"><i class="bi bi-clock-history text-primary"></i></div>
+                <div>
+                    <div class="metric-widget-val">3</div>
+                    <div class="metric-widget-lbl">Active & Available</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-widget">
+                <div class="metric-widget-icon"><i class="bi bi-bell-fill text-warning"></i></div>
+                <div>
+                    <div class="metric-widget-val">2</div>
+                    <div class="metric-widget-lbl">Pending NGO Requests</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-widget">
+                <div class="metric-widget-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
+                <div>
+                    <div class="metric-widget-val">7</div>
+                    <div class="metric-widget-lbl">Completed Deliveries</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Donation Form Section -->
+    <div class="collapse mb-4" id="createDonationBox">
+        <div class="custom-card p-4">
+            <h4 class="fw-bold text-success mb-3"><i class="bi bi-box2-heart me-1"></i> Create Donation & Food Scheduling</h4>
+            <form onsubmit="event.preventDefault(); alert('Donation creation UI preview.');">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Category</label>
+                        <select class="form-select">
+                            <option>🍲 Cooked Food</option>
+                            <option>🌾 Packaged Rations</option>
+                            <option>👕 Clothes</option>
+                            <option>📚 Books</option>
+                            <option>🧸 Toys</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Item Title</label>
+                        <input type="text" class="form-control" placeholder="e.g. 50 Packets Vegetable Fried Rice" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Quantity / Portions</label>
+                        <input type="text" class="form-control" placeholder="e.g. 50 Portions" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Cooked Time / Expiry</label>
+                        <input type="datetime-local" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Pickup Window</label>
+                        <input type="text" class="form-control" placeholder="e.g. Today 5:00 PM - 8:00 PM" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Pickup Address & Contact Phone</label>
+                        <input type="text" class="form-control" placeholder="Street address, landmark, contact number" required>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Set Item Available
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- My Donations Table -->
+    <div class="custom-card p-4">
+        <h4 class="fw-bold mb-3">My Donation Records & Live Status</h4>
+        <div class="custom-table-wrapper">
+            <div class="table-responsive">
+                <table class="table table-custom">
+                    <thead>
+                        <tr>
+                            <th>Item Title</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Scheduled Slot</th>
+                            <th>Status</th>
+                            <th>Action / Approval</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">Banquet Fresh Rice & Curry</td>
+                            <td>🍲 Food</td>
+                            <td>80 Packs</td>
+                            <td>Today, 6:00 PM</td>
+                            <td><span class="status-badge status-requested">Requested</span></td>
+                            <td>
+                                <button class="btn btn-success btn-sm" onclick="alert('Donor Approval Confirmed!')">
+                                    <i class="bi bi-check-lg"></i> Approve NGO Claim
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Winter Blankets & Sweaters</td>
+                            <td>👕 Clothes</td>
+                            <td>25 Units</td>
+                            <td>Tomorrow, 10:00 AM</td>
+                            <td><span class="status-badge status-scheduled">Pickup Scheduled</span></td>
+                            <td><span class="small text-muted">Volunteer Rahul Assigned</span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">High School Science Books</td>
+                            <td>📚 Books</td>
+                            <td>40 Books</td>
+                            <td>Aug 22, 2026</td>
+                            <td><span class="status-badge status-completed">Completed</span></td>
+                            <td>
+                                <button class="btn btn-outline-success btn-sm" onclick="alert('Displaying verified delivery proof photo!')">
+                                    <i class="bi bi-receipt"></i> View Proof
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

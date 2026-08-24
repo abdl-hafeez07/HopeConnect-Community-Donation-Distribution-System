@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Sign In | HopeConnect
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="custom-card p-4 p-md-5 shadow-lg">
+            <div class="text-center mb-4">
+                <span class="brand-icon mx-auto mb-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                </span>
+                <h3 class="fw-bold">Sign In to HopeConnect</h3>
+                <p class="text-secondary small">Choose your role and enter your credentials to access your portal.</p>
+            </div>
+
+            <form onsubmit="event.preventDefault(); alert('Login UI preview. Backend authentication will be connected in future updates.');">
+                <!-- Role Selector -->
+                <div class="mb-3">
+                    <label class="form-label small">Select Your Role</label>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="authRole" id="authDonor" checked>
+                            <label class="btn btn-outline-success btn-sm w-100" for="authDonor">
+                                <i class="bi bi-person-heart me-1"></i> Donor
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="authRole" id="authNgo">
+                            <label class="btn btn-outline-success btn-sm w-100" for="authNgo">
+                                <i class="bi bi-building me-1"></i> NGO
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="authRole" id="authVolunteer">
+                            <label class="btn btn-outline-success btn-sm w-100" for="authVolunteer">
+                                <i class="bi bi-bicycle me-1"></i> Volunteer
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="authRole" id="authAdmin">
+                            <label class="btn btn-outline-success btn-sm w-100" for="authAdmin">
+                                <i class="bi bi-shield-lock me-1"></i> Admin
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Input -->
+                <div class="mb-3">
+                    <label for="pageLoginEmail" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="pageLoginEmail" placeholder="name@example.com" required>
+                </div>
+
+                <!-- Password Input -->
+                <div class="mb-3">
+                    <label for="pageLoginPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="pageLoginPassword" placeholder="••••••••" required>
+                </div>
+
+                <!-- Remember & Forgot -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="pageRememberMe">
+                        <label class="form-check-label small text-secondary" for="pageRememberMe">Remember me</label>
+                    </div>
+                    <a href="#" class="small text-success text-decoration-none">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100 mb-3">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" class="text-success fw-bold">Register here</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
