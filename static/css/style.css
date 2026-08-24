@@ -1,8 +1,6 @@
 /* ==========================================================================
    HopeConnect - Community Donation Platform Stylesheet
    Theme: Clean Green & White Modern Design
-   Workflow: Public -> Auth -> Role Dashboard -> Donation -> Scheduling ->
-             NGO Request -> Approval -> Volunteer Pickup -> Proof -> Completed -> Reports
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -26,35 +24,6 @@
     --text-muted: #6b7280;
     --border-color: #e5e7eb;
     --border-subtle: #f0f3f1;
-
-    /* Status Indicator Colors */
-    --status-available-bg: #e8f5e9;
-    --status-available-text: #198754;
-    --status-available-border: #a3cfbb;
-
-    --status-requested-bg: #fff8e1;
-    --status-requested-text: #b45309;
-    --status-requested-border: #fde68a;
-
-    --status-approved-bg: #e0f2fe;
-    --status-approved-text: #0369a1;
-    --status-approved-border: #bae6fd;
-
-    --status-scheduled-bg: #f3e8ff;
-    --status-scheduled-text: #6d28d9;
-    --status-scheduled-border: #ddd6fe;
-
-    --status-pickedup-bg: #fef3c7;
-    --status-pickedup-text: #92400e;
-    --status-pickedup-border: #fcd34d;
-
-    --status-delivered-bg: #ecfdf5;
-    --status-delivered-text: #047857;
-    --status-delivered-border: #a7f3d0;
-
-    --status-completed-bg: #d1e7dd;
-    --status-completed-text: #0f5132;
-    --status-completed-border: #75b798;
 
     /* Elevation & Shadows */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
@@ -153,10 +122,10 @@ h1, h2, h3, h4, h5, h6 {
 .navbar-nav .nav-link {
     color: var(--text-secondary) !important;
     font-weight: 600;
-    font-size: 0.92rem;
-    padding: 0.55rem 0.85rem !important;
+    font-size: 0.95rem;
+    padding: 0.55rem 1rem !important;
     border-radius: var(--radius-sm);
-    margin: 0 0.1rem;
+    margin: 0 0.15rem;
     transition: var(--transition-fast);
     position: relative;
 }
@@ -185,14 +154,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-cta-btn {
-    padding: 0.5rem 1.15rem !important;
-    font-size: 0.88rem;
-}
-
-.nav-auth-btn {
-    padding: 0.45rem 1rem !important;
-    font-size: 0.88rem;
-    font-weight: 600;
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.9rem;
 }
 
 /* --------------------------------------------------------------------------
@@ -254,365 +217,9 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.btn-sm {
-    padding: 0.4rem 0.9rem;
-    font-size: 0.85rem;
-}
-
 .btn-lg {
     padding: 0.85rem 2rem;
     font-size: 1.05rem;
-}
-
-/* --------------------------------------------------------------------------
-   Status Indicators & Badges (Lifecycle Stages)
-   -------------------------------------------------------------------------- */
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    border-radius: var(--radius-pill);
-    border: 1px solid transparent;
-    text-transform: capitalize;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
-}
-
-.status-badge::before {
-    content: '';
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-}
-
-/* 1. Available */
-.status-available {
-    background-color: var(--status-available-bg);
-    color: var(--status-available-text);
-    border-color: var(--status-available-border);
-}
-.status-available::before {
-    background-color: var(--status-available-text);
-}
-
-/* 2. Requested */
-.status-requested {
-    background-color: var(--status-requested-bg);
-    color: var(--status-requested-text);
-    border-color: var(--status-requested-border);
-}
-.status-requested::before {
-    background-color: var(--status-requested-text);
-}
-
-/* 3. Approved */
-.status-approved {
-    background-color: var(--status-approved-bg);
-    color: var(--status-approved-text);
-    border-color: var(--status-approved-border);
-}
-.status-approved::before {
-    background-color: var(--status-approved-text);
-}
-
-/* 4. Pickup Scheduled */
-.status-scheduled {
-    background-color: var(--status-scheduled-bg);
-    color: var(--status-scheduled-text);
-    border-color: var(--status-scheduled-border);
-}
-.status-scheduled::before {
-    background-color: var(--status-scheduled-text);
-}
-
-/* 5. Picked Up */
-.status-pickedup {
-    background-color: var(--status-pickedup-bg);
-    color: var(--status-pickedup-text);
-    border-color: var(--status-pickedup-border);
-}
-.status-pickedup::before {
-    background-color: var(--status-pickedup-text);
-}
-
-/* 6. Delivered */
-.status-delivered {
-    background-color: var(--status-delivered-bg);
-    color: var(--status-delivered-text);
-    border-color: var(--status-delivered-border);
-}
-.status-delivered::before {
-    background-color: var(--status-delivered-text);
-}
-
-/* 7. Completed */
-.status-completed {
-    background-color: var(--status-completed-bg);
-    color: var(--status-completed-text);
-    border-color: var(--status-completed-border);
-}
-.status-completed::before {
-    background-color: var(--status-completed-text);
-}
-
-/* --------------------------------------------------------------------------
-   Lifecycle Stepper & Workflow Timeline Component
-   -------------------------------------------------------------------------- */
-.lifecycle-wrapper {
-    background-color: #ffffff;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 2.5rem 1.5rem;
-    box-shadow: var(--shadow-sm);
-    margin-bottom: 2.5rem;
-}
-
-.lifecycle-track {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    position: relative;
-    overflow-x: auto;
-    padding: 1rem 0.5rem;
-}
-
-.lifecycle-track::-webkit-scrollbar {
-    height: 6px;
-}
-.lifecycle-track::-webkit-scrollbar-thumb {
-    background-color: var(--primary-green-light);
-    border-radius: 4px;
-}
-
-.lifecycle-node {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    min-width: 110px;
-    flex: 1;
-    position: relative;
-    padding: 0 0.5rem;
-}
-
-.lifecycle-node:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    top: 24px;
-    left: calc(50% + 24px);
-    width: calc(100% - 48px);
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary-green-light), var(--border-color));
-    z-index: 1;
-}
-
-.lifecycle-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: var(--primary-green-subtle);
-    color: var(--primary-green);
-    border: 2px solid var(--primary-green-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
-    position: relative;
-    z-index: 2;
-    transition: var(--transition-fast);
-}
-
-.lifecycle-node:hover .lifecycle-icon {
-    background-color: var(--primary-green);
-    color: #ffffff;
-    border-color: var(--primary-green);
-    transform: scale(1.1);
-}
-
-.lifecycle-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.2rem;
-}
-
-.lifecycle-subtitle {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-/* --------------------------------------------------------------------------
-   Role-Based Dashboards & Showcase Tabs
-   -------------------------------------------------------------------------- */
-.role-tabs .nav-pills {
-    background-color: #f1f5f9;
-    padding: 0.4rem;
-    border-radius: var(--radius-pill);
-    display: inline-flex;
-    gap: 0.25rem;
-}
-
-.role-tabs .nav-link {
-    color: var(--text-secondary);
-    font-weight: 600;
-    font-size: 0.9rem;
-    padding: 0.55rem 1.35rem;
-    border-radius: var(--radius-pill);
-    border: none;
-    transition: var(--transition-fast);
-}
-
-.role-tabs .nav-link:hover {
-    color: var(--primary-green);
-}
-
-.role-tabs .nav-link.active {
-    background-color: var(--primary-green);
-    color: #ffffff;
-    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.25);
-}
-
-.dashboard-panel {
-    background-color: #ffffff;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-md);
-    margin-top: 1.5rem;
-}
-
-.dashboard-header-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 1.25rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.role-badge-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-pill);
-    font-size: 0.82rem;
-    font-weight: 700;
-    background-color: var(--primary-green-subtle);
-    color: var(--primary-green-dark);
-    border: 1px solid var(--primary-green-light);
-}
-
-/* Dashboard Metric Widget */
-.metric-widget {
-    background-color: var(--body-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    height: 100%;
-}
-
-.metric-widget-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-sm);
-    background-color: var(--primary-green-subtle);
-    color: var(--primary-green);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.35rem;
-    flex-shrink: 0;
-}
-
-.metric-widget-val {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    line-height: 1.1;
-}
-
-.metric-widget-lbl {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    margin-top: 0.2rem;
-}
-
-/* --------------------------------------------------------------------------
-   Custom Tables & Data Displays
-   -------------------------------------------------------------------------- */
-.custom-table-wrapper {
-    background: #ffffff;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-}
-
-.table-custom {
-    width: 100%;
-    margin-bottom: 0;
-    font-size: 0.9rem;
-    vertical-align: middle;
-}
-
-.table-custom thead {
-    background-color: #f8fafc;
-    border-bottom: 2px solid var(--border-color);
-}
-
-.table-custom th {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-secondary);
-    padding: 0.9rem 1rem;
-    border-bottom: none;
-}
-
-.table-custom td {
-    padding: 0.9rem 1rem;
-    border-bottom: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-}
-
-.table-custom tbody tr:hover {
-    background-color: var(--primary-green-subtle);
-}
-
-/* --------------------------------------------------------------------------
-   Proof Upload & Interactive Demo Components
-   -------------------------------------------------------------------------- */
-.proof-upload-box {
-    border: 2px dashed var(--primary-green);
-    border-radius: var(--radius-md);
-    background-color: var(--primary-green-subtle);
-    padding: 1.75rem 1.25rem;
-    text-align: center;
-    cursor: pointer;
-    transition: var(--transition-fast);
-}
-
-.proof-upload-box:hover {
-    background-color: #e6f9ed;
-    border-color: var(--primary-green-hover);
-}
-
-.search-filter-box {
-    background-color: #ffffff;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 1rem;
-    margin-bottom: 1.5rem;
 }
 
 /* --------------------------------------------------------------------------
@@ -624,7 +231,7 @@ h1, h2, h3, h4, h5, h6 {
     color: #ffffff;
     padding: 4.5rem 2rem;
     margin-top: 1.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     position: relative;
     overflow: hidden;
     box-shadow: var(--shadow-lg);
@@ -681,7 +288,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-lead {
     font-size: 1.15rem;
     color: rgba(255, 255, 255, 0.9);
-    max-width: 720px;
+    max-width: 680px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 2rem;
@@ -690,7 +297,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
-   Page Header Banner (for About, Services, Contact, Dashboards)
+   Page Header Banner (for About, Services, Contact)
    -------------------------------------------------------------------------- */
 .page-header {
     background: linear-gradient(135deg, var(--primary-green-subtle) 0%, #ffffff 100%);
@@ -712,7 +319,7 @@ h1, h2, h3, h4, h5, h6 {
 .page-header p {
     font-size: 1.1rem;
     color: var(--text-secondary);
-    max-width: 680px;
+    max-width: 650px;
     margin: 0 auto;
 }
 
@@ -744,8 +351,42 @@ h1, h2, h3, h4, h5, h6 {
 .section-subtitle {
     color: var(--text-muted);
     font-size: 1.05rem;
-    max-width: 640px;
-    margin: 0 auto 2.5rem auto;
+    max-width: 620px;
+    margin: 0 auto 3rem auto;
+}
+
+/* --------------------------------------------------------------------------
+   Stats / Trust Bar
+   -------------------------------------------------------------------------- */
+.stat-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+}
+
+.stat-card:hover {
+    border-color: var(--primary-green-light);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary-green);
+    line-height: 1;
+    margin-bottom: 0.35rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -840,6 +481,21 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0.5rem;
 }
 
+/* Step / How It Works Cards */
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: var(--primary-green);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 50%;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
 /* --------------------------------------------------------------------------
    CTA Section
    -------------------------------------------------------------------------- */
@@ -868,8 +524,28 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
-   Form & Input Controls
+   Contact Page Styles
    -------------------------------------------------------------------------- */
+.contact-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.contact-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    background-color: var(--primary-green-subtle);
+    color: var(--primary-green);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
 .form-control,
 .form-select {
     border: 1px solid var(--border-color);
@@ -906,7 +582,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .footer-custom h5 {
     color: #ffffff;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 1.25rem;
     letter-spacing: -0.01em;
@@ -999,13 +675,6 @@ h1, h2, h3, h4, h5, h6 {
     .nav-cta-btn {
         margin-top: 0.5rem;
     }
-    .role-tabs .nav-pills {
-        flex-wrap: wrap;
-        border-radius: var(--radius-md);
-    }
-    .lifecycle-node:not(:last-child)::after {
-        display: none;
-    }
 }
 
 @media (max-width: 767.98px) {
@@ -1027,9 +696,6 @@ h1, h2, h3, h4, h5, h6 {
     }
     .page-header {
         padding: 2.25rem 1.25rem;
-    }
-    .dashboard-panel {
-        padding: 1.25rem;
     }
     .cta-banner {
         padding: 2.75rem 1.25rem;
