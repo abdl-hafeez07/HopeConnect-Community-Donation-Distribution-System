@@ -1,55 +1,151 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Services | HopeConnect
+Our Services | HopeConnect
 {% endblock %}
 
 {% block content %}
 
-<div class="py-5">
+<!-- ==========================================================================
+     Services Header Banner
+     ========================================================================== -->
+<div class="page-header">
+    <span class="section-tag">Donation Channels</span>
+    <h1>Our Donation Services</h1>
+    <p>
+        Explore how you can contribute across various donation categories to support families, children, and students in need.
+    </p>
+</div>
 
-    <h1 class="text-center mb-5">Our Services</h1>
-
-    <div class="row">
-
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h5>Food Donation</h5>
-                    <p>Donate surplus food to verified NGOs.</p>
+<!-- ==========================================================================
+     Services Grid
+     ========================================================================== -->
+<section class="section-wrapper pt-0">
+    <div class="row g-4 mb-5">
+        <!-- Service 1: Food -->
+        <div class="col-md-6 col-lg-3">
+            <div class="custom-card">
+                <div class="card-icon-box">
+                    <i class="bi bi-egg-fried"></i>
+                </div>
+                <h4>Food Donation</h4>
+                <p class="mb-3">
+                    Donate surplus cooked food from events, restaurants, and homes, or non-perishable pantry rations.
+                </p>
+                <div class="pt-3 border-top border-1" style="border-color: var(--border-color) !important;">
+                    <span class="badge bg-success-subtle text-success fw-semibold">🍱 Cooked & Packed</span>
+                    <span class="badge bg-success-subtle text-success fw-semibold mt-1">🌾 Dry Rations</span>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h5>Clothes Donation</h5>
-                    <p>Donate reusable clothes to those in need.</p>
+        <!-- Service 2: Clothes -->
+        <div class="col-md-6 col-lg-3">
+            <div class="custom-card">
+                <div class="card-icon-box">
+                    <i class="bi bi-bag-heart-fill"></i>
+                </div>
+                <h4>Clothes Donation</h4>
+                <p class="mb-3">
+                    Give clean, wearable clothes, winter jackets, blankets, and footwear to support underserved families.
+                </p>
+                <div class="pt-3 border-top border-1" style="border-color: var(--border-color) !important;">
+                    <span class="badge bg-success-subtle text-success fw-semibold">👕 Wearable Clothes</span>
+                    <span class="badge bg-success-subtle text-success fw-semibold mt-1">🧣 Blankets</span>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h5>Book Donation</h5>
-                    <p>Share educational books with students.</p>
+        <!-- Service 3: Books -->
+        <div class="col-md-6 col-lg-3">
+            <div class="custom-card">
+                <div class="card-icon-box">
+                    <i class="bi bi-book-half"></i>
+                </div>
+                <h4>Book Donation</h4>
+                <p class="mb-3">
+                    Share educational textbooks, storybooks, notebooks, and school stationery with eager students.
+                </p>
+                <div class="pt-3 border-top border-1" style="border-color: var(--border-color) !important;">
+                    <span class="badge bg-success-subtle text-success fw-semibold">📚 Textbooks</span>
+                    <span class="badge bg-success-subtle text-success fw-semibold mt-1">✏️ Stationery</span>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h5>Toy Donation</h5>
-                    <p>Bring smiles to children by donating toys.</p>
+        <!-- Service 4: Toys -->
+        <div class="col-md-6 col-lg-3">
+            <div class="custom-card">
+                <div class="card-icon-box">
+                    <i class="bi bi-controller"></i>
+                </div>
+                <h4>Toy Donation</h4>
+                <p class="mb-3">
+                    Bring joy and educational play to children in orphanages and care centers with safe toys and puzzles.
+                </p>
+                <div class="pt-3 border-top border-1" style="border-color: var(--border-color) !important;">
+                    <span class="badge bg-success-subtle text-success fw-semibold">🧩 Board Games</span>
+                    <span class="badge bg-success-subtle text-success fw-semibold mt-1">🧸 Soft Toys</span>
                 </div>
             </div>
         </div>
-
     </div>
 
-</div>
+    <!-- ==========================================================================
+         Safety & Quality Standards
+         ========================================================================== -->
+    <div class="text-center mb-5">
+        <span class="section-tag">Quality Assurance</span>
+        <h2 class="section-title">How We Ensure Safe Distribution</h2>
+        <p class="section-subtitle">
+            Safety and hygiene are our highest priorities across all donation channels.
+        </p>
+
+        <div class="row g-4 text-start">
+            <div class="col-md-4">
+                <div class="custom-card">
+                    <div class="card-icon-box">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4>Food Freshness Inspection</h4>
+                    <p>All prepared food donations are inspected for freshness and hygienic packaging before pickup.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="custom-card">
+                    <div class="card-icon-box">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h4>Swift Volunteer Pickup</h4>
+                    <p>Local volunteers and NGO partners are mobilized promptly to ensure quick transit of perishable items.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="custom-card">
+                    <div class="card-icon-box">
+                        <i class="bi bi-clipboard2-check-fill"></i>
+                    </div>
+                    <h4>Direct Beneficiary Handover</h4>
+                    <p>Donations are logged and delivered directly to registered shelters, schools, and families.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         Ready to Donate CTA
+         ========================================================================== -->
+    <div class="cta-banner mt-0">
+        <h2>Have Items Ready to Donate?</h2>
+        <p>
+            Connect with us today or reach out directly to coordinate your donation pickup.
+        </p>
+        <a href="{% url 'contact' %}" class="btn btn-white btn-lg">
+            <i class="bi bi-telephone-outbound me-1"></i> Contact Our Team
+        </a>
+    </div>
+</section>
 
 {% endblock %}

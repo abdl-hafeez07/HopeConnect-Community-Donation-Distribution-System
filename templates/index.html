@@ -1,140 +1,237 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Home | HopeConnect
+Home | HopeConnect - Community Donation Platform
 {% endblock %}
 
 {% block content %}
 
-<!-- Hero Section -->
-<section class="hero text-center py-5">
-    <div class="container">
-        <h1 class="display-3 fw-bold">
-            Donate Today, Change Tomorrow
+<!-- ==========================================================================
+     Hero Section
+     ========================================================================== -->
+<section class="hero-wrapper text-center">
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="hero-badge">
+            <i class="bi bi-stars"></i> Verified Community Donation Network
+        </div>
+
+        <h1 class="hero-title">
+            Donate Today,<br class="d-none d-md-inline"> Change Tomorrow
         </h1>
 
-        <p class="lead mt-3">
-            Connecting generous donors with verified NGOs and volunteers to
-            reduce food waste and support communities.
+        <p class="hero-lead">
+            Connecting generous donors with verified NGOs and dedicated volunteers to reduce waste, fight hunger, and support local communities.
         </p>
 
-        <div class="mt-4">
-            <a href="#" class="btn btn-success btn-lg me-3">
-                Donate Now
+        <div class="d-flex flex-wrap justify-content-center gap-3 hero-btn-group">
+            <a href="{% url 'services' %}" class="btn btn-white btn-lg">
+                <i class="bi bi-heart-fill text-success me-1"></i> Donate Now
             </a>
 
-            <a href="{% url 'about' %}" class="btn btn-outline-success btn-lg">
-                Learn More
+            <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-info-circle me-1"></i> Learn More
             </a>
         </div>
     </div>
 </section>
 
-<!-- Features -->
-<section class="py-5">
+<!-- ==========================================================================
+     Impact & Trust Metrics
+     ========================================================================== -->
+<section class="mb-5">
+    <div class="row g-3">
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Verified NGOs</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-number">5,000+</div>
+                <div class="stat-label">Meals Shared</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-number">1,200+</div>
+                <div class="stat-label">Active Donors</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Direct Impact</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     Why Choose HopeConnect (Features)
+     ========================================================================== -->
+<section class="section-wrapper text-center">
     <div class="container">
+        <span class="section-tag">Key Benefits</span>
+        <h2 class="section-title">Why Choose HopeConnect?</h2>
+        <p class="section-subtitle">
+            We ensure every contribution is verified, safe, and quickly distributed to those who need it most.
+        </p>
 
-        <h2 class="text-center mb-5">
-            Why Choose HopeConnect?
-        </h2>
-
-        <div class="row text-center">
-
-            <div class="col-md-3">
-                <div class="card h-100 p-3">
+        <div class="row g-4 text-start">
+            <div class="col-md-6 col-lg-3">
+                <div class="custom-card">
+                    <div class="card-icon-box">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </div>
                     <h4>Verified NGOs</h4>
-                    <p>Trusted organizations ensure donations reach the right people.</p>
+                    <p>Trusted, vetted organizations guarantee your donations reach genuine beneficiaries.</p>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="card h-100 p-3">
+            <div class="col-md-6 col-lg-3">
+                <div class="custom-card">
+                    <div class="card-icon-box">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
                     <h4>Easy Donations</h4>
-                    <p>Create and schedule donations in just a few clicks.</p>
+                    <p>Schedule your donations in just a few clicks with a streamlined submission workflow.</p>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="card h-100 p-3">
+            <div class="col-md-6 col-lg-3">
+                <div class="custom-card">
+                    <div class="card-icon-box">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
                     <h4>Secure Platform</h4>
-                    <p>Role-based access and secure user authentication.</p>
+                    <p>Role-based access control and transparent community guidelines keep all data safe.</p>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="card h-100 p-3">
-                    <h4>Track Donations</h4>
-                    <p>Monitor every donation from creation to delivery.</p>
+            <div class="col-md-6 col-lg-3">
+                <div class="custom-card">
+                    <div class="card-icon-box">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <h4>Track Progress</h4>
+                    <p>Monitor your donation status in real-time from pickup preparation to successful delivery.</p>
                 </div>
             </div>
-
         </div>
-
     </div>
 </section>
 
-<!-- Services -->
-<section class="py-5 bg-light">
-
+<!-- ==========================================================================
+     What Can You Donate? (Categories)
+     ========================================================================== -->
+<section class="section-wrapper bg-white rounded-4 p-4 p-md-5 my-4 border border-1" style="border-color: var(--border-subtle) !important;">
     <div class="container">
-
-        <h2 class="text-center mb-5">
-            What Can You Donate?
-        </h2>
-
-        <div class="row text-center">
-
-            <div class="col-md-3">
-                <div class="card p-4">
-                    <h4>🍲 Food</h4>
-                    <p>Donate surplus food safely.</p>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card p-4">
-                    <h4>👕 Clothes</h4>
-                    <p>Help families with reusable clothes.</p>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card p-4">
-                    <h4>📚 Books</h4>
-                    <p>Support education through book donations.</p>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card p-4">
-                    <h4>🧸 Toys</h4>
-                    <p>Bring joy to children with donated toys.</p>
-                </div>
-            </div>
-
+        <div class="text-center">
+            <span class="section-tag">Donation Categories</span>
+            <h2 class="section-title">What Can You Donate?</h2>
+            <p class="section-subtitle">
+                Every essential item you share brings immediate relief and comfort to a family.
+            </p>
         </div>
 
-    </div>
+        <div class="row g-4">
+            <div class="col-6 col-lg-3">
+                <div class="donation-category-card">
+                    <span class="donation-emoji-icon">🍲</span>
+                    <h4>Food</h4>
+                    <p>Surplus edible meals, fresh groceries, and packaged rations safely distributed.</p>
+                </div>
+            </div>
 
+            <div class="col-6 col-lg-3">
+                <div class="donation-category-card">
+                    <span class="donation-emoji-icon">👕</span>
+                    <h4>Clothes</h4>
+                    <p>Clean, wearable apparel and blankets for children, youth, and adults.</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="donation-category-card">
+                    <span class="donation-emoji-icon">📚</span>
+                    <h4>Books</h4>
+                    <p>Educational textbooks, stationery, and reading books for young learners.</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="donation-category-card">
+                    <span class="donation-emoji-icon">🧸</span>
+                    <h4>Toys</h4>
+                    <p>Pre-loved and new toys to spark joy and happiness for underprivileged children.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
-<!-- Call to Action -->
-<section class="text-center py-5">
-
+<!-- ==========================================================================
+     How It Works (3 Simple Steps)
+     ========================================================================== -->
+<section class="section-wrapper text-center">
     <div class="container">
-
-        <h2>Join Our Mission Today</h2>
-
-        <p class="lead">
-            Together, we can reduce waste and make a positive impact in our communities.
+        <span class="section-tag">Simple Process</span>
+        <h2 class="section-title">How HopeConnect Works</h2>
+        <p class="section-subtitle">
+            Making an impact in your community takes less than three simple steps.
         </p>
 
-        <a href="#" class="btn btn-success btn-lg">
-            Get Started
-        </a>
+        <div class="row g-4 text-start">
+            <div class="col-md-4">
+                <div class="custom-card text-center">
+                    <div><span class="step-number">1</span></div>
+                    <h4>List Your Donation</h4>
+                    <p>Select what you wish to donate, specify the quantity, and provide your pickup details.</p>
+                </div>
+            </div>
 
+            <div class="col-md-4">
+                <div class="custom-card text-center">
+                    <div><span class="step-number">2</span></div>
+                    <h4>NGO Match & Pickup</h4>
+                    <p>A nearby verified NGO accepts your request and coordinates pickup or collection.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="custom-card text-center">
+                    <div><span class="step-number">3</span></div>
+                    <h4>Delivering Smiles</h4>
+                    <p>Items are directly handed over to beneficiaries with total transparency and care.</p>
+                </div>
+            </div>
+        </div>
     </div>
+</section>
 
+<!-- ==========================================================================
+     Call To Action Banner
+     ========================================================================== -->
+<section id="get-started" class="cta-banner">
+    <div class="container">
+        <h2>Join Our Community Mission Today</h2>
+        <p>
+            Together, we can bridge surplus resources with real needs, ensuring no usable item goes to waste.
+        </p>
+
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="{% url 'contact' %}" class="btn btn-white btn-lg">
+                <i class="bi bi-chat-heart me-1"></i> Get In Touch
+            </a>
+            <a href="{% url 'services' %}" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-box2-heart me-1"></i> View Services
+            </a>
+        </div>
+    </div>
 </section>
 
 {% endblock %}
