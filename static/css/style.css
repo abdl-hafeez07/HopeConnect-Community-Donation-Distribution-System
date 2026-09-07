@@ -75,7 +75,12 @@ a:hover {
     color: var(--primary-green-hover);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--text-primary);
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -663,15 +668,19 @@ h1, h2, h3, h4, h5, h6 {
     .hero-title {
         font-size: 2.4rem;
     }
+
     .hero-wrapper {
         padding: 3.5rem 1.5rem;
     }
+
     .navbar-nav {
         padding-top: 1rem;
     }
+
     .navbar-nav .nav-link {
         margin: 0.2rem 0;
     }
+
     .nav-cta-btn {
         margin-top: 0.5rem;
     }
@@ -681,36 +690,33 @@ h1, h2, h3, h4, h5, h6 {
     .hero-title {
         font-size: 2rem;
     }
+
     .hero-lead {
         font-size: 1rem;
     }
+
     .hero-wrapper {
         padding: 2.75rem 1.25rem;
         margin-bottom: 2.5rem;
     }
+
     .section-title {
         font-size: 1.75rem;
     }
+
     .section-wrapper {
         padding: 2.5rem 0;
     }
+
     .page-header {
         padding: 2.25rem 1.25rem;
     }
+
     .cta-banner {
         padding: 2.75rem 1.25rem;
     }
+
     .cta-banner h2 {
         font-size: 1.8rem;
-    }
-}
-
-@media (max-width: 575.98px) {
-    .hero-btn-group .btn {
-        width: 100%;
-        margin-bottom: 0.75rem;
-    }
-    .hero-btn-group .btn:last-child {
-        margin-bottom: 0;
     }
 }
