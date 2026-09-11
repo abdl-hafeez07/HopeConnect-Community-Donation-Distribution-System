@@ -720,14 +720,3 @@ h6 {
         font-size: 1.8rem;
     }
 }
-
-@media (max-width: 575.98px) {
-    .hero-btn-group .btn {
-        width: 100%;
-        margin-bottom: 0.75rem;
-    }
-
-    .hero-btn-group .btn:last-child {
-        margin-bottom: 0;
-    }
-}
