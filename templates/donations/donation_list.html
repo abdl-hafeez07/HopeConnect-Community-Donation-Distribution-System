@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Available Donations | HopeConnect{% endblock %}
+
+{% block content %}
+<div class="py-3">
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Available Community Donations</h2>
+        <p class="text-muted">Verified NGOs and charities can request items for immediate community distribution.</p>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 bg-white">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="q" value="{{ search_query|default:'' }}" class="form-control border-start-0" placeholder="Search by title, description, or location...">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <input type="text" name="city" value="{{ selected_city|default:'' }}" class="form-control" placeholder="City...">
+            </div>
+
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-success fw-bold">Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Donations Grid -->
+    {% if donations %}
+    <div class="row g-4">
+        {% for item in donations %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}" style="height: 190px; object-fit: cover;">
+                {% else %}
+                <div class="bg-success-subtle text-success d-flex align-items-center justify-content-center" style="height: 160px;">
+                    <i class="bi bi-gift fs-1"></i>
+                </div>
+                {% endif %}
+
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                            {{ item.category.name }}
+                        </span>
+                        <span class="small text-muted">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ item.city }}
+                        </span>
+                    </div>
+
+                    <h5 class="fw-bold mb-1">{{ item.title }}</h5>
+                    <div class="fw-semibold text-success small mb-2">
+                        <i class="bi bi-box-seam me-1"></i>Quantity: {{ item.quantity }}
+                    </div>
+
+                    <p class="text-muted small mb-3 flex-grow-1">
+                        {{ item.description|truncatewords:20 }}
+                    </p>
+
+                    {% if item.food_detail %}
+                    <div class="p-2 rounded-3 bg-light border mb-3 small">
+                        <div class="d-flex justify-content-between">
+                            <span><i class="bi bi-tag me-1"></i>{{ item.food_detail.food_type }}</span>
+                            <span class="badge {% if item.food_detail.dietary_type == 'Vegetarian' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                {{ item.food_detail.dietary_type }}
+                            </span>
+                        </div>
+                        <div class="text-danger mt-1">
+                            <i class="bi bi-clock-history me-1"></i>Expires: {{ item.food_detail.expiry_time|date:"M d, H:i" }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <small class="text-muted">By {{ item.donor.username }}</small>
+                        <a href="{% url 'donation_detail' item.id %}" class="btn btn-outline-success btn-sm px-3 fw-bold">
+                            View & Request &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-inbox text-muted fs-1 d-block mb-3"></i>
+        <h4 class="text-muted">No donations found</h4>
+        <p class="text-muted">Try adjusting your category or city filters, or check back later.</p>
+        <a href="{% url 'donations_list' %}" class="btn btn-outline-success">Reset Filters</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}My Donations | HopeConnect{% endblock %}
+
+{% block content %}
+<div class="py-3">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">My Donations</h2>
+            <p class="text-muted mb-0">Manage items you have listed and monitor their distribution.</p>
+        </div>
+        <div>
+            <a href="{% url 'create_donation' %}" class="btn btn-success fw-bold">
+                <i class="bi bi-plus-circle-fill me-1"></i>List Another Donation
+            </a>
+        </div>
+    </div>
+
+    <!-- Status Tabs -->
+    <div class="mb-4">
+        <ul class="nav nav-pills bg-light p-1 rounded-3 d-inline-flex border">
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'ALL' %}active bg-success{% else %}text-dark{% endif %}" href="?status=ALL">All</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'AVAILABLE' %}active bg-success{% else %}text-dark{% endif %}" href="?status=AVAILABLE">Available</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'REQUESTED' %}active bg-success{% else %}text-dark{% endif %}" href="?status=REQUESTED">Requested</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'APPROVED' %}active bg-success{% else %}text-dark{% endif %}" href="?status=APPROVED">Approved</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'COMPLETED' %}active bg-success{% else %}text-dark{% endif %}" href="?status=COMPLETED">Completed</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Donations Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            {% if donations %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Item</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Requests</th>
+                            <th>Created On</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in donations %}
+                        <tr>
+                            <td class="ps-4 fw-semibold">
+                                <a href="{% url 'donation_detail' item.id %}" class="text-dark text-decoration-none">
+                                    {{ item.title }}
+                                </a>
+                            </td>
+                            <td><span class="badge bg-light text-dark border">{{ item.category.name }}</span></td>
+                            <td>{{ item.quantity }}</td>
+                            <td>
+                                {% if item.status == 'AVAILABLE' %}
+                                <span class="badge bg-success">Available</span>
+                                {% elif item.status == 'REQUESTED' %}
+                                <span class="badge bg-warning text-dark">Requested</span>
+                                {% elif item.status == 'APPROVED' %}
+                                <span class="badge bg-primary">Approved</span>
+                                {% elif item.status == 'COMPLETED' %}
+                                <span class="badge bg-success-subtle text-success border border-success">Completed</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ item.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.requests.count > 0 %}
+                                <a href="{% url 'review_requests' item.id %}" class="badge bg-danger text-decoration-none">
+                                    {{ item.requests.count }} Pending Review
+                                </a>
+                                {% else %}
+                                <span class="text-muted small">None</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-muted small">{{ item.created_at|date:"M d, Y" }}</td>
+                            <td class="text-end pe-4">
+                                <a href="{% url 'donation_detail' item.id %}" class="btn btn-sm btn-outline-secondary me-1">View</a>
+                                {% if item.requests.count > 0 %}
+                                <a href="{% url 'review_requests' item.id %}" class="btn btn-sm btn-primary">Review</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-gift text-muted fs-1 d-block mb-3"></i>
+                <h5>No donations found in this category.</h5>
+                <p class="mb-3">Start sharing resources to help individuals and families across the community.</p>
+                <a href="{% url 'create_donation' %}" class="btn btn-success fw-bold">Post a Donation</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

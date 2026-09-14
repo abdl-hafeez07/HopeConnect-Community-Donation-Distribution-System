@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ donation.title }} | HopeConnect{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'donations_list' %}" class="text-success text-decoration-none">Donations</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ donation.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                {% if donation.image %}
+                <img src="{{ donation.image.url }}" class="w-100" alt="{{ donation.title }}" style="max-height: 400px; object-fit: cover;">
+                {% endif %}
+
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                        <span class="badge bg-success-subtle text-success border border-success px-3 py-2 fs-6">
+                            {{ donation.category.name }}
+                        </span>
+
+                        <!-- Status Badge -->
+                        {% if donation.status == 'AVAILABLE' %}
+                        <span class="badge bg-success fs-6 px-3 py-2"><i class="bi bi-check-circle me-1"></i>Available</span>
+                        {% elif donation.status == 'REQUESTED' %}
+                        <span class="badge bg-warning text-dark fs-6 px-3 py-2"><i class="bi bi-hourglass-split me-1"></i>Requested by NGO</span>
+                        {% elif donation.status == 'APPROVED' %}
+                        <span class="badge bg-primary fs-6 px-3 py-2"><i class="bi bi-hand-thumbs-up me-1"></i>Approved for NGO</span>
+                        {% elif donation.status == 'PICKUP_SCHEDULED' or donation.status == 'PICKED_UP' %}
+                        <span class="badge bg-info text-dark fs-6 px-3 py-2"><i class="bi bi-truck me-1"></i>{{ donation.get_status_display }}</span>
+                        {% elif donation.status == 'COMPLETED' or donation.status == 'DELIVERED' %}
+                        <span class="badge bg-success fs-6 px-3 py-2"><i class="bi bi-patch-check-fill me-1"></i>Completed & Delivered</span>
+                        {% else %}
+                        <span class="badge bg-secondary fs-6 px-3 py-2">{{ donation.get_status_display }}</span>
+                        {% endif %}
+                    </div>
+
+                    <h2 class="fw-bold mb-2">{{ donation.title }}</h2>
+                    <h5 class="text-success fw-bold mb-3"><i class="bi bi-box-seam me-1"></i>Quantity: {{ donation.quantity }}</h5>
+
+                    <h6 class="fw-bold text-muted text-uppercase small mt-4">Description</h6>
+                    <p class="lead fs-6 text-secondary mb-4">{{ donation.description }}</p>
+
+                    <!-- Food Safety Info (If Food) -->
+                    {% if food_detail %}
+                    <div class="card border-0 bg-light rounded-4 p-4 mb-4 border-start border-success border-4">
+                        <h5 class="fw-bold text-success mb-3">
+                            <i class="bi bi-shield-check me-2"></i>Food Safety & Expiry Information
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Food Type</span>
+                                <strong class="text-dark">{{ food_detail.food_type }}</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Dietary Type</span>
+                                <span class="badge {% if food_detail.dietary_type == 'Vegetarian' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                    {{ food_detail.dietary_type }}
+                                </span>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Prepared / Cooked On</span>
+                                <strong>{{ food_detail.preparation_time|default:"Not specified" }}</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Safe Consumption Deadline (Expiry)</span>
+                                <strong class="{% if food_detail.is_expired %}text-danger{% else %}text-success{% endif %}">
+                                    <i class="bi bi-clock-history me-1"></i>{{ food_detail.expiry_time|date:"Y-m-d H:i" }}
+                                    {% if food_detail.is_expired %}(EXPIRED){% endif %}
+                                </strong>
+                            </div>
+                            {% if food_detail.storage_instructions %}
+                            <div class="col-12">
+                                <span class="text-muted small d-block">Storage Instructions</span>
+                                <span>{{ food_detail.storage_instructions }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Pickup Location -->
+                    <div class="card border-0 bg-light rounded-4 p-4 mb-4">
+                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Pickup Location</h5>
+                        <p class="mb-1"><strong>City:</strong> {{ donation.city }}</p>
+                        <p class="mb-1"><strong>Address:</strong> {{ donation.pickup_address }}</p>
+                        {% if donation.pickup_landmark %}
+                        <p class="mb-1"><strong>Landmark:</strong> {{ donation.pickup_landmark }}</p>
+                        {% endif %}
+                        {% if donation.preferred_pickup_time %}
+                        <p class="mb-0"><strong>Preferred Time:</strong> {{ donation.preferred_pickup_time|date:"M d, Y H:i" }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                        {% if request.user == donation.donor %}
+                            <a href="{% url 'review_requests' donation.id %}" class="btn btn-primary px-4 fw-bold">
+                                <i class="bi bi-inbox-fill me-1"></i>Review Requests ({{ donation.requests.count }})
+                            </a>
+                            {% if donation.status == 'AVAILABLE' or donation.status == 'REQUESTED' %}
+                            <a href="{% url 'cancel_donation' donation.id %}" class="btn btn-outline-danger px-4" onclick="return confirm('Are you sure you want to cancel this donation?');">
+                                <i class="bi bi-x-circle me-1"></i>Cancel Donation
+                            </a>
+                            {% endif %}
+                        {% elif user_role == 'NGO' %}
+                            {% if donation.status == 'AVAILABLE' %}
+                                {% if user_request %}
+                                <button class="btn btn-secondary px-4 fw-bold" disabled>
+                                    <i class="bi bi-check2 me-1"></i>Request Submitted (Pending Review)
+                                </button>
+                                {% else %}
+                                <a href="{% url 'request_donation' donation.id %}" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">
+                                    <i class="bi bi-send-fill me-1"></i>Request This Donation
+                                </a>
+                                {% endif %}
+                            {% else %}
+                                {% if delivery_assignment and delivery_assignment.status == 'DELIVERED' and delivery_assignment.request.ngo == request.user %}
+                                <form method="post" action="{% url 'confirm_receipt' delivery_assignment.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success px-4 fw-bold" onclick="return confirm('Confirm receipt of these items?');">
+                                        <i class="bi bi-check2-circle me-1"></i>Confirm Receipt of Delivery
+                                    </button>
+                                </form>
+                                {% else %}
+                                <button class="btn btn-secondary px-4" disabled>Not Available for New Requests</button>
+                                {% endif %}
+                            {% endif %}
+                        {% elif not user.is_authenticated %}
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-success px-4 fw-bold">
+                                Log in as NGO to Request
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Status History Timeline -->
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-clock-history text-primary me-2"></i>Donation Lifecycle Audit History</h5>
+                {% if status_history %}
+                <ul class="list-group list-group-flush">
+                    {% for h in status_history %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start px-0 py-3">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">
+                                <span class="badge bg-secondary me-2">{{ h.status }}</span>
+                                {% if h.changed_by %}Updated by {{ h.changed_by.username }}{% endif %}
+                            </div>
+                            <small class="text-muted">{{ h.remarks|default:"Status updated" }}</small>
+                        </div>
+                        <span class="badge bg-light text-muted border">{{ h.timestamp|date:"M d, Y H:i" }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted mb-0">No history events recorded yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar: Donor & Delivery details -->
+        <div class="col-lg-4">
+            <!-- Donor Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h6 class="fw-bold text-muted text-uppercase small mb-3">Posted By</h6>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold" style="width: 50px; height: 50px; font-size: 20px;">
+                        {{ donation.donor.username|make_list|first|upper }}
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">{{ donation.donor.username }}</h6>
+                        <small class="text-muted">Community Donor</small>
+                        <div class="small text-muted"><i class="bi bi-geo-alt"></i> {{ donation.city }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Assignment Card (if exists) -->
+            {% if delivery_assignment %}
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 border-start border-primary border-4">
+                <h6 class="fw-bold text-primary text-uppercase small mb-3">
+                    <i class="bi bi-truck me-1"></i>Delivery Assignment
+                </h6>
+                <p class="mb-2"><strong>Status:</strong> <span class="badge bg-info text-dark">{{ delivery_assignment.get_status_display }}</span></p>
+                <p class="mb-2"><strong>Volunteer:</strong> {{ delivery_assignment.volunteer.username|default:"Awaiting Assignment" }}</p>
+                {% if delivery_assignment.scheduled_pickup_time %}
+                <p class="mb-2"><strong>Scheduled Pickup:</strong> {{ delivery_assignment.scheduled_pickup_time|date:"M d, H:i" }}</p>
+                {% endif %}
+                {% if delivery_assignment.delivered_at %}
+                <p class="mb-2"><strong>Delivered At:</strong> {{ delivery_assignment.delivered_at|date:"M d, H:i" }}</p>
+                {% endif %}
+                {% if delivery_assignment.delivery_proof_image %}
+                <div class="mt-3">
+                    <label class="small text-muted d-block mb-1">Delivery Proof Photo:</label>
+                    <a href="{{ delivery_assignment.delivery_proof_image.url }}" target="_blank">
+                        <img src="{{ delivery_assignment.delivery_proof_image.url }}" alt="Proof" class="img-fluid rounded-3 border" style="max-height: 150px;">
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

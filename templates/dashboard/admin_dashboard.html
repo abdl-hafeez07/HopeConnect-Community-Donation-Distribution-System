@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Management Console | HopeConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Administrative Control Center</h2>
+        <p class="text-muted mb-0">Review pending verifications, monitor donations, and govern the HopeConnect platform.</p>
+    </div>
+    <div>
+        <a href="/admin/" class="btn btn-outline-dark fw-bold" target="_blank">
+            <i class="bi bi-shield-lock me-1"></i>Open Django Admin
+        </a>
+    </div>
+</div>
+
+<!-- System Metrics -->
+<div class="row g-3 mb-4">
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted small text-uppercase">Total Users</span>
+            <h3 class="fw-bold text-dark mt-1 mb-0">{{ total_users }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted small text-uppercase">Donors</span>
+            <h3 class="fw-bold text-success mt-1 mb-0">{{ donor_count }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted small text-uppercase">NGOs</span>
+            <h3 class="fw-bold text-primary mt-1 mb-0">{{ ngo_count }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted small text-uppercase">Volunteers</span>
+            <h3 class="fw-bold text-warning mt-1 mb-0">{{ vol_count }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted small text-uppercase">Donations</span>
+            <h3 class="fw-bold text-info mt-1 mb-0">{{ total_donations }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted small text-uppercase">Completed</span>
+            <h3 class="fw-bold text-success mt-1 mb-0">{{ completed_donations }}</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Pending NGO Verifications -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-building-check text-primary fs-4"></i>
+            <h5 class="mb-0 fw-bold">NGO Verification Requests</h5>
+        </div>
+        <span class="badge bg-primary">{{ pending_ngos.count }} Pending</span>
+    </div>
+
+    <div class="card-body p-0">
+        {% if pending_ngos %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Organization Name</th>
+                        <th>User</th>
+                        <th>Reg Number</th>
+                        <th>Contact Person</th>
+                        <th>Document</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ngo in pending_ngos %}
+                    <tr>
+                        <td class="ps-4 fw-bold">{{ ngo.organization_name }}</td>
+                        <td>{{ ngo.user.username }} ({{ ngo.user.email }})</td>
+                        <td><code>{{ ngo.registration_number }}</code></td>
+                        <td>{{ ngo.contact_person }}</td>
+                        <td>
+                            {% if ngo.verification_document %}
+                            <a href="{{ ngo.verification_document.url }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-file-earmark-pdf"></i> View Doc
+                            </a>
+                            {% else %}
+                            <span class="text-muted small">No doc uploaded</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'verify_ngo_action' ngo.id 'approve' %}" class="btn btn-sm btn-success fw-bold me-1">
+                                <i class="bi bi-check-lg"></i> Approve
+                            </a>
+                            <a href="{% url 'verify_ngo_action' ngo.id 'reject' %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Reject this NGO application?');">
+                                <i class="bi bi-x-lg"></i> Reject
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-4 text-center text-muted">No pending NGO verification requests.</div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Pending Volunteer Verifications -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person-badge-fill text-warning fs-4"></i>
+            <h5 class="mb-0 fw-bold">Volunteer Verification Requests</h5>
+        </div>
+        <span class="badge bg-warning text-dark">{{ pending_volunteers.count }} Pending</span>
+    </div>
+
+    <div class="card-body p-0">
+        {% if pending_volunteers %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Volunteer Username</th>
+                        <th>Email & Phone</th>
+                        <th>Vehicle Mode</th>
+                        <th>ID Document</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vol in pending_volunteers %}
+                    <tr>
+                        <td class="ps-4 fw-bold">{{ vol.user.username }}</td>
+                        <td>{{ vol.user.email }} | {{ vol.user.profile.phone }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ vol.vehicle_type }}</span></td>
+                        <td>
+                            {% if vol.id_proof_document %}
+                            <a href="{{ vol.id_proof_document.url }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-file-earmark-person"></i> View ID
+                            </a>
+                            {% else %}
+                            <span class="text-muted small">No doc uploaded</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'verify_volunteer_action' vol.id 'approve' %}" class="btn btn-sm btn-success fw-bold me-1">
+                                <i class="bi bi-check-lg"></i> Approve
+                            </a>
+                            <a href="{% url 'verify_volunteer_action' vol.id 'reject' %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Reject this volunteer?');">
+                                <i class="bi bi-x-lg"></i> Reject
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-4 text-center text-muted">No pending volunteer verification requests.</div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- System-Wide Recent Donations -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white py-3 px-4 border-bottom">
+        <h5 class="mb-0 fw-bold">Recent Donations Across HopeConnect</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Title</th>
+                        <th>Donor</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th class="text-end pe-4">View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in recent_donations %}
+                    <tr>
+                        <td class="ps-4 fw-semibold">{{ item.title }}</td>
+                        <td>{{ item.donor.username }}</td>
+                        <td>{{ item.category.name }}</td>
+                        <td>{{ item.city }}</td>
+                        <td><span class="badge bg-secondary">{{ item.get_status_display }}</span></td>
+                        <td class="text-muted small">{{ item.created_at|date:"M d, Y" }}</td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'donation_detail' item.id %}" class="btn btn-sm btn-light border">Inspect</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

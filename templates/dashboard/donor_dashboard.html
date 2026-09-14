@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Donor Dashboard | HopeConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Welcome back, {{ request.user.first_name|default:request.user.username }}!</h2>
+        <p class="text-muted mb-0">Track your contributions, review NGO requests, and follow delivery status.</p>
+    </div>
+    <div>
+        <a href="{% url 'create_donation' %}" class="btn btn-success btn-lg px-4 shadow-sm fw-bold">
+            <i class="bi bi-plus-circle-fill me-2"></i>Create New Donation
+        </a>
+    </div>
+</div>
+
+<!-- Metrics Overview -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Total Donations</span>
+                    <h3 class="fw-bold text-success mb-0 mt-1">{{ total_donations }}</h3>
+                </div>
+                <div class="rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <i class="bi bi-gift fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Active & In-Progress</span>
+                    <h3 class="fw-bold text-primary mb-0 mt-1">{{ active_donations }}</h3>
+                </div>
+                <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <i class="bi bi-arrow-repeat fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Delivered & Completed</span>
+                    <h3 class="fw-bold text-info mb-0 mt-1">{{ completed_donations }}</h3>
+                </div>
+                <div class="rounded-circle bg-info-subtle text-info d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <i class="bi bi-check2-circle fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pending Requests Requiring Attention -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-inbox-fill text-warning fs-4"></i>
+            <h5 class="mb-0 fw-bold">Requests Awaiting Your Approval</h5>
+        </div>
+        <span class="badge bg-warning text-dark">{{ pending_requests.count }} Pending</span>
+    </div>
+
+    <div class="card-body p-0">
+        {% if pending_requests %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Donation</th>
+                        <th>Requesting NGO</th>
+                        <th>Beneficiaries</th>
+                        <th>Requested On</th>
+                        <th>Message</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in pending_requests %}
+                    <tr>
+                        <td class="ps-4 fw-bold">
+                            <a href="{% url 'donation_detail' req.donation.id %}" class="text-decoration-none text-dark">
+                                {{ req.donation.title }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="fw-semibold">{{ req.ngo.ngo_profile.organization_name|default:req.ngo.username }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">{{ req.beneficiaries_count }} people</span>
+                        </td>
+                        <td class="text-muted small">{{ req.requested_at|date:"M d, Y H:i" }}</td>
+                        <td class="small text-muted text-truncate" style="max-width: 250px;">{{ req.message }}</td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'review_requests' req.donation.id %}" class="btn btn-sm btn-outline-success fw-bold">
+                                Review & Approve
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-4 text-center text-muted">
+            <i class="bi bi-check2-all text-success fs-1 d-block mb-2"></i>
+            <p class="mb-0">No pending requests right now. When an NGO requests your donation, it will show up here.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- My Recent Donations -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+        <h5 class="mb-0 fw-bold">My Recent Donations</h5>
+        <a href="{% url 'my_donations' %}" class="btn btn-sm btn-outline-secondary">View All</a>
+    </div>
+
+    <div class="card-body p-0">
+        {% if recent_donations %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Item</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>City</th>
+                        <th>Status</th>
+                        <th>Posted</th>
+                        <th class="text-end pe-4">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for don in recent_donations %}
+                    <tr>
+                        <td class="ps-4 fw-semibold">{{ don.title }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ don.category.name }}</span></td>
+                        <td>{{ don.quantity }}</td>
+                        <td>{{ don.city }}</td>
+                        <td>
+                            {% if don.status == 'AVAILABLE' %}
+                            <span class="badge bg-success">Available</span>
+                            {% elif don.status == 'REQUESTED' %}
+                            <span class="badge bg-warning text-dark">Requested</span>
+                            {% elif don.status == 'APPROVED' %}
+                            <span class="badge bg-primary">Approved</span>
+                            {% elif don.status == 'PICKUP_SCHEDULED' or don.status == 'PICKED_UP' %}
+                            <span class="badge bg-info text-dark">{{ don.get_status_display }}</span>
+                            {% elif don.status == 'COMPLETED' or don.status == 'DELIVERED' %}
+                            <span class="badge bg-success-subtle text-success border border-success">Completed</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ don.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted small">{{ don.created_at|date:"M d, Y" }}</td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'donation_detail' don.id %}" class="btn btn-sm btn-light border">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-5 text-center text-muted">
+            <i class="bi bi-box2 text-muted fs-1 d-block mb-2"></i>
+            <p class="mb-3">You haven't posted any donations yet.</p>
+            <a href="{% url 'create_donation' %}" class="btn btn-success fw-bold">
+                <i class="bi bi-plus-circle me-1"></i> Make Your First Donation
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

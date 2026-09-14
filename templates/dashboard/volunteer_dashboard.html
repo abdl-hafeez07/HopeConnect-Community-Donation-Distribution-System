@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Volunteer Dashboard | HopeConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Volunteer Portal: {{ request.user.username }}</h2>
+        <p class="text-muted mb-0">
+            Vehicle: <strong>{{ vol_profile.vehicle_type|default:"Walking" }}</strong> &bull;
+            Status: <span class="badge bg-success">{{ vol_profile.availability_status|default:"Available" }}</span>
+            {% if vol_profile.is_approved %}
+            <span class="badge bg-primary ms-1"><i class="bi bi-patch-check-fill"></i> Verified Volunteer</span>
+            {% else %}
+            <span class="badge bg-warning text-dark ms-1"><i class="bi bi-hourglass"></i> Verification Pending</span>
+            {% endif %}
+        </p>
+    </div>
+    <div>
+        <a href="{% url 'available_pickups' %}" class="btn btn-success btn-lg px-4 shadow-sm fw-bold">
+            <i class="bi bi-box-seam me-2"></i>Find Available Pickups
+        </a>
+    </div>
+</div>
+
+<!-- Metrics Overview -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Active Tasks In Progress</span>
+                    <h3 class="fw-bold text-primary mb-0 mt-1">{{ active_deliveries.count }}</h3>
+                </div>
+                <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <i class="bi bi-truck fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Completed Deliveries</span>
+                    <h3 class="fw-bold text-success mb-0 mt-1">{{ completed_deliveries }}</h3>
+                </div>
+                <div class="rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <i class="bi bi-check-circle-fill fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- My Active Deliveries -->
+<div class="card border-0 shadow-sm rounded-4 mb-4 border-start border-success border-4">
+    <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+        <h5 class="mb-0 fw-bold text-success">
+            <i class="bi bi-geo-alt-fill me-2"></i>My Current Delivery Tasks
+        </h5>
+        <span class="badge bg-success">{{ active_deliveries.count }} Active</span>
+    </div>
+
+    <div class="card-body p-0">
+        {% if active_deliveries %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Donation</th>
+                        <th>Donor & Pickup Point</th>
+                        <th>NGO Destination</th>
+                        <th>Current Status</th>
+                        <th>Scheduled Time</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in active_deliveries %}
+                    <tr>
+                        <td class="ps-4 fw-bold">
+                            {{ item.donation.title }}
+                            <div class="small text-muted">{{ item.donation.quantity }}</div>
+                        </td>
+                        <td>
+                            <div><strong>{{ item.donation.donor.username }}</strong></div>
+                            <div class="small text-muted">{{ item.donation.pickup_address }}, {{ item.donation.city }}</div>
+                        </td>
+                        <td>
+                            <div><strong>{{ item.request.ngo.ngo_profile.organization_name|default:item.request.ngo.username }}</strong></div>
+                            <div class="small text-muted">{{ item.request.ngo.profile.address|default:item.request.ngo.profile.city }}</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-info text-dark">{{ item.get_status_display }}</span>
+                        </td>
+                        <td class="text-muted small">
+                            {{ item.scheduled_pickup_time|default:"Not scheduled yet" }}
+                        </td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'update_delivery' item.id %}" class="btn btn-sm btn-success fw-bold">
+                                Update Status / Proof &rarr;
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-4 text-center text-muted">
+            <i class="bi bi-bicycle text-muted fs-1 d-block mb-2"></i>
+            <p class="mb-0">You currently have no active deliveries assigned. Browse available pickups below to claim one!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Pickups Ready for Volunteers -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+        <h5 class="mb-0 fw-bold">Pickups Waiting for a Volunteer</h5>
+        <a href="{% url 'available_pickups' %}" class="btn btn-sm btn-outline-secondary">View All</a>
+    </div>
+
+    <div class="card-body p-0">
+        {% if unassigned_deliveries %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Item</th>
+                        <th>Category</th>
+                        <th>Donor Location</th>
+                        <th>Destination NGO</th>
+                        <th>Preferred Time</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in unassigned_deliveries %}
+                    <tr>
+                        <td class="ps-4 fw-semibold">{{ item.donation.title }} ({{ item.donation.quantity }})</td>
+                        <td><span class="badge bg-light text-dark border">{{ item.donation.category.name }}</span></td>
+                        <td>{{ item.donation.city }}</td>
+                        <td>{{ item.request.ngo.ngo_profile.organization_name|default:item.request.ngo.username }}</td>
+                        <td class="text-muted small">{{ item.donation.preferred_pickup_time|default:"Flexible" }}</td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'claim_pickup' item.id %}" class="btn btn-sm btn-outline-success fw-bold">
+                                <i class="bi bi-hand-thumbs-up me-1"></i>Claim Pickup
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-4 text-center text-muted">No unassigned pickups available right now. Great job, community!</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

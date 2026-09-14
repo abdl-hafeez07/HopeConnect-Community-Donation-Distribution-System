@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications | HopeConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-lg-8 col-md-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-1">Notifications & Activity Alerts</h3>
+                <p class="text-muted mb-0">Stay informed about donation requests, volunteer assignments, and delivery milestones.</p>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-body p-0">
+                {% if notifications %}
+                <ul class="list-group list-group-flush">
+                    {% for notif in notifications %}
+                    <li class="list-group-item p-4 {% if not notif.is_read %}bg-light{% endif %}">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="rounded-circle bg-success-subtle text-success p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                <i class="bi bi-bell-fill fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="fw-bold mb-1">{{ notif.title }}</h6>
+                                    <span class="small text-muted">{{ notif.created_at|timesince }} ago</span>
+                                </div>
+                                <p class="text-secondary small mb-2">{{ notif.message }}</p>
+                                {% if notif.link %}
+                                <a href="{{ notif.link }}" class="btn btn-sm btn-outline-success">
+                                    View Details &rarr;
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="p-5 text-center text-muted">
+                    <i class="bi bi-bell-slash fs-1 d-block mb-2"></i>
+                    <p class="mb-0">No notifications yet. When updates occur, you'll receive them right here.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

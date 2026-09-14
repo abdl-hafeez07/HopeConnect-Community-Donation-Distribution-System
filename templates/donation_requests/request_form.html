@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Donation: {{ donation.title }} | HopeConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-lg-8 col-md-10">
+        <!-- Donation Summary Banner -->
+        <div class="card border-0 bg-success-subtle rounded-4 p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <span class="badge bg-success mb-2">{{ donation.category.name }}</span>
+                    <h4 class="fw-bold mb-1">{{ donation.title }}</h4>
+                    <p class="mb-0 text-muted"><strong>Quantity:</strong> {{ donation.quantity }} &bull; <strong>City:</strong> {{ donation.city }}</p>
+                </div>
+                <a href="{% url 'donation_detail' donation.id %}" class="btn btn-sm btn-outline-success">View Details</a>
+            </div>
+        </div>
+
+        <!-- Request Submission Form -->
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white py-3 px-4 border-bottom">
+                <h5 class="mb-0 fw-bold text-success">
+                    <i class="bi bi-send-fill me-2"></i>Submit Donation Request
+                </h5>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                <p class="text-muted mb-4">
+                    Please outline how your organization plans to distribute these items so the donor can make an informed decision.
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Estimated Number of Beneficiaries <span class="text-danger">*</span></label>
+                        {{ form.beneficiaries_count }}
+                        <div class="form-text">Approximate count of individuals, children, or families who will benefit.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Distribution Plan & Purpose <span class="text-danger">*</span></label>
+                        {{ form.message }}
+                        <div class="form-text">Describe your community center, shelter, or target locality where items will be delivered.</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <a href="{% url 'donation_detail' donation.id %}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        <button type="submit" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">
+                            <i class="bi bi-check-circle me-1"></i> Send Request to Donor
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

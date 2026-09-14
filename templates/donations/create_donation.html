@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}Post a Donation | HopeConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-lg-9 col-md-11">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-success text-white py-3 px-4 rounded-top-4">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-gift-fill fs-3"></i>
+                    <div>
+                        <h4 class="mb-0 fw-bold">List a Donation</h4>
+                        <small class="text-white-50">Offer food, clothes, books, or essentials to verified local NGOs</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                <form method="post" enctype="multipart/form-data" id="donationForm">
+                    {% csrf_token %}
+
+                    {% if form.errors or food_form.errors %}
+                    <div class="alert alert-danger">
+                        <p class="fw-bold mb-1">Please correct the errors below:</p>
+                        <ul class="mb-0 small">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for field in food_form %}
+                                {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <!-- General Details -->
+                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3">
+                        <i class="bi bi-info-circle me-1"></i> General Details
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Donation Title <span class="text-danger">*</span></label>
+                            {{ form.title }}
+                            <div class="form-text">e.g. 50 Fresh Meal Packets / 15 Winter Blankets</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
+                            {{ form.category }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Quantity / Amount <span class="text-danger">*</span></label>
+                            {{ form.quantity }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Photo of Item(s)</label>
+                            {{ form.image }}
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Description & Packaging <span class="text-danger">*</span></label>
+                            {{ form.description }}
+                        </div>
+                    </div>
+
+                    <!-- Food Safety Section (Dynamic) -->
+                    <div id="foodSafetySection" class="p-4 rounded-4 border bg-success-subtle mb-4" style="display: none;">
+                        <h5 class="fw-bold text-success mb-2">
+                            <i class="bi bi-shield-check me-2"></i>Food Details & Safety Information
+                        </h5>
+                        <p class="small text-muted mb-3">
+                            For quality assurance and recipient health, please provide food type, preparation time, and strict consumption deadline.
+                        </p>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Food Type <span class="text-danger">*</span></label>
+                                {{ food_form.food_type }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Dietary Type <span class="text-danger">*</span></label>
+                                {{ food_form.dietary_type }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Preparation / Cooked Time</label>
+                                {{ food_form.preparation_time }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Expiry / Consumption Deadline <span class="text-danger">*</span></label>
+                                {{ food_form.expiry_time }}
+                                <div class="form-text">Must be a future date and time.</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Storage & Handling Instructions</label>
+                                {{ food_form.storage_instructions }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pickup Location & Time -->
+                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3">
+                        <i class="bi bi-geo-alt me-1"></i> Pickup Location & Schedule
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">City / District <span class="text-danger">*</span></label>
+                            {{ form.city }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nearby Landmark</label>
+                            {{ form.pickup_landmark }}
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Pickup Address <span class="text-danger">*</span></label>
+                            {{ form.pickup_address }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Preferred Pickup Date & Time</label>
+                            {{ form.preferred_pickup_time }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                        <a href="{% url 'dashboard_home' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        <button type="submit" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">
+                            <i class="bi bi-check2-circle me-1"></i> Publish Donation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categorySelect = document.getElementById('id_category_select');
+        const foodSection = document.getElementById('foodSafetySection');
+        const foodCategoryIds = {{ food_category_ids|safe }};
+
+        function checkFoodCategory() {
+            const selectedVal = parseInt(categorySelect.value);
+            if (foodCategoryIds.includes(selectedVal)) {
+                foodSection.style.display = 'block';
+            } else {
+                foodSection.style.display = 'none';
+            }
+        }
+
+        categorySelect.addEventListener('change', checkFoodCategory);
+        checkFoodCategory();
+    });
+</script>
+{% endblock %}

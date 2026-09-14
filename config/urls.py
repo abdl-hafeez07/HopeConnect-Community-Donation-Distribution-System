@@ -21,6 +21,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
+    path('dashboard/', include('dashboard.urls')),
+    path('donations/', include('donations.urls')),
+    path('requests/', include('donation_requests.urls')),
     path('', include('core.urls')),
 ]
 
