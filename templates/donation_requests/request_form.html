@@ -34,15 +34,9 @@
                     {% csrf_token %}
 
                     <div class="mb-4">
-                        <label class="form-label fw-bold">Estimated Number of Beneficiaries <span class="text-danger">*</span></label>
-                        {{ form.beneficiaries_count }}
-                        <div class="form-text">Approximate count of individuals, children, or families who will benefit.</div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Distribution Plan & Purpose <span class="text-danger">*</span></label>
+                        <label class="form-label fw-bold">Message & Distribution Plan</label>
                         {{ form.message }}
-                        <div class="form-text">Describe your community center, shelter, or target locality where items will be delivered.</div>
+                        <div class="form-text">Explain how your organization will distribute these items, who will benefit, and your pickup capability.</div>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center pt-3 border-top">

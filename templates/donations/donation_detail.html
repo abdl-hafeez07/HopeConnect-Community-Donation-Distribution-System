@@ -22,9 +22,11 @@
 
                 <div class="card-body p-4 p-md-5">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                        {% if donation.category %}
                         <span class="badge bg-success-subtle text-success border border-success px-3 py-2 fs-6">
                             {{ donation.category.name }}
                         </span>
+                        {% endif %}
 
                         <!-- Status Badge -->
                         {% if donation.status == 'AVAILABLE' %}
@@ -33,10 +35,16 @@
                         <span class="badge bg-warning text-dark fs-6 px-3 py-2"><i class="bi bi-hourglass-split me-1"></i>Requested by NGO</span>
                         {% elif donation.status == 'APPROVED' %}
                         <span class="badge bg-primary fs-6 px-3 py-2"><i class="bi bi-hand-thumbs-up me-1"></i>Approved for NGO</span>
-                        {% elif donation.status == 'PICKUP_SCHEDULED' or donation.status == 'PICKED_UP' %}
-                        <span class="badge bg-info text-dark fs-6 px-3 py-2"><i class="bi bi-truck me-1"></i>{{ donation.get_status_display }}</span>
-                        {% elif donation.status == 'COMPLETED' or donation.status == 'DELIVERED' %}
-                        <span class="badge bg-success fs-6 px-3 py-2"><i class="bi bi-patch-check-fill me-1"></i>Completed & Delivered</span>
+                        {% elif donation.status == 'COLLECTED' %}
+                        <span class="badge bg-info text-dark fs-6 px-3 py-2"><i class="bi bi-box-seam me-1"></i>Collected by NGO</span>
+                        {% elif donation.status == 'COMPLETED' %}
+                        <span class="badge bg-success fs-6 px-3 py-2"><i class="bi bi-patch-check-fill me-1"></i>Completed</span>
+                        {% elif donation.status == 'REJECTED' %}
+                        <span class="badge bg-danger fs-6 px-3 py-2"><i class="bi bi-x-circle me-1"></i>Rejected</span>
+                        {% elif donation.status == 'CANCELLED' %}
+                        <span class="badge bg-secondary fs-6 px-3 py-2"><i class="bi bi-slash-circle me-1"></i>Cancelled</span>
+                        {% elif donation.status == 'EXPIRED' %}
+                        <span class="badge bg-dark fs-6 px-3 py-2"><i class="bi bi-clock-history me-1"></i>Expired</span>
                         {% else %}
                         <span class="badge bg-secondary fs-6 px-3 py-2">{{ donation.get_status_display }}</span>
                         {% endif %}
@@ -45,57 +53,33 @@
                     <h2 class="fw-bold mb-2">{{ donation.title }}</h2>
                     <h5 class="text-success fw-bold mb-3"><i class="bi bi-box-seam me-1"></i>Quantity: {{ donation.quantity }}</h5>
 
+                    {% if donation.description %}
                     <h6 class="fw-bold text-muted text-uppercase small mt-4">Description</h6>
                     <p class="lead fs-6 text-secondary mb-4">{{ donation.description }}</p>
+                    {% endif %}
 
-                    <!-- Food Safety Info (If Food) -->
-                    {% if food_detail %}
-                    <div class="card border-0 bg-light rounded-4 p-4 mb-4 border-start border-success border-4">
-                        <h5 class="fw-bold text-success mb-3">
-                            <i class="bi bi-shield-check me-2"></i>Food Safety & Expiry Information
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-sm-6">
-                                <span class="text-muted small d-block">Food Type</span>
-                                <strong class="text-dark">{{ food_detail.food_type }}</strong>
+                    <!-- Expiry Date (if perishable) -->
+                    {% if donation.expiry_date %}
+                    <div class="card border-0 bg-warning-subtle rounded-4 p-3 mb-4">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history text-warning-emphasis fs-4"></i>
+                            <div>
+                                <strong class="text-warning-emphasis">Safe Consumption / Expiry Deadline:</strong>
+                                <span class="ms-1 text-dark fw-bold">{{ donation.expiry_date|date:"M d, Y H:i" }}</span>
                             </div>
-                            <div class="col-sm-6">
-                                <span class="text-muted small d-block">Dietary Type</span>
-                                <span class="badge {% if food_detail.dietary_type == 'Vegetarian' %}bg-success{% else %}bg-warning text-dark{% endif %}">
-                                    {{ food_detail.dietary_type }}
-                                </span>
-                            </div>
-                            <div class="col-sm-6">
-                                <span class="text-muted small d-block">Prepared / Cooked On</span>
-                                <strong>{{ food_detail.preparation_time|default:"Not specified" }}</strong>
-                            </div>
-                            <div class="col-sm-6">
-                                <span class="text-muted small d-block">Safe Consumption Deadline (Expiry)</span>
-                                <strong class="{% if food_detail.is_expired %}text-danger{% else %}text-success{% endif %}">
-                                    <i class="bi bi-clock-history me-1"></i>{{ food_detail.expiry_time|date:"Y-m-d H:i" }}
-                                    {% if food_detail.is_expired %}(EXPIRED){% endif %}
-                                </strong>
-                            </div>
-                            {% if food_detail.storage_instructions %}
-                            <div class="col-12">
-                                <span class="text-muted small d-block">Storage Instructions</span>
-                                <span>{{ food_detail.storage_instructions }}</span>
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
                     {% endif %}
 
                     <!-- Pickup Location -->
                     <div class="card border-0 bg-light rounded-4 p-4 mb-4">
-                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Pickup Location</h5>
-                        <p class="mb-1"><strong>City:</strong> {{ donation.city }}</p>
+                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Pickup Location & Schedule</h5>
                         <p class="mb-1"><strong>Address:</strong> {{ donation.pickup_address }}</p>
-                        {% if donation.pickup_landmark %}
-                        <p class="mb-1"><strong>Landmark:</strong> {{ donation.pickup_landmark }}</p>
+                        {% if donation.pickup_date %}
+                        <p class="mb-1"><strong>Pickup Date:</strong> {{ donation.pickup_date|date:"M d, Y" }}</p>
                         {% endif %}
-                        {% if donation.preferred_pickup_time %}
-                        <p class="mb-0"><strong>Preferred Time:</strong> {{ donation.preferred_pickup_time|date:"M d, Y H:i" }}</p>
+                        {% if donation.pickup_time %}
+                        <p class="mb-0"><strong>Pickup Time:</strong> {{ donation.pickup_time|time:"H:i" }}</p>
                         {% endif %}
                     </div>
 
@@ -110,28 +94,54 @@
                                 <i class="bi bi-x-circle me-1"></i>Cancel Donation
                             </a>
                             {% endif %}
-                        {% elif user_role == 'NGO' %}
+                        {% elif is_ngo or user_role == 'NGO' %}
                             {% if donation.status == 'AVAILABLE' %}
                                 {% if user_request %}
                                 <button class="btn btn-secondary px-4 fw-bold" disabled>
                                     <i class="bi bi-check2 me-1"></i>Request Submitted (Pending Review)
                                 </button>
-                                {% else %}
-                                <a href="{% url 'request_donation' donation.id %}" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">
-                                    <i class="bi bi-send-fill me-1"></i>Request This Donation
+                                {% elif is_verified_ngo %}
+                                <a href="{% url 'submit_request' donation.id %}" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">
+                                    <i class="bi bi-send-fill me-1"></i>Request Donation
                                 </a>
+                                {% else %}
+                                <div class="alert alert-warning d-flex align-items-center mb-0 py-2 px-3 rounded-3" role="alert">
+                                    <i class="bi bi-shield-exclamation fs-5 me-2"></i>
+                                    <span class="fw-semibold">Admin verification required to request items.</span>
+                                </div>
                                 {% endif %}
-                            {% else %}
-                                {% if user_request and user_request.status == 'APPROVED' and donation.status != 'COMPLETED' %}
-                                <form method="post" action="{% url 'confirm_receipt' user_request.id %}" class="d-inline">
+                            {% elif user_request %}
+                                {% if user_request.status == 'APPROVED' %}
+                                <div class="d-flex flex-wrap gap-2">
+                                    <form method="post" action="{% url 'mark_collected' user_request.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-info px-4 fw-bold text-dark">
+                                            <i class="bi bi-box-seam me-1"></i>Mark Collected
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'mark_completed' user_request.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success px-4 fw-bold" onclick="return confirm('Confirm receipt of these items?');">
+                                            <i class="bi bi-check2-circle me-1"></i>Confirm Completed
+                                        </button>
+                                    </form>
+                                </div>
+                                {% elif user_request.status == 'COLLECTED' %}
+                                <form method="post" action="{% url 'mark_completed' user_request.id %}" class="d-inline">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-success px-4 fw-bold" onclick="return confirm('Confirm receipt of these items?');">
-                                        <i class="bi bi-check2-circle me-1"></i>Confirm Receipt of Donation
+                                    <button type="submit" class="btn btn-success px-4 fw-bold" onclick="return confirm('Confirm completion of donation?');">
+                                        <i class="bi bi-check2-circle me-1"></i>Confirm Completed
                                     </button>
                                 </form>
+                                {% elif user_request.status == 'COMPLETED' %}
+                                <button class="btn btn-success px-4" disabled>
+                                    <i class="bi bi-patch-check-fill me-1"></i>Donation Completed
+                                </button>
                                 {% else %}
-                                <button class="btn btn-secondary px-4" disabled>Not Available for New Requests</button>
+                                <button class="btn btn-secondary px-4" disabled>{{ user_request.get_status_display }}</button>
                                 {% endif %}
+                            {% else %}
+                                <button class="btn btn-secondary px-4" disabled>Not Available for New Requests</button>
                             {% endif %}
                         {% elif not user.is_authenticated %}
                             <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-success px-4 fw-bold">
@@ -141,32 +151,9 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Audit Status History Timeline -->
-            <div class="card border-0 shadow-sm rounded-4 p-4">
-                <h5 class="fw-bold mb-3"><i class="bi bi-clock-history text-primary me-2"></i>Donation Lifecycle Audit History</h5>
-                {% if status_history %}
-                <ul class="list-group list-group-flush">
-                    {% for h in status_history %}
-                    <li class="list-group-item d-flex justify-content-between align-items-start px-0 py-3">
-                        <div class="ms-2 me-auto">
-                            <div class="fw-bold">
-                                <span class="badge bg-secondary me-2">{{ h.status }}</span>
-                                {% if h.changed_by %}Updated by {{ h.changed_by.username }}{% endif %}
-                            </div>
-                            <small class="text-muted">{{ h.remarks|default:"Status updated" }}</small>
-                        </div>
-                        <span class="badge bg-light text-muted border">{{ h.timestamp|date:"M d, Y H:i" }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p class="text-muted mb-0">No history events recorded yet.</p>
-                {% endif %}
-            </div>
         </div>
 
-        <!-- Sidebar: Donor & Delivery details -->
+        <!-- Sidebar: Donor details -->
         <div class="col-lg-4">
             <!-- Donor Card -->
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
@@ -178,19 +165,27 @@
                     <div>
                         <h6 class="fw-bold mb-0">{{ donation.donor.username }}</h6>
                         <small class="text-muted">Community Donor</small>
+                        {% if donation.city %}
                         <div class="small text-muted"><i class="bi bi-geo-alt"></i> {{ donation.city }}</div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
-            <!-- Handover Details (if approved) -->
-            {% if donation.status == 'APPROVED' or donation.status == 'COMPLETED' %}
+            <!-- Direct Handover Details (if approved) -->
+            {% if donation.status == 'APPROVED' or donation.status == 'COLLECTED' or donation.status == 'COMPLETED' %}
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 border-start border-success border-4">
                 <h6 class="fw-bold text-success text-uppercase small mb-3">
-                    <i class="bi bi-box-seam me-1"></i>Pickup & Handover Details
+                    <i class="bi bi-box-seam me-1"></i>Direct Handover Details
                 </h6>
                 <p class="mb-2"><strong>Status:</strong> <span class="badge bg-success text-white">{{ donation.get_status_display }}</span></p>
-                <p class="mb-2"><strong>Pickup Address:</strong> {{ donation.pickup_address }}, {{ donation.city }}</p>
+                <p class="mb-2"><strong>Pickup Address:</strong> {{ donation.pickup_address }}</p>
+                {% if donation.pickup_date %}
+                <p class="mb-2"><strong>Pickup Date:</strong> {{ donation.pickup_date|date:"M d, Y" }}</p>
+                {% endif %}
+                {% if donation.pickup_time %}
+                <p class="mb-2"><strong>Pickup Time:</strong> {{ donation.pickup_time|time:"H:i" }}</p>
+                {% endif %}
                 <p class="mb-0"><strong>Donor Contact:</strong> {{ donation.donor.profile.phone|default:donation.donor.email }}</p>
             </div>
             {% endif %}

@@ -2,58 +2,76 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.db import transaction
 
 from .models import DonationRequest
 from .forms import DonationRequestForm
 from donations.models import Donation
-from accounts.decorators import verified_ngo_required, donor_required, ngo_required
+from accounts.decorators import donor_required, ngo_required
 from core.utils import send_notification
 
 
 @login_required
-@verified_ngo_required
-def request_donation(request, donation_id):
+def submit_request(request, donation_id):
     """
     Allows a verified NGO to request an available donation.
+    - Restrict to verified NGOs (role == 'NGO' and is_verified == True).
+    - Prevent duplicate active requests by the same NGO on the same donation.
+    - Set DonationRequest.status = 'PENDING' and update Donation.status = 'REQUESTED'.
     """
+    profile = getattr(request.user, 'profile', None)
+    user_role = getattr(profile, 'role', '').upper() if profile else ''
+
+    if user_role != 'NGO':
+        messages.error(request, "Only registered NGOs can submit donation requests.")
+        return redirect('donation_detail', pk=donation_id)
+
+    ngo_profile = getattr(request.user, 'ngo_profile', None)
+    is_verified = bool(getattr(profile, 'is_verified', False) or (ngo_profile and ngo_profile.is_approved))
+    if not is_verified:
+        messages.warning(request, "Admin verification required to request items.")
+        return redirect('donation_detail', pk=donation_id)
+
     donation = get_object_or_404(Donation, pk=donation_id)
 
-    if donation.status != Donation.STATUS_AVAILABLE:
+    if donation.status not in ['AVAILABLE', 'REQUESTED']:
         messages.error(request, "This donation is no longer available for requests.")
         return redirect('donation_detail', pk=donation.id)
 
-    existing_request = DonationRequest.objects.filter(donation=donation, ngo=request.user).first()
+    # Prevent duplicate active requests by the same NGO
+    existing_request = DonationRequest.objects.filter(
+        donation=donation,
+        ngo=request.user,
+        status__in=['PENDING', 'APPROVED', 'COLLECTED']
+    ).first()
     if existing_request:
-        messages.info(request, "Your organization has already submitted a request for this donation.")
+        messages.info(request, "Your organization already has an active request for this donation.")
         return redirect('donation_detail', pk=donation.id)
 
     if request.method == 'POST':
         form = DonationRequestForm(request.POST)
         if form.is_valid():
-            req_obj = form.save(commit=False)
-            req_obj.donation = donation
-            req_obj.ngo = request.user
-            req_obj.status = DonationRequest.STATUS_PENDING
-            req_obj.save()
+            with transaction.atomic():
+                req_obj = form.save(commit=False)
+                req_obj.donation = donation
+                req_obj.ngo = request.user
+                req_obj.status = 'PENDING'
+                req_obj.save()
 
-            # Mark donation as REQUESTED
-            donation.change_status(
-                Donation.STATUS_REQUESTED,
-                user=request.user,
-                remarks=f"Request submitted by NGO: {request.user.username}"
-            )
+                donation.status = 'REQUESTED'
+                donation.save(update_fields=['status', 'updated_at'])
 
             # Notify donor
-            ngo_name = request.user.ngo_profile.organization_name if hasattr(request.user, 'ngo_profile') else request.user.username
+            ngo_name = getattr(ngo_profile, 'organization_name', request.user.username)
             send_notification(
                 donation.donor,
                 f"New Request from {ngo_name}",
-                f"{ngo_name} requested your donation '{donation.title}' for {req_obj.beneficiaries_count} beneficiaries.",
+                f"{ngo_name} requested your donation '{donation.title}'.",
                 "REQUEST_RECEIVED",
                 link=f"/requests/review/{donation.id}/"
             )
 
-            messages.success(request, f"Your request for '{donation.title}' has been sent to the donor for review.")
+            messages.success(request, f"Your request for '{donation.title}' has been submitted to the donor.")
             return redirect('donation_detail', pk=donation.id)
     else:
         form = DonationRequestForm()
@@ -65,14 +83,17 @@ def request_donation(request, donation_id):
     return render(request, 'donation_requests/request_form.html', context)
 
 
+# Alias for backward compatibility
+request_donation = submit_request
+
+
 @login_required
-@donor_required
 def donor_review_requests(request, donation_id):
     """
     Donor reviews all incoming NGO applications for a specific donation.
     """
     donation = get_object_or_404(Donation, pk=donation_id, donor=request.user)
-    requests = donation.requests.select_related('ngo', 'ngo__profile', 'ngo__ngo_profile').order_by('-requested_at')
+    requests = donation.requests.select_related('ngo', 'ngo__profile', 'ngo__ngo_profile').order_by('-created_at')
 
     context = {
         'donation': donation,
@@ -82,96 +103,170 @@ def donor_review_requests(request, donation_id):
 
 
 @login_required
-@donor_required
-def approve_request(request, request_id):
+def manage_request(request, request_id, action):
     """
-    Donor approves an NGO's request.
-    This triggers:
-    1. Request marked as APPROVED
-    2. Other pending requests rejected
-    3. Donation status changed to APPROVED
-    4. Notification sent to approved NGO.
+    Manage an NGO request on a donation.
+    - Restricted to the Donor who owns the item.
+    - If action == 'approve':
+        * Set DonationRequest.status = 'APPROVED'.
+        * Set Donation.status = 'APPROVED'.
+        * Automatically reject any other pending requests for the same item.
+    - If action == 'reject':
+        * Set DonationRequest.status = 'REJECTED'.
+        * If no other pending requests exist, revert Donation.status = 'AVAILABLE'.
     """
-    req_obj = get_object_or_404(DonationRequest, pk=request_id, donation__donor=request.user)
+    req_obj = get_object_or_404(
+        DonationRequest.objects.select_related('donation', 'ngo'),
+        pk=request_id
+    )
 
-    if request.method == 'POST':
-        notes = request.POST.get('donor_notes', '')
-        req_obj.approve(donor=request.user, notes=notes)
+    if req_obj.donation.donor != request.user:
+        messages.error(request, "Access restricted. You do not own this donation.")
+        return redirect('dashboard:donor_dashboard')
 
-        # Notify approved NGO
+    action = action.lower()
+
+    if action == 'approve':
+        with transaction.atomic():
+            req_obj.status = 'APPROVED'
+            req_obj.save(update_fields=['status', 'updated_at'])
+
+            req_obj.donation.status = 'APPROVED'
+            req_obj.donation.save(update_fields=['status', 'updated_at'])
+
+            # Automatically reject competing pending requests on the same item
+            req_obj.donation.requests.filter(
+                status='PENDING'
+            ).exclude(id=req_obj.id).update(status='REJECTED')
+
         send_notification(
             req_obj.ngo,
             f"Request Approved for '{req_obj.donation.title}'!",
-            f"The donor approved your request. You can now coordinate pickup directly with the donor.",
+            "The donor approved your request. Coordinate pickup directly with the donor.",
             "REQUEST_APPROVED",
             link=f"/donations/{req_obj.donation.id}/"
         )
+        messages.success(request, f"You approved the request from {req_obj.ngo.username}.")
 
-        messages.success(request, f"You approved the request from {req_obj.ngo.username}. The donation is now awarded to this NGO.")
-        return redirect('review_requests', donation_id=req_obj.donation.id)
+    elif action == 'reject':
+        with transaction.atomic():
+            req_obj.status = 'REJECTED'
+            req_obj.save(update_fields=['status', 'updated_at'])
 
-    return redirect('review_requests', donation_id=req_obj.donation.id)
-
-
-@login_required
-@donor_required
-def reject_request(request, request_id):
-    """
-    Donor rejects an individual request.
-    """
-    req_obj = get_object_or_404(DonationRequest, pk=request_id, donation__donor=request.user)
-
-    if request.method == 'POST':
-        notes = request.POST.get('donor_notes', 'Request was declined by donor.')
-        req_obj.reject(donor=request.user, notes=notes)
+            # If no other pending requests exist, revert Donation to AVAILABLE
+            pending_count = req_obj.donation.requests.filter(status='PENDING').count()
+            if pending_count == 0 and req_obj.donation.status == 'REQUESTED':
+                req_obj.donation.status = 'AVAILABLE'
+                req_obj.donation.save(update_fields=['status', 'updated_at'])
 
         send_notification(
             req_obj.ngo,
             f"Request Declined for '{req_obj.donation.title}'",
-            f"The donor was unable to accept your request at this time. Notes: {notes}",
+            "The donor was unable to accept your request at this time.",
             "REQUEST_REJECTED",
             link=f"/donations/{req_obj.donation.id}/"
         )
-
         messages.info(request, f"Request from {req_obj.ngo.username} was rejected.")
+
+    else:
+        messages.error(request, f"Unknown action '{action}'.")
 
     return redirect('review_requests', donation_id=req_obj.donation.id)
 
 
+def approve_request(request, request_id):
+    """Alias delegating to manage_request with action='approve'."""
+    return manage_request(request, request_id, action='approve')
+
+
+def reject_request(request, request_id):
+    """Alias delegating to manage_request with action='reject'."""
+    return manage_request(request, request_id, action='reject')
+
+
 @login_required
-@ngo_required
-def confirm_receipt(request, request_id):
+def mark_collected(request, request_id):
     """
-    Allows the recipient NGO to confirm receipt of the approved donation,
-    finalizing the distribution as COMPLETED.
+    Restrict to the assigned NGO.
+    Updates DonationRequest.status = 'COLLECTED' and Donation.status = 'COLLECTED'.
+    """
+    req_obj = get_object_or_404(
+        DonationRequest.objects.select_related('donation', 'ngo'),
+        pk=request_id
+    )
+
+    if req_obj.ngo != request.user:
+        messages.error(request, "Access restricted. Only the assigned NGO can mark this as collected.")
+        return redirect('dashboard:ngo_dashboard')
+
+    if req_obj.status != 'APPROVED':
+        messages.error(request, "Only approved requests can be marked as collected.")
+        return redirect('donation_detail', pk=req_obj.donation.id)
+
+    with transaction.atomic():
+        req_obj.status = 'COLLECTED'
+        req_obj.save(update_fields=['status', 'updated_at'])
+
+        req_obj.donation.status = 'COLLECTED'
+        req_obj.donation.save(update_fields=['status', 'updated_at'])
+
+    send_notification(
+        req_obj.donation.donor,
+        f"Donation Collected: {req_obj.donation.title}",
+        f"{req_obj.ngo.username} has marked your donation as collected.",
+        "STATUS_UPDATE",
+        link=f"/donations/{req_obj.donation.id}/"
+    )
+
+    messages.success(request, f"Donation '{req_obj.donation.title}' marked as collected.")
+    return redirect('dashboard:ngo_dashboard')
+
+
+@login_required
+def mark_completed(request, request_id):
+    """
+    Triggered by either the NGO confirming final receipt or Donor confirming handoff.
+    Updates DonationRequest.status = 'COMPLETED' and Donation.status = 'COMPLETED'.
     """
     req_obj = get_object_or_404(
         DonationRequest.objects.select_related('donation', 'donation__donor', 'ngo'),
-        pk=request_id,
-        ngo=request.user,
-        status=DonationRequest.STATUS_APPROVED
+        pk=request_id
     )
 
-    if request.method == 'POST':
-        notes = request.POST.get('receipt_notes', 'Items received in good condition.')
+    is_donor = (req_obj.donation.donor == request.user)
+    is_assigned_ngo = (req_obj.ngo == request.user)
 
-        # Update donation to COMPLETED
-        req_obj.donation.change_status(
-            Donation.STATUS_COMPLETED,
-            user=request.user,
-            remarks=f"Receipt confirmed by NGO: {request.user.username}. Notes: {notes}"
-        )
+    if not (is_donor or is_assigned_ngo):
+        messages.error(request, "Access restricted. Only the donor or assigned NGO can mark this as completed.")
+        return redirect('dashboard:dashboard_home')
 
-        # Notify donor
-        send_notification(
-            req_obj.donation.donor,
-            "Receipt Confirmed by NGO!",
-            f"{request.user.username} confirmed receipt of '{req_obj.donation.title}'. Distribution is now Completed!",
-            "COMPLETED",
-            link=f"/donations/{req_obj.donation.id}/"
-        )
+    if req_obj.status not in ['APPROVED', 'COLLECTED']:
+        messages.error(request, "This donation cannot be completed in its current state.")
+        return redirect('donation_detail', pk=req_obj.donation.id)
 
-        messages.success(request, f"You have confirmed receipt of '{req_obj.donation.title}'. Distribution is now marked as Completed!")
+    with transaction.atomic():
+        req_obj.status = 'COMPLETED'
+        req_obj.save(update_fields=['status', 'updated_at'])
 
+        req_obj.donation.status = 'COMPLETED'
+        req_obj.donation.save(update_fields=['status', 'updated_at'])
+
+    # Notify counterparty
+    counterparty = req_obj.donation.donor if is_assigned_ngo else req_obj.ngo
+    send_notification(
+        counterparty,
+        f"Donation Completed: {req_obj.donation.title}",
+        f"The donation '{req_obj.donation.title}' has been successfully completed!",
+        "COMPLETED",
+        link=f"/donations/{req_obj.donation.id}/"
+    )
+
+    messages.success(request, f"Donation '{req_obj.donation.title}' is now marked as completed!")
+
+    if is_donor:
+        return redirect('my_donations')
     return redirect('dashboard:ngo_dashboard')
 
+
+# Alias for backward compatibility
+confirm_receipt = mark_completed

@@ -6,7 +6,7 @@ from donations.models import Donation, Category
 
 def home(request):
     recent_donations = Donation.objects.filter(status='AVAILABLE').select_related('category', 'donor')[:6]
-    categories = Category.objects.filter(is_active=True)
+    categories = Category.objects.all()
     return render(request, 'index.html', {'recent_donations': recent_donations, 'categories': categories})
 
 

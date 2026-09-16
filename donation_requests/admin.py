@@ -7,14 +7,13 @@ class DonationRequestAdmin(admin.ModelAdmin):
     list_display = (
         'donation',
         'ngo',
-        'beneficiaries_count',
         'status',
-        'requested_at',
-        'responded_at',
+        'created_at',
+        'updated_at',
     )
     list_filter = (
         'status',
-        'requested_at',
+        'created_at',
     )
     search_fields = (
         'donation__title',

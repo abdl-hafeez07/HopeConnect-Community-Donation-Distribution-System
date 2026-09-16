@@ -5,18 +5,23 @@ from django.utils import timezone
 
 class DonationRequest(models.Model):
     """
-    Represents an application by a verified NGO to receive a posted donation.
+    Represents an application by an NGO to receive an offered donation.
+    Direct Donor -> NGO workflow without volunteer or third-party delivery tracking.
     """
     STATUS_PENDING = 'PENDING'
     STATUS_APPROVED = 'APPROVED'
     STATUS_REJECTED = 'REJECTED'
+    STATUS_COLLECTED = 'COLLECTED'
+    STATUS_COMPLETED = 'COMPLETED'
     STATUS_CANCELLED = 'CANCELLED'
 
     STATUS_CHOICES = [
-        (STATUS_PENDING, 'Pending Review'),
-        (STATUS_APPROVED, 'Approved by Donor'),
-        (STATUS_REJECTED, 'Rejected'),
-        (STATUS_CANCELLED, 'Cancelled by NGO'),
+        ('PENDING', 'Pending'),
+        ('APPROVED', 'Approved'),
+        ('REJECTED', 'Rejected'),
+        ('COLLECTED', 'Collected'),
+        ('COMPLETED', 'Completed'),
+        ('CANCELLED', 'Cancelled'),
     ]
 
     donation = models.ForeignKey(
@@ -27,49 +32,54 @@ class DonationRequest(models.Model):
     ngo = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='donation_requests'
+        related_name='ngo_requests'
     )
     message = models.TextField(
-        help_text="Explain how your NGO plans to distribute this donation and who will benefit."
-    )
-    beneficiaries_count = models.PositiveIntegerField(
-        default=1,
-        help_text="Estimated number of beneficiaries"
-    )
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default=STATUS_PENDING
-    )
-    requested_at = models.DateTimeField(
-        auto_now_add=True
-    )
-    responded_at = models.DateTimeField(
-        null=True,
         blank=True
     )
-    donor_notes = models.TextField(
-        blank=True,
-        help_text="Optional remarks from the donor when accepting or rejecting the request."
+    status = models.CharField(
+        max_length=25,
+        choices=STATUS_CHOICES,
+        default='PENDING'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True
     )
 
     class Meta:
         verbose_name = "Donation Request"
         verbose_name_plural = "Donation Requests"
-        ordering = ['-requested_at']
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"Request by {self.ngo.username} for {self.donation.title} ({self.get_status_display()})"
 
+    @property
+    def requested_at(self):
+        return self.created_at
+
+    @property
+    def responded_at(self):
+        return self.updated_at
+
+    @property
+    def beneficiaries_count(self):
+        return None
+
+    @property
+    def donor_notes(self):
+        return ""
+
     def approve(self, donor=None, notes=""):
         """
-        Approves this request, updates the donation status,
-        and rejects competing pending requests for this donation.
+        Approves this request, updates the donation status to APPROVED,
+        and marks competing pending requests as REJECTED.
         """
         self.status = self.STATUS_APPROVED
-        self.responded_at = timezone.now()
-        self.donor_notes = notes
-        self.save()
+        self.save(update_fields=['status', 'updated_at'])
 
         # Update donation status
         self.donation.change_status(
@@ -82,11 +92,7 @@ class DonationRequest(models.Model):
         other_requests = self.donation.requests.filter(
             status=self.STATUS_PENDING
         ).exclude(id=self.id)
-        other_requests.update(
-            status=self.STATUS_REJECTED,
-            responded_at=timezone.now(),
-            donor_notes="Donation was awarded to another organization."
-        )
+        other_requests.update(status=self.STATUS_REJECTED)
         return self
 
     def reject(self, donor=None, notes=""):
@@ -94,9 +100,7 @@ class DonationRequest(models.Model):
         Rejects this request. If no more pending requests exist, returns donation to AVAILABLE.
         """
         self.status = self.STATUS_REJECTED
-        self.responded_at = timezone.now()
-        self.donor_notes = notes
-        self.save()
+        self.save(update_fields=['status', 'updated_at'])
 
         remaining_requests = self.donation.requests.filter(status=self.STATUS_PENDING).count()
         if remaining_requests == 0 and self.donation.status == 'REQUESTED':
@@ -105,3 +109,4 @@ class DonationRequest(models.Model):
                 user=donor,
                 remarks="All pending requests were rejected or cancelled."
             )
+        return self

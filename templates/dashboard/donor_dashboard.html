@@ -96,7 +96,11 @@
                             <span class="fw-semibold">{{ req.ngo.ngo_profile.organization_name|default:req.ngo.username }}</span>
                         </td>
                         <td>
+                            {% if req.beneficiaries_count %}
                             <span class="badge bg-light text-dark border">{{ req.beneficiaries_count }} people</span>
+                            {% else %}
+                            <span class="badge bg-light text-dark border">Direct NGO</span>
+                            {% endif %}
                         </td>
                         <td class="text-muted small">{{ req.requested_at|date:"M d, Y H:i" }}</td>
                         <td class="small text-muted text-truncate" style="max-width: 250px;">{{ req.message }}</td>

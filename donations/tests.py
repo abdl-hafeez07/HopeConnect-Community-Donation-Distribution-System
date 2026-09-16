@@ -2,11 +2,11 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
-from datetime import timedelta
-from django.core.exceptions import ValidationError
+from datetime import date, time, timedelta
 
-from accounts.models import UserProfile
-from donations.models import Category, Donation, FoodDetail, DonationStatusHistory
+from accounts.models import UserProfile, NGOProfile
+from donations.models import DonationCategory, Donation, Category
+from donations.forms import DonationForm
 
 
 class DonationsModelAndViewsTests(TestCase):
@@ -16,84 +16,161 @@ class DonationsModelAndViewsTests(TestCase):
             username='donor_test',
             password='password123'
         )
-        UserProfile.objects.create(user=self.donor, role='Donor', is_verified=True)
+        UserProfile.objects.create(user=self.donor, role='DONOR', is_verified=True, city='Kochi')
 
-        self.category = Category.objects.create(
+        self.category = DonationCategory.objects.create(
             name='Cooked Food & Meals',
             description='Surplus food'
         )
+        self.other_category = DonationCategory.objects.create(
+            name='Blankets',
+            description='Winter bedding'
+        )
 
-    def test_donation_creation_and_status_change(self):
+        # Verified NGO
+        self.verified_ngo = User.objects.create_user(
+            username='verified_ngo',
+            password='password123'
+        )
+        UserProfile.objects.create(user=self.verified_ngo, role='NGO', is_verified=True, city='Kochi')
+        NGOProfile.objects.create(
+            user=self.verified_ngo,
+            organization_name='Verified NGO Org',
+            registration_number='REG-001',
+            contact_person='Manager John',
+            is_approved=True
+        )
+
+        # Unverified NGO
+        self.unverified_ngo = User.objects.create_user(
+            username='unverified_ngo',
+            password='password123'
+        )
+        UserProfile.objects.create(user=self.unverified_ngo, role='NGO', is_verified=False, city='Kochi')
+        NGOProfile.objects.create(
+            user=self.unverified_ngo,
+            organization_name='Unverified NGO Org',
+            registration_number='REG-002',
+            contact_person='Applicant Dave',
+            is_approved=False
+        )
+
+    def test_donation_form_valid(self):
+        form = DonationForm(data={
+            'title': 'Hot Meals',
+            'category': self.category.id,
+            'description': 'Delicious hot meals for 20 people',
+            'quantity': '20 packs',
+            'pickup_address': 'MG Road, Kochi',
+            'pickup_date': '2026-10-10',
+            'pickup_time': '12:00:00',
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_create_donation_view_donor_only(self):
+        self.client.login(username='donor_test', password='password123')
+        res = self.client.post(reverse('create_donation'), {
+            'title': 'Warm Clothes Batch',
+            'category': self.other_category.id,
+            'description': 'Assorted coats and sweaters',
+            'quantity': '10 bags',
+            'pickup_address': 'Panampilly Nagar',
+            'pickup_date': '2026-10-12',
+            'pickup_time': '11:00:00',
+        })
+        self.assertEqual(res.status_code, 302)
+        donation = Donation.objects.get(title='Warm Clothes Batch')
+        self.assertEqual(donation.donor, self.donor)
+        self.assertEqual(donation.status, 'AVAILABLE')
+        self.client.logout()
+
+        # Non-donor cannot post
+        self.client.login(username='verified_ngo', password='password123')
+        blocked_res = self.client.post(reverse('create_donation'), {
+            'title': 'Illegal Post',
+            'category': self.category.id,
+            'quantity': '1',
+            'pickup_address': 'Nowhere',
+        })
+        self.assertEqual(blocked_res.status_code, 302)
+        self.assertFalse(Donation.objects.filter(title='Illegal Post').exists())
+
+    def test_donation_catalog_and_filtering(self):
+        d1 = Donation.objects.create(
+            donor=self.donor,
+            category=self.category,
+            title='Rice Bowls',
+            description='Hot rice bowls',
+            quantity='30 packs',
+            pickup_address='Marine Drive, Kochi',
+            status='AVAILABLE'
+        )
+        d2 = Donation.objects.create(
+            donor=self.donor,
+            category=self.other_category,
+            title='Warm Blankets',
+            description='Winter blankets',
+            quantity='15 blankets',
+            pickup_address='Fort Kochi',
+            status='AVAILABLE'
+        )
+
+        res = self.client.get(reverse('donations_list'))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'Rice Bowls')
+        self.assertContains(res, 'Warm Blankets')
+
+        # Filter by category
+        cat_res = self.client.get(reverse('donations_list'), {'category': self.category.id})
+        self.assertContains(cat_res, 'Rice Bowls')
+        self.assertNotContains(cat_res, 'Warm Blankets')
+
+        # Search by title
+        search_title = self.client.get(reverse('donations_list'), {'q': 'Rice'})
+        self.assertContains(search_title, 'Rice Bowls')
+        self.assertNotContains(search_title, 'Warm Blankets')
+
+        # Search by pickup_address
+        search_addr = self.client.get(reverse('donations_list'), {'q': 'Fort Kochi'})
+        self.assertContains(search_addr, 'Warm Blankets')
+        self.assertNotContains(search_addr, 'Rice Bowls')
+
+    def test_donation_detail_verification_notices(self):
         donation = Donation.objects.create(
             donor=self.donor,
             category=self.category,
-            title='25 Meals Rice & Curry',
-            description='Freshly cooked lunch packets',
-            quantity='25 packets',
-            pickup_address='123 Marine Drive',
-            city='Kochi'
+            title='Fruit Crates',
+            description='Fresh apples and oranges',
+            quantity='5 crates',
+            pickup_address='Edappally',
+            status='AVAILABLE'
         )
-        self.assertEqual(donation.status, Donation.STATUS_AVAILABLE)
-        self.assertTrue(donation.is_available)
 
-        # Change status and verify history record
-        donation.change_status(
-            Donation.STATUS_REQUESTED,
-            user=self.donor,
-            remarks='NGO requested donation'
-        )
-        self.assertEqual(donation.status, Donation.STATUS_REQUESTED)
-        history = DonationStatusHistory.objects.filter(donation=donation)
-        self.assertEqual(history.count(), 1)
-        self.assertEqual(history.first().status, Donation.STATUS_REQUESTED)
+        # Verified NGO sees Request Donation
+        self.client.login(username='verified_ngo', password='password123')
+        v_res = self.client.get(reverse('donation_detail', kwargs={'pk': donation.id}))
+        self.assertEqual(v_res.status_code, 200)
+        self.assertContains(v_res, 'Request Donation')
+        self.client.logout()
 
-    def test_food_detail_validation(self):
-        donation = Donation.objects.create(
-            donor=self.donor,
-            category=self.category,
-            title='Vegetable Biryani',
-            description='Event excess',
-            quantity='50 boxes',
-            pickup_address='Panampilly Nagar',
-            city='Kochi'
-        )
-        future_time = timezone.now() + timedelta(hours=4)
-        food_detail = FoodDetail.objects.create(
-            donation=donation,
-            food_type='Cooked Meals',
-            expiry_time=future_time,
-            dietary_type='Vegetarian'
-        )
-        self.assertFalse(food_detail.is_expired)
+        # Unverified NGO sees Admin verification required notice
+        self.client.login(username='unverified_ngo', password='password123')
+        uv_res = self.client.get(reverse('donation_detail', kwargs={'pk': donation.id}))
+        self.assertEqual(uv_res.status_code, 200)
+        self.assertContains(uv_res, 'Admin verification required to request items.')
+        self.assertNotContains(uv_res, 'Request Donation')
+        self.client.logout()
 
-        # Test past expiry validation
-        past_food = FoodDetail(
-            donation=donation,
-            food_type='Cooked Meals',
-            expiry_time=timezone.now() - timedelta(hours=1),
-            dietary_type='Vegetarian'
-        )
-        with self.assertRaises(ValidationError):
-            past_food.clean()
-
-    def test_donation_catalog_and_filter(self):
+    def test_my_donations_view(self):
         Donation.objects.create(
             donor=self.donor,
             category=self.category,
-            title='Sandwiches',
-            description='Fresh sandwiches',
-            quantity='30 packs',
-            pickup_address='Kaloor',
-            city='Kochi',
-            status=Donation.STATUS_AVAILABLE
+            title='Donor Item A',
+            quantity='5',
+            pickup_address='Vyttila',
+            status='AVAILABLE'
         )
-        response = self.client.get(reverse('donations_list'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Sandwiches')
-
-        # Filter by query
-        search_res = self.client.get(reverse('donations_list'), {'q': 'Sandwiches'})
-        self.assertContains(search_res, 'Sandwiches')
-
-        no_match = self.client.get(reverse('donations_list'), {'q': 'NonExistentItem'})
-        self.assertNotContains(no_match, 'Sandwiches')
+        self.client.login(username='donor_test', password='password123')
+        res = self.client.get(reverse('my_donations'))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'Donor Item A')

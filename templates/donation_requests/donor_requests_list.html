@@ -46,9 +46,11 @@
                     </div>
 
                     <div class="bg-light p-3 rounded-3 mb-3">
+                        {% if req.beneficiaries_count %}
                         <div class="fw-bold text-success small text-uppercase mb-1">
                             <i class="bi bi-people-fill me-1"></i>Beneficiaries to be served: {{ req.beneficiaries_count }} individuals
                         </div>
+                        {% endif %}
                         <p class="mb-0 text-dark">{{ req.message }}</p>
                     </div>
 
@@ -71,9 +73,21 @@
                             </button>
                         </form>
                     </div>
-                    {% elif req.donor_notes %}
-                    <div class="small text-muted border-top pt-2">
-                        <strong>Your Notes:</strong> {{ req.donor_notes }}
+                    {% elif req.status in 'APPROVED,COLLECTED' %}
+                    <div class="d-flex flex-wrap gap-2 pt-2 border-top align-items-center">
+                        <span class="badge bg-success-subtle text-success border border-success px-3 py-2">
+                            <i class="bi bi-info-circle me-1"></i>Awarded to this NGO
+                        </span>
+                        <form method="post" action="{% url 'mark_completed' req.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm px-4 fw-bold shadow-sm" onclick="return confirm('Confirm completion and handoff of this donation?');">
+                                <i class="bi bi-check2-circle me-1"></i>Confirm Donation Completed
+                            </button>
+                        </form>
+                    </div>
+                    {% elif req.status == 'COMPLETED' %}
+                    <div class="small text-success fw-bold border-top pt-2">
+                        <i class="bi bi-patch-check-fill me-1"></i>Distribution has been completed successfully.
                     </div>
                     {% endif %}
                 </div>

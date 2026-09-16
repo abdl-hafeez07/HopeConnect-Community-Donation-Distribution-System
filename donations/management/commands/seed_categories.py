@@ -45,8 +45,6 @@ class Command(BaseCommand):
                 name=cat['name'],
                 defaults={
                     'description': cat['description'],
-                    'icon': cat['icon'],
-                    'is_active': True,
                 }
             )
             if created:

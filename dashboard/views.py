@@ -39,14 +39,14 @@ def donor_dashboard(request):
     my_donations = Donation.objects.filter(donor=user).select_related('category')
 
     total_donations = my_donations.count()
-    active_donations = my_donations.filter(status__in=['AVAILABLE', 'REQUESTED', 'APPROVED', 'PICKUP_SCHEDULED', 'PICKED_UP']).count()
+    active_donations = my_donations.filter(status__in=['AVAILABLE', 'REQUESTED', 'APPROVED', 'COLLECTED']).count()
     completed_donations = my_donations.filter(status='COMPLETED').count()
 
     # Incoming requests on donor's donations that require approval/decision
     pending_requests = DonationRequest.objects.filter(
         donation__donor=user,
         status='PENDING'
-    ).select_related('donation', 'ngo', 'ngo__profile').order_by('-requested_at')
+    ).select_related('donation', 'ngo', 'ngo__profile').order_by('-created_at')
 
     recent_donations = my_donations.order_by('-created_at')[:5]
 
@@ -69,7 +69,7 @@ def ngo_dashboard(request):
     user = request.user
     ngo_profile = getattr(user, 'ngo_profile', None)
 
-    my_requests = DonationRequest.objects.filter(ngo=user).select_related('donation', 'donation__donor').order_by('-requested_at')
+    my_requests = DonationRequest.objects.filter(ngo=user).select_related('donation', 'donation__donor').order_by('-created_at')
     total_requested = my_requests.count()
     pending_count = my_requests.filter(status='PENDING').count()
     approved_count = my_requests.filter(status='APPROVED').count()
@@ -78,7 +78,7 @@ def ngo_dashboard(request):
     approved_requests = DonationRequest.objects.filter(
         ngo=user,
         status='APPROVED'
-    ).select_related('donation', 'donation__donor', 'donation__category').order_by('-responded_at')
+    ).select_related('donation', 'donation__donor', 'donation__category').order_by('-updated_at')
 
     # Available community donations
     available_donations = Donation.objects.filter(
