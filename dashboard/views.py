@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.utils import timezone
 
 from accounts.models import UserProfile, NGOProfile
-from accounts.decorators import donor_required, ngo_required, admin_required
+from accounts.decorators import admin_required
 from donations.models import Donation
 from donation_requests.models import DonationRequest
 from core.utils import send_notification
@@ -30,69 +30,109 @@ def dashboard_home(request):
 
 
 @login_required
-@donor_required
 def donor_dashboard(request):
     """
-    Dashboard for Donors: view stats, incoming NGO requests, and recent donations.
+    Dashboard for Donors:
+    - Enforce login and check request.user.profile.role == 'DONOR'.
+    - Metric counters: total_donations, available_count, pending_requests_count,
+      approved_count, completed_count.
+    - Query lists: active_requests, recent_donations.
     """
-    user = request.user
-    my_donations = Donation.objects.filter(donor=user).select_related('category')
+    profile = getattr(request.user, 'profile', None)
+    user_role = getattr(profile, 'role', '').upper() if profile else ''
+
+    if not request.user.is_staff and user_role != 'DONOR':
+        messages.error(request, "Access restricted to Donors.")
+        return redirect('dashboard:dashboard_home')
+
+    my_donations = Donation.objects.filter(donor=request.user)
 
     total_donations = my_donations.count()
-    active_donations = my_donations.filter(status__in=['AVAILABLE', 'REQUESTED', 'APPROVED', 'COLLECTED']).count()
-    completed_donations = my_donations.filter(status='COMPLETED').count()
+    available_count = my_donations.filter(status='AVAILABLE').count()
+    approved_count = my_donations.filter(status='APPROVED').count()
+    completed_count = my_donations.filter(status='COMPLETED').count()
 
     # Incoming requests on donor's donations that require approval/decision
-    pending_requests = DonationRequest.objects.filter(
-        donation__donor=user,
+    pending_requests_query = DonationRequest.objects.filter(
+        donation__donor=request.user,
         status='PENDING'
-    ).select_related('donation', 'ngo', 'ngo__profile').order_by('-created_at')
+    )
+    pending_requests_count = pending_requests_query.count()
 
-    recent_donations = my_donations.order_by('-created_at')[:5]
+    active_requests = pending_requests_query.select_related(
+        'donation', 'ngo', 'ngo__profile', 'ngo__ngo_profile'
+    ).order_by('-created_at')
+
+    recent_donations = my_donations.select_related('category').order_by('-created_at')[:5]
 
     context = {
         'total_donations': total_donations,
-        'active_donations': active_donations,
-        'completed_donations': completed_donations,
-        'pending_requests': pending_requests,
+        'available_count': available_count,
+        'pending_requests_count': pending_requests_count,
+        'approved_count': approved_count,
+        'completed_count': completed_count,
+        'active_requests': active_requests,
         'recent_donations': recent_donations,
+        # Backward-compatibility aliases for templates
+        'pending_requests': active_requests,
     }
     return render(request, 'dashboard/donor_dashboard.html', context)
 
 
 @login_required
-@ngo_required
 def ngo_dashboard(request):
     """
-    Dashboard for NGOs: review verification status, active requests, and approved donations awaiting pickup/completion.
+    Dashboard for NGOs:
+    - Enforce login and check request.user.profile.role == 'NGO'.
+    - Metric counters: available_donations_count, my_requests_count,
+      pending_requests_count, approved_donations_count, completed_count.
+    - Query lists: pickup_queue, recent_requests.
+    - is_verified: boolean flag from request.user.profile.is_verified.
     """
-    user = request.user
-    ngo_profile = getattr(user, 'ngo_profile', None)
+    profile = getattr(request.user, 'profile', None)
+    user_role = getattr(profile, 'role', '').upper() if profile else ''
 
-    my_requests = DonationRequest.objects.filter(ngo=user).select_related('donation', 'donation__donor').order_by('-created_at')
-    total_requested = my_requests.count()
-    pending_count = my_requests.filter(status='PENDING').count()
-    approved_count = my_requests.filter(status='APPROVED').count()
+    if not request.user.is_staff and user_role != 'NGO':
+        messages.error(request, "Access restricted to NGOs.")
+        return redirect('dashboard:dashboard_home')
 
-    # Approved donations awarded to this NGO that can be confirmed/completed
-    approved_requests = DonationRequest.objects.filter(
-        ngo=user,
-        status='APPROVED'
-    ).select_related('donation', 'donation__donor', 'donation__category').order_by('-updated_at')
+    ngo_profile = getattr(request.user, 'ngo_profile', None)
+    is_verified = bool(
+        getattr(profile, 'is_verified', False) or
+        (ngo_profile and ngo_profile.is_approved)
+    )
 
-    # Available community donations
-    available_donations = Donation.objects.filter(
-        status='AVAILABLE'
-    ).select_related('category', 'donor').order_by('-created_at')[:6]
+    available_donations_count = Donation.objects.filter(status='AVAILABLE').count()
+
+    my_requests = DonationRequest.objects.filter(ngo=request.user)
+    my_requests_count = my_requests.count()
+    pending_requests_count = my_requests.filter(status='PENDING').count()
+    approved_donations_count = my_requests.filter(status='APPROVED').count()
+    completed_count = my_requests.filter(status='COMPLETED').count()
+
+    # Requests approved by donors awaiting collection by this NGO
+    pickup_queue = my_requests.filter(status='APPROVED').select_related(
+        'donation', 'donation__donor', 'donation__donor__profile', 'donation__category'
+    ).order_by('-updated_at')
+
+    # Latest 5 requests made by this NGO with current statuses
+    recent_requests = my_requests.select_related(
+        'donation', 'donation__donor', 'donation__category'
+    ).order_by('-created_at')[:5]
 
     context = {
+        'available_donations_count': available_donations_count,
+        'my_requests_count': my_requests_count,
+        'pending_requests_count': pending_requests_count,
+        'approved_donations_count': approved_donations_count,
+        'completed_count': completed_count,
+        'pickup_queue': pickup_queue,
+        'recent_requests': recent_requests,
+        'is_verified': is_verified,
         'ngo_profile': ngo_profile,
-        'total_requested': total_requested,
-        'pending_count': pending_count,
-        'approved_count': approved_count,
-        'my_requests': my_requests[:5],
-        'approved_requests': approved_requests,
-        'available_donations': available_donations,
+        # Backward-compatibility aliases
+        'approved_requests': pickup_queue,
+        'my_requests': recent_requests,
     }
     return render(request, 'dashboard/ngo_dashboard.html', context)
 

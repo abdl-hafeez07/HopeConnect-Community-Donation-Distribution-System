@@ -3,6 +3,7 @@
 {% block title %}Donor Dashboard | HopeConnect{% endblock %}
 
 {% block content %}
+<!-- Top Header & Primary Quick Action -->
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
         <h2 class="fw-bold mb-1">Welcome back, {{ request.user.first_name|default:request.user.username }}!</h2>
@@ -10,104 +11,141 @@
     </div>
     <div>
         <a href="{% url 'create_donation' %}" class="btn btn-success btn-lg px-4 shadow-sm fw-bold">
-            <i class="bi bi-plus-circle-fill me-2"></i>Create New Donation
+            <i class="bi bi-plus-circle me-1"></i>+ Create New Donation
         </a>
     </div>
 </div>
 
-<!-- Metrics Overview -->
+<!-- Metrics Overview Row (5 Metric Cards) -->
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+    <div class="col-xl col-md-4 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="text-muted small text-uppercase fw-semibold">Total Donations</span>
-                    <h3 class="fw-bold text-success mb-0 mt-1">{{ total_donations }}</h3>
+                    <span class="text-muted small text-uppercase fw-semibold">Total</span>
+                    <h3 class="fw-bold text-dark mb-0 mt-1">{{ total_donations }}</h3>
                 </div>
-                <div class="rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                    <i class="bi bi-gift fs-4"></i>
+                <div class="rounded-circle bg-light text-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-gift-fill fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+    <div class="col-xl col-md-4 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="text-muted small text-uppercase fw-semibold">Active & In-Progress</span>
-                    <h3 class="fw-bold text-primary mb-0 mt-1">{{ active_donations }}</h3>
+                    <span class="text-muted small text-uppercase fw-semibold">Available</span>
+                    <h3 class="fw-bold text-success mb-0 mt-1">{{ available_count }}</h3>
                 </div>
-                <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                    <i class="bi bi-arrow-repeat fs-4"></i>
+                <div class="rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-check-circle-fill fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+    <div class="col-xl col-md-4 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="text-muted small text-uppercase fw-semibold">Delivered & Completed</span>
-                    <h3 class="fw-bold text-info mb-0 mt-1">{{ completed_donations }}</h3>
+                    <span class="text-muted small text-uppercase fw-semibold">Pending Requests</span>
+                    <h3 class="fw-bold text-warning mb-0 mt-1">{{ pending_requests_count }}</h3>
                 </div>
-                <div class="rounded-circle bg-info-subtle text-info d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                    <i class="bi bi-check2-circle fs-4"></i>
+                <div class="rounded-circle bg-warning-subtle text-warning d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-hourglass-split fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl col-md-6 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Approved</span>
+                    <h3 class="fw-bold text-primary mb-0 mt-1">{{ approved_count }}</h3>
+                </div>
+                <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-hand-thumbs-up-fill fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl col-md-6 col-sm-12">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Completed</span>
+                    <h3 class="fw-bold text-info mb-0 mt-1">{{ completed_count }}</h3>
+                </div>
+                <div class="rounded-circle bg-info-subtle text-info d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-patch-check-fill fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Pending Requests Requiring Attention -->
+<!-- Incoming Requests Table with Direct Inline Actions -->
 <div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-2">
             <i class="bi bi-inbox-fill text-warning fs-4"></i>
-            <h5 class="mb-0 fw-bold">Requests Awaiting Your Approval</h5>
+            <h5 class="mb-0 fw-bold">Incoming Requests</h5>
         </div>
-        <span class="badge bg-warning text-dark">{{ pending_requests.count }} Pending</span>
+        <span class="badge bg-warning text-dark px-3 py-2 fs-6">{{ pending_requests_count }} Awaiting Approval</span>
     </div>
 
     <div class="card-body p-0">
-        {% if pending_requests %}
+        {% if active_requests %}
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">Donation</th>
                         <th>Requesting NGO</th>
-                        <th>Beneficiaries</th>
-                        <th>Requested On</th>
-                        <th>Message</th>
-                        <th class="text-end pe-4">Action</th>
+                        <th>Distribution Plan / Message</th>
+                        <th>Requested Date</th>
+                        <th class="text-end pe-4">Direct Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for req in pending_requests %}
+                    {% for req in active_requests %}
                     <tr>
                         <td class="ps-4 fw-bold">
                             <a href="{% url 'donation_detail' req.donation.id %}" class="text-decoration-none text-dark">
                                 {{ req.donation.title }}
                             </a>
+                            <div class="small text-muted">{{ req.donation.quantity }}</div>
                         </td>
                         <td>
-                            <span class="fw-semibold">{{ req.ngo.ngo_profile.organization_name|default:req.ngo.username }}</span>
+                            <div class="fw-semibold">{{ req.ngo.ngo_profile.organization_name|default:req.ngo.username }}</div>
+                            <small class="text-muted">
+                                Contact: {{ req.ngo.ngo_profile.contact_person|default:req.ngo.profile.phone|default:req.ngo.email }}
+                            </small>
                         </td>
-                        <td>
-                            {% if req.beneficiaries_count %}
-                            <span class="badge bg-light text-dark border">{{ req.beneficiaries_count }} people</span>
-                            {% else %}
-                            <span class="badge bg-light text-dark border">Direct NGO</span>
-                            {% endif %}
+                        <td class="small text-secondary" style="max-width: 280px;">
+                            <div class="text-truncate">{{ req.message|default:"No notes specified." }}</div>
                         </td>
-                        <td class="text-muted small">{{ req.requested_at|date:"M d, Y H:i" }}</td>
-                        <td class="small text-muted text-truncate" style="max-width: 250px;">{{ req.message }}</td>
-                        <td class="text-end pe-4">
-                            <a href="{% url 'review_requests' req.donation.id %}" class="btn btn-sm btn-outline-success fw-bold">
-                                Review & Approve
-                            </a>
+                        <td class="text-muted small text-nowrap">
+                            {{ req.created_at|date:"M d, Y H:i" }}
+                        </td>
+                        <td class="text-end pe-4 text-nowrap">
+                            <form method="post" action="{% url 'manage_request' req.id 'approve' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-success px-3 fw-bold shadow-sm me-1" onclick="return confirm('Approve request from {{ req.ngo.username }}? This will award the item to this NGO.');">
+                                    <i class="bi bi-check-lg me-1"></i>Approve
+                                </button>
+                            </form>
+                            <form method="post" action="{% url 'manage_request' req.id 'reject' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger px-3" onclick="return confirm('Decline request from {{ req.ngo.username }}?');">
+                                    <i class="bi bi-x-lg me-1"></i>Reject
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
@@ -115,19 +153,20 @@
             </table>
         </div>
         {% else %}
-        <div class="p-4 text-center text-muted">
+        <div class="p-5 text-center text-muted">
             <i class="bi bi-check2-all text-success fs-1 d-block mb-2"></i>
-            <p class="mb-0">No pending requests right now. When an NGO requests your donation, it will show up here.</p>
+            <h6 class="fw-bold mb-1">No Pending Requests</h6>
+            <p class="mb-0 text-muted small">When verified local NGOs apply for your donations, you can review and accept them directly here.</p>
         </div>
         {% endif %}
     </div>
 </div>
 
-<!-- My Recent Donations -->
+<!-- Recent Donations Table with Status Badges -->
 <div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
-        <h5 class="mb-0 fw-bold">My Recent Donations</h5>
-        <a href="{% url 'my_donations' %}" class="btn btn-sm btn-outline-secondary">View All</a>
+        <h5 class="mb-0 fw-bold">Recent Donations</h5>
+        <a href="{% url 'my_donations' %}" class="btn btn-sm btn-outline-secondary">View All Donations</a>
     </div>
 
     <div class="card-body p-0">
@@ -136,22 +175,34 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4">Item</th>
+                        <th class="ps-4">Title</th>
                         <th>Category</th>
                         <th>Quantity</th>
-                        <th>City</th>
+                        <th>Pickup Address</th>
                         <th>Status</th>
                         <th>Posted</th>
-                        <th class="text-end pe-4">Details</th>
+                        <th class="text-end pe-4">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for don in recent_donations %}
                     <tr>
-                        <td class="ps-4 fw-semibold">{{ don.title }}</td>
-                        <td><span class="badge bg-light text-dark border">{{ don.category.name }}</span></td>
+                        <td class="ps-4 fw-semibold">
+                            <a href="{% url 'donation_detail' don.id %}" class="text-decoration-none text-dark">
+                                {{ don.title }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if don.category %}
+                            <span class="badge bg-light text-dark border">{{ don.category.name }}</span>
+                            {% else %}
+                            <span class="badge bg-light text-muted border">General</span>
+                            {% endif %}
+                        </td>
                         <td>{{ don.quantity }}</td>
-                        <td>{{ don.city }}</td>
+                        <td class="small text-muted text-truncate" style="max-width: 200px;">
+                            {{ don.pickup_address }}
+                        </td>
                         <td>
                             {% if don.status == 'AVAILABLE' %}
                             <span class="badge bg-success">Available</span>
@@ -159,18 +210,24 @@
                             <span class="badge bg-warning text-dark">Requested</span>
                             {% elif don.status == 'APPROVED' %}
                             <span class="badge bg-primary">Approved</span>
-                            {% elif don.status == 'PICKUP_SCHEDULED' or don.status == 'PICKED_UP' %}
-                            <span class="badge bg-info text-dark">{{ don.get_status_display }}</span>
-                            {% elif don.status == 'COMPLETED' or don.status == 'DELIVERED' %}
+                            {% elif don.status == 'COLLECTED' %}
+                            <span class="badge bg-info text-dark">Collected</span>
+                            {% elif don.status == 'COMPLETED' %}
                             <span class="badge bg-success-subtle text-success border border-success">Completed</span>
+                            {% elif don.status == 'REJECTED' %}
+                            <span class="badge bg-danger">Rejected</span>
+                            {% elif don.status == 'CANCELLED' %}
+                            <span class="badge bg-secondary">Cancelled</span>
+                            {% elif don.status == 'EXPIRED' %}
+                            <span class="badge bg-dark">Expired</span>
                             {% else %}
                             <span class="badge bg-secondary">{{ don.get_status_display }}</span>
                             {% endif %}
                         </td>
-                        <td class="text-muted small">{{ don.created_at|date:"M d, Y" }}</td>
+                        <td class="text-muted small text-nowrap">{{ don.created_at|date:"M d, Y" }}</td>
                         <td class="text-end pe-4">
                             <a href="{% url 'donation_detail' don.id %}" class="btn btn-sm btn-light border">
-                                View
+                                View Details
                             </a>
                         </td>
                     </tr>
