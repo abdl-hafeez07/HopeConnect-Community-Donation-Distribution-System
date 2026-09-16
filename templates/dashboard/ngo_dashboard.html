@@ -73,12 +73,12 @@
     </div>
 </div>
 
-<!-- Incoming Deliveries -->
-{% if incoming_deliveries %}
-<div class="card border-0 shadow-sm rounded-4 mb-4 border-start border-primary border-4">
+<!-- Approved Donations Handover & Confirmation -->
+{% if approved_requests %}
+<div class="card border-0 shadow-sm rounded-4 mb-4 border-start border-success border-4">
     <div class="card-header bg-white py-3 px-4 border-bottom">
-        <h5 class="mb-0 fw-bold text-primary">
-            <i class="bi bi-truck me-2"></i>Deliveries In Progress
+        <h5 class="mb-0 fw-bold text-success">
+            <i class="bi bi-box-seam me-2"></i>Approved Donations (Ready for Pickup / Handover)
         </h5>
     </div>
     <div class="card-body p-0">
@@ -87,37 +87,40 @@
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">Donation</th>
+                        <th>Donor & Contact</th>
+                        <th>Pickup Address</th>
                         <th>Status</th>
-                        <th>Assigned Volunteer</th>
-                        <th>Scheduled Pickup</th>
-                        <th class="text-end pe-4">Details</th>
+                        <th class="text-end pe-4">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for del in incoming_deliveries %}
+                    {% for req in approved_requests %}
                     <tr>
-                        <td class="ps-4 fw-bold">{{ del.donation.title }}</td>
-                        <td>
-                            <span class="badge bg-info text-dark">{{ del.get_status_display }}</span>
+                        <td class="ps-4 fw-bold">
+                            <a href="{% url 'donation_detail' req.donation.id %}" class="text-decoration-none text-dark">
+                                {{ req.donation.title }}
+                            </a>
                         </td>
                         <td>
-                            {% if del.volunteer %}
-                            <i class="bi bi-person-check me-1 text-success"></i>{{ del.volunteer.username }}
-                            {% else %}
-                            <span class="text-muted small">Awaiting Volunteer</span>
-                            {% endif %}
+                            <div>{{ req.donation.donor.username }}</div>
+                            <small class="text-muted">{{ req.donation.donor.profile.phone|default:req.donation.donor.email }}</small>
                         </td>
-                        <td class="text-muted small">{{ del.scheduled_pickup_time|default:"Pending schedule" }}</td>
+                        <td class="text-muted small">
+                            {{ req.donation.pickup_address }}, {{ req.donation.city }}
+                        </td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">{{ req.donation.get_status_display }}</span>
+                        </td>
                         <td class="text-end pe-4">
-                            {% if del.status == 'DELIVERED' %}
-                            <form method="post" action="{% url 'confirm_receipt' del.id %}" class="d-inline">
+                            {% if req.donation.status != 'COMPLETED' %}
+                            <form method="post" action="{% url 'confirm_receipt' req.id %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-success fw-bold me-1" onclick="return confirm('Confirm that your NGO has received this donation?');">
+                                <button type="submit" class="btn btn-sm btn-success fw-bold me-1" onclick="return confirm('Confirm that your NGO has received this donation from the donor?');">
                                     <i class="bi bi-check2-circle me-1"></i>Confirm Receipt
                                 </button>
                             </form>
                             {% endif %}
-                            <a href="{% url 'donation_detail' del.donation.id %}" class="btn btn-sm btn-light border">Tracker</a>
+                            <a href="{% url 'donation_detail' req.donation.id %}" class="btn btn-sm btn-light border">Details</a>
                         </td>
                     </tr>
                     {% endfor %}

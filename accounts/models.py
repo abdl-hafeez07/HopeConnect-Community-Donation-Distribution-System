@@ -7,11 +7,10 @@ class UserProfile(models.Model):
     Extends Django's built-in User model to store role, contact,
     location, and verification state for all HopeConnect users.
     """
-    ROLE_CHOICES = [
-        ('Donor', 'Donor'),
+    ROLE_CHOICES = (
+        ('DONOR', 'Donor'),
         ('NGO', 'NGO'),
-        ('Volunteer', 'Volunteer'),
-    ]
+    )
 
     user = models.OneToOneField(
         User,
@@ -21,7 +20,7 @@ class UserProfile(models.Model):
     role = models.CharField(
         max_length=20,
         choices=ROLE_CHOICES,
-        default='Donor'
+        default='DONOR'
     )
     phone = models.CharField(
         max_length=15,
@@ -41,7 +40,7 @@ class UserProfile(models.Model):
     )
     is_verified = models.BooleanField(
         default=False,
-        help_text="Donors are auto-verified; NGOs and Volunteers require admin verification."
+        help_text="Donors are auto-verified; NGOs require admin verification."
     )
     created_at = models.DateTimeField(
         auto_now_add=True
@@ -59,15 +58,11 @@ class UserProfile(models.Model):
 
     @property
     def is_donor(self):
-        return self.role == 'Donor'
+        return self.role.upper() == 'DONOR'
 
     @property
     def is_ngo(self):
-        return self.role == 'NGO'
-
-    @property
-    def is_volunteer(self):
-        return self.role == 'Volunteer'
+        return self.role.upper() == 'NGO'
 
     @property
     def is_admin(self):
@@ -135,71 +130,3 @@ class NGOProfile(models.Model):
 
     def __str__(self):
         return f"{self.organization_name} (NGO: {self.user.username})"
-
-
-class VolunteerProfile(models.Model):
-    """
-    Stores verification details, vehicle type, and availability for volunteers.
-    """
-    VEHICLE_CHOICES = [
-        ('None/Walking', 'None / Walking'),
-        ('Bicycle', 'Bicycle'),
-        ('Motorcycle/Scooter', 'Motorcycle / Scooter'),
-        ('Car', 'Car'),
-        ('Van/Truck', 'Van / Truck'),
-    ]
-
-    AVAILABILITY_CHOICES = [
-        ('Available', 'Available for Pickups'),
-        ('Busy', 'Temporarily Busy'),
-        ('Inactive', 'Inactive'),
-    ]
-
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name='volunteer_profile'
-    )
-    id_proof_document = models.FileField(
-        upload_to='volunteer_ids/',
-        blank=True,
-        null=True,
-        help_text="Government ID proof (Aadhaar/Driving License/Voter ID)"
-    )
-    vehicle_type = models.CharField(
-        max_length=50,
-        choices=VEHICLE_CHOICES,
-        default='None/Walking'
-    )
-    availability_status = models.CharField(
-        max_length=20,
-        choices=AVAILABILITY_CHOICES,
-        default='Available'
-    )
-    is_approved = models.BooleanField(
-        default=False
-    )
-    verified_at = models.DateTimeField(
-        null=True,
-        blank=True
-    )
-    verified_by = models.ForeignKey(
-        User,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='verified_volunteers'
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
-
-    class Meta:
-        verbose_name = "Volunteer Profile"
-        verbose_name_plural = "Volunteer Profiles"
-
-    def __str__(self):
-        return f"Volunteer: {self.user.username} ({self.vehicle_type})"

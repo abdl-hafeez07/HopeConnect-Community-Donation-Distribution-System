@@ -1,14 +1,13 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
-from .models import UserProfile, NGOProfile, VolunteerProfile
+from .models import UserProfile, NGOProfile
 
 
 class UserRegisterForm(forms.ModelForm):
     ROLE_CHOICES = [
-        ('Donor', 'Donor (I want to donate items/food)'),
+        ('DONOR', 'Donor (I want to donate items/food)'),
         ('NGO', 'NGO / Charity (I want to request & distribute donations)'),
-        ('Volunteer', 'Volunteer (I want to pick up & deliver donations)'),
     ]
 
     role = forms.ChoiceField(
@@ -63,17 +62,6 @@ class UserRegisterForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Brief mission & beneficiaries supported'})
     )
     verification_document = forms.FileField(
-        required=False,
-        widget=forms.FileInput(attrs={'class': 'form-control'})
-    )
-
-    # Volunteer Specific Fields
-    vehicle_type = forms.ChoiceField(
-        required=False,
-        choices=VolunteerProfile.VEHICLE_CHOICES,
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
-    id_proof_document = forms.FileField(
         required=False,
         widget=forms.FileInput(attrs={'class': 'form-control'})
     )

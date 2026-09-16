@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils import timezone
 
-from accounts.models import UserProfile, NGOProfile, VolunteerProfile
-from accounts.decorators import donor_required, ngo_required, volunteer_required, admin_required
+from accounts.models import UserProfile, NGOProfile
+from accounts.decorators import donor_required, ngo_required, admin_required
 from donations.models import Donation
-from donation_requests.models import DonationRequest, DeliveryAssignment
+from donation_requests.models import DonationRequest
 from core.utils import send_notification
 
 
@@ -17,18 +17,16 @@ def dashboard_home(request):
     Central router that dispatches users to their dedicated role dashboard.
     """
     if request.user.is_staff or request.user.is_superuser:
-        return redirect('/admin/')
+        return redirect('dashboard:admin_dashboard')
 
     profile = getattr(request.user, 'profile', None)
     if not profile:
-        profile = UserProfile.objects.create(user=request.user, role='Donor')
+        profile = UserProfile.objects.create(user=request.user, role='DONOR')
 
-    if profile.role == 'NGO':
-        return redirect('ngo_dashboard')
-    elif profile.role == 'Volunteer':
-        return redirect('volunteer_dashboard')
+    if profile.role.upper() == 'NGO':
+        return redirect('dashboard:ngo_dashboard')
     else:
-        return redirect('donor_dashboard')
+        return redirect('dashboard:donor_dashboard')
 
 
 @login_required
@@ -66,7 +64,7 @@ def donor_dashboard(request):
 @ngo_required
 def ngo_dashboard(request):
     """
-    Dashboard for NGOs: review verification status, active requests, and incoming deliveries.
+    Dashboard for NGOs: review verification status, active requests, and approved donations awaiting pickup/completion.
     """
     user = request.user
     ngo_profile = getattr(user, 'ngo_profile', None)
@@ -76,11 +74,11 @@ def ngo_dashboard(request):
     pending_count = my_requests.filter(status='PENDING').count()
     approved_count = my_requests.filter(status='APPROVED').count()
 
-    # Active deliveries headed to this NGO (including those awaiting receipt confirmation)
-    incoming_deliveries = DeliveryAssignment.objects.filter(
-        request__ngo=user,
-        status__in=['ASSIGNED', 'PICKUP_SCHEDULED', 'PICKED_UP', 'DELIVERED']
-    ).select_related('donation', 'volunteer', 'request')
+    # Approved donations awarded to this NGO that can be confirmed/completed
+    approved_requests = DonationRequest.objects.filter(
+        ngo=user,
+        status='APPROVED'
+    ).select_related('donation', 'donation__donor', 'donation__category').order_by('-responded_at')
 
     # Available community donations
     available_donations = Donation.objects.filter(
@@ -93,61 +91,23 @@ def ngo_dashboard(request):
         'pending_count': pending_count,
         'approved_count': approved_count,
         'my_requests': my_requests[:5],
-        'incoming_deliveries': incoming_deliveries,
+        'approved_requests': approved_requests,
         'available_donations': available_donations,
     }
     return render(request, 'dashboard/ngo_dashboard.html', context)
 
 
 @login_required
-@volunteer_required
-def volunteer_dashboard(request):
-    """
-    Dashboard for Volunteers: available pickups to claim, assigned tasks, and completion history.
-    """
-    user = request.user
-    vol_profile = getattr(user, 'volunteer_profile', None)
-
-    # Deliveries assigned to this volunteer that are in progress
-    active_deliveries = DeliveryAssignment.objects.filter(
-        volunteer=user,
-        status__in=['ASSIGNED', 'PICKUP_SCHEDULED', 'PICKED_UP']
-    ).select_related('donation', 'request', 'request__ngo', 'donation__donor')
-
-    # Unassigned deliveries waiting for a volunteer
-    unassigned_deliveries = DeliveryAssignment.objects.filter(
-        volunteer__isnull=True,
-        status__in=['ASSIGNED', 'PICKUP_SCHEDULED']
-    ).select_related('donation', 'request', 'request__ngo', 'donation__donor').order_by('-created_at')
-
-    # Completed deliveries by this volunteer
-    completed_deliveries = DeliveryAssignment.objects.filter(
-        volunteer=user,
-        status__in=['DELIVERED', 'COMPLETED']
-    ).count()
-
-    context = {
-        'vol_profile': vol_profile,
-        'active_deliveries': active_deliveries,
-        'unassigned_deliveries': unassigned_deliveries,
-        'completed_deliveries': completed_deliveries,
-    }
-    return render(request, 'dashboard/volunteer_dashboard.html', context)
-
-
-@login_required
 @admin_required
 def admin_dashboard(request):
     """
-    Admin control panel: verify NGOs & Volunteers, system-wide counts and monitoring.
+    Admin control panel: verify NGOs, system-wide counts and monitoring.
     """
     pending_ngos = NGOProfile.objects.filter(is_approved=False).select_related('user', 'user__profile')
-    pending_volunteers = VolunteerProfile.objects.filter(is_approved=False).select_related('user', 'user__profile')
 
     total_users = User.objects.count()
-    donor_count = UserProfile.objects.filter(role='Donor').count()
+    donor_count = UserProfile.objects.filter(role__iexact='DONOR').count()
     ngo_count = NGOProfile.objects.count()
-    vol_count = VolunteerProfile.objects.count()
 
     total_donations = Donation.objects.count()
     completed_donations = Donation.objects.filter(status='COMPLETED').count()
@@ -156,11 +116,9 @@ def admin_dashboard(request):
 
     context = {
         'pending_ngos': pending_ngos,
-        'pending_volunteers': pending_volunteers,
         'total_users': total_users,
         'donor_count': donor_count,
         'ngo_count': ngo_count,
-        'vol_count': vol_count,
         'total_donations': total_donations,
         'completed_donations': completed_donations,
         'recent_donations': recent_donations,
@@ -191,30 +149,4 @@ def verify_ngo_action(request, pk, action):
         ngo.is_approved = False
         ngo.save()
         messages.info(request, f"NGO '{ngo.organization_name}' approval rejected.")
-    return redirect('admin_dashboard')
-
-
-@login_required
-@admin_required
-def verify_volunteer_action(request, pk, action):
-    vol = get_object_or_404(VolunteerProfile, pk=pk)
-    if action == 'approve':
-        vol.is_approved = True
-        vol.verified_at = timezone.now()
-        vol.verified_by = request.user
-        vol.save()
-        if hasattr(vol.user, 'profile'):
-            vol.user.profile.is_verified = True
-            vol.user.profile.save()
-        send_notification(
-            vol.user,
-            "Volunteer Verification Approved!",
-            "Your volunteer profile has been approved. You can now accept donation pickup & delivery tasks.",
-            "ACCOUNT_VERIFIED"
-        )
-        messages.success(request, f"Volunteer '{vol.user.username}' has been approved.")
-    elif action == 'reject':
-        vol.is_approved = False
-        vol.save()
-        messages.info(request, f"Volunteer '{vol.user.username}' was rejected.")
-    return redirect('admin_dashboard')
+    return redirect('dashboard:admin_dashboard')

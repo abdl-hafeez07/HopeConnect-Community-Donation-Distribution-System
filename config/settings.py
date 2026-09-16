@@ -76,7 +76,7 @@ TEMPLATES = [
 ]
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard_home'
+LOGIN_REDIRECT_URL = 'dashboard:dashboard_home'
 LOGOUT_REDIRECT_URL = 'home'
 
 

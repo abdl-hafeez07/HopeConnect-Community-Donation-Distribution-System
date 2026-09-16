@@ -92,7 +92,7 @@
                     </li>
 
                     <li class="nav-item ms-lg-2">
-                        <a href="{% url 'dashboard_home' %}" class="btn btn-outline-success btn-sm px-3 fw-bold">
+                        <a href="{% url 'dashboard:dashboard_home' %}" class="btn btn-outline-success btn-sm px-3 fw-bold">
                             <i class="bi bi-speedometer2 me-1"></i>Dashboard
                         </a>
                     </li>
@@ -112,11 +112,14 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                             <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person me-2"></i>My Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'dashboard_home' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                            {% if user.is_staff or user.is_superuser or user_role == 'Admin' %}
+                            <li><a class="dropdown-item" href="{% url 'dashboard:admin_dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</a></li>
+                            <li><a class="dropdown-item" href="/admin/" target="_blank"><i class="bi bi-shield-lock me-2"></i>Django Admin</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="{% url 'dashboard:dashboard_home' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                            {% endif %}
                             {% if user_role == 'Donor' %}
                             <li><a class="dropdown-item" href="{% url 'my_donations' %}"><i class="bi bi-gift me-2"></i>My Donations</a></li>
-                            {% elif user_role == 'Volunteer' %}
-                            <li><a class="dropdown-item" href="{% url 'available_pickups' %}"><i class="bi bi-truck me-2"></i>Available Pickups</a></li>
                             {% endif %}
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Log Out</a></li>
@@ -175,7 +178,7 @@
                         <span class="text-white">HopeConnect</span>
                     </a>
                     <p class="pe-lg-4">
-                        A community-centered donation and distribution platform bridging the gap between generous donors, volunteers, and verified NGOs to reduce waste and bring hope.
+                        A community-centered donation and distribution platform bridging the gap between generous donors and verified NGOs to reduce waste and bring hope.
                     </p>
                 </div>
 

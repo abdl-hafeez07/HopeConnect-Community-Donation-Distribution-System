@@ -6,13 +6,13 @@ from django.contrib import messages
 from django.db import transaction
 
 from .forms import UserRegisterForm, UserLoginForm, UserProfileUpdateForm
-from .models import UserProfile, NGOProfile, VolunteerProfile
+from .models import UserProfile, NGOProfile
 from core.utils import send_notification
 
 
 def register_view(request):
     """
-    Handles user signup with role selection (Donor, NGO, Volunteer).
+    Handles user signup with role selection (Donor, NGO).
     Automatically creates the associated UserProfile and role-specific profile.
     """
     if request.user.is_authenticated:
@@ -31,7 +31,7 @@ def register_view(request):
                     )
 
                     role = form.cleaned_data['role']
-                    is_auto_verified = (role == 'Donor')
+                    is_auto_verified = (role.upper() == 'DONOR')
 
                     # 2. Create UserProfile
                     profile = UserProfile.objects.create(
@@ -44,7 +44,7 @@ def register_view(request):
                     )
 
                     # 3. Create Role-Specific Profile
-                    if role == 'NGO':
+                    if role.upper() == 'NGO':
                         NGOProfile.objects.create(
                             user=user,
                             organization_name=form.cleaned_data.get('organization_name', ''),
@@ -60,18 +60,6 @@ def register_view(request):
                             "Welcome to HopeConnect! Your NGO registration has been received and is pending admin verification.",
                             "ACCOUNT_VERIFIED"
                         )
-                    elif role == 'Volunteer':
-                        VolunteerProfile.objects.create(
-                            user=user,
-                            vehicle_type=form.cleaned_data.get('vehicle_type', 'None/Walking'),
-                            id_proof_document=form.cleaned_data.get('id_proof_document')
-                        )
-                        send_notification(
-                            user,
-                            "Welcome to the Volunteer Network",
-                            "Thank you for signing up to volunteer! Our coordinators will verify your account shortly.",
-                            "ACCOUNT_VERIFIED"
-                        )
                     else:
                         send_notification(
                             user,
@@ -83,15 +71,20 @@ def register_view(request):
                     # 4. Log in immediately
                     auth_login(request, user)
                     messages.success(request, f"Welcome to HopeConnect, {user.username}! Your account has been created.")
-                    return redirect('dashboard_home')
+                    if user.is_staff or user.is_superuser:
+                        return redirect('dashboard:admin_dashboard')
+                    elif role.upper() == 'NGO':
+                        return redirect('dashboard:ngo_dashboard')
+                    else:
+                        return redirect('dashboard:donor_dashboard')
 
             except Exception as e:
                 messages.error(request, f"An error occurred during registration: {str(e)}")
     else:
         # Check if pre-selected role in GET query
-        initial_role = request.GET.get('role', 'Donor')
-        if initial_role not in ['Donor', 'NGO', 'Volunteer']:
-            initial_role = 'Donor'
+        initial_role = request.GET.get('role', 'DONOR')
+        if initial_role.upper() not in ['DONOR', 'NGO']:
+            initial_role = 'DONOR'
         form = UserRegisterForm(initial={'role': initial_role})
 
     return render(request, 'accounts/register.html', {'form': form})
@@ -102,7 +95,12 @@ def login_view(request):
     Standard user authentication view with role-aware redirection.
     """
     if request.user.is_authenticated:
-        return redirect('dashboard_home')
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect('dashboard:admin_dashboard')
+        profile = getattr(request.user, 'profile', None)
+        if profile and profile.role.upper() == 'NGO':
+            return redirect('dashboard:ngo_dashboard')
+        return redirect('dashboard:donor_dashboard')
 
     if request.method == 'POST':
         form = UserLoginForm(request, data=request.POST)
@@ -113,7 +111,20 @@ def login_view(request):
             next_url = request.GET.get('next')
             if next_url:
                 return redirect(next_url)
-            return redirect('dashboard_home')
+
+            # Role-based post-login redirection
+            if user.is_staff or user.is_superuser:
+                return redirect('dashboard:admin_dashboard')
+
+            profile = getattr(user, 'profile', None)
+            if profile:
+                role = profile.role.upper()
+                if role == 'NGO':
+                    return redirect('dashboard:ngo_dashboard')
+                elif role == 'DONOR':
+                    return redirect('dashboard:donor_dashboard')
+
+            return redirect('dashboard:donor_dashboard')
         else:
             messages.error(request, "Invalid username or password. Please try again.")
     else:

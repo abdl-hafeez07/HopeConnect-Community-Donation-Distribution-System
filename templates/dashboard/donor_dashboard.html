@@ -6,7 +6,7 @@
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
         <h2 class="fw-bold mb-1">Welcome back, {{ request.user.first_name|default:request.user.username }}!</h2>
-        <p class="text-muted mb-0">Track your contributions, review NGO requests, and follow delivery status.</p>
+        <p class="text-muted mb-0">Track your contributions, review NGO requests, and follow handover status.</p>
     </div>
     <div>
         <a href="{% url 'create_donation' %}" class="btn btn-success btn-lg px-4 shadow-sm fw-bold">

@@ -3,11 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 
-from .models import DonationRequest, DeliveryAssignment
-from .forms import DonationRequestForm, DeliveryUpdateForm
+from .models import DonationRequest
+from .forms import DonationRequestForm
 from donations.models import Donation
-from accounts.models import VolunteerProfile
-from accounts.decorators import verified_ngo_required, donor_required, volunteer_required
+from accounts.decorators import verified_ngo_required, donor_required, ngo_required
 from core.utils import send_notification
 
 
@@ -91,36 +90,24 @@ def approve_request(request, request_id):
     1. Request marked as APPROVED
     2. Other pending requests rejected
     3. Donation status changed to APPROVED
-    4. DeliveryAssignment created
-    5. Notifications sent to approved NGO and local volunteers.
+    4. Notification sent to approved NGO.
     """
     req_obj = get_object_or_404(DonationRequest, pk=request_id, donation__donor=request.user)
 
     if request.method == 'POST':
         notes = request.POST.get('donor_notes', '')
-        delivery = req_obj.approve(donor=request.user, notes=notes)
+        req_obj.approve(donor=request.user, notes=notes)
 
         # Notify approved NGO
         send_notification(
             req_obj.ngo,
             f"Request Approved for '{req_obj.donation.title}'!",
-            f"The donor approved your request. A delivery volunteer will be assigned shortly.",
+            f"The donor approved your request. You can now coordinate pickup directly with the donor.",
             "REQUEST_APPROVED",
             link=f"/donations/{req_obj.donation.id}/"
         )
 
-        # Notify active volunteers
-        active_volunteers = VolunteerProfile.objects.filter(is_approved=True).select_related('user')
-        for vol in active_volunteers:
-            send_notification(
-                vol.user,
-                f"New Pickup Needed: {req_obj.donation.title}",
-                f"A donation in {req_obj.donation.city} was approved and is ready for volunteer pickup.",
-                "PICKUP_SCHEDULED",
-                link="/requests/volunteer/pickups/"
-            )
-
-        messages.success(request, f"You approved the request from {req_obj.ngo.username}. The donation is now queued for volunteer pickup.")
+        messages.success(request, f"You approved the request from {req_obj.ngo.username}. The donation is now awarded to this NGO.")
         return redirect('review_requests', donation_id=req_obj.donation.id)
 
     return redirect('review_requests', donation_id=req_obj.donation.id)
@@ -152,197 +139,39 @@ def reject_request(request, request_id):
 
 
 @login_required
-@volunteer_required
-def available_pickups(request):
+@ngo_required
+def confirm_receipt(request, request_id):
     """
-    Lists approved donations in need of volunteer pickup.
-    """
-    unassigned_deliveries = DeliveryAssignment.objects.filter(
-        volunteer__isnull=True
-    ).select_related('donation', 'donation__donor', 'request__ngo', 'request__ngo__profile', 'request__ngo__ngo_profile').order_by('-created_at')
-
-    context = {
-        'deliveries': unassigned_deliveries,
-    }
-    return render(request, 'donation_requests/available_pickups.html', context)
-
-
-@login_required
-@volunteer_required
-def claim_pickup(request, assignment_id):
-    """
-    Volunteer claims an unassigned delivery task.
-    """
-    assignment = get_object_or_404(DeliveryAssignment, pk=assignment_id)
-
-    if assignment.volunteer is not None:
-        messages.warning(request, "This pickup has already been claimed by another volunteer.")
-        return redirect('available_pickups')
-
-    assignment.volunteer = request.user
-    assignment.status = DeliveryAssignment.STATUS_ASSIGNED
-    assignment.save()
-
-    # Update donation status
-    assignment.donation.change_status(
-        Donation.STATUS_PICKUP_SCHEDULED,
-        user=request.user,
-        remarks=f"Claimed by volunteer {request.user.username}"
-    )
-
-    # Notify donor and NGO
-    send_notification(
-        assignment.donation.donor,
-        f"Volunteer Assigned: {request.user.username}",
-        f"Volunteer {request.user.username} has accepted to pick up and deliver your donation.",
-        "PICKUP_SCHEDULED"
-    )
-    send_notification(
-        assignment.request.ngo,
-        f"Volunteer Assigned for Delivery",
-        f"Volunteer {request.user.username} is handling pickup and delivery of '{assignment.donation.title}'.",
-        "PICKUP_SCHEDULED"
-    )
-
-    messages.success(request, f"You have claimed the pickup for '{assignment.donation.title}'. Thank you!")
-    return redirect('volunteer_dashboard')
-
-
-@login_required
-@volunteer_required
-def update_delivery(request, assignment_id):
-    """
-    Volunteer updates delivery progress:
-    - Schedule pickup time -> PICKUP_SCHEDULED
-    - Confirm picked up from donor -> PICKED_UP
-    - Confirm delivered to NGO -> DELIVERED & COMPLETED (with proof photo & recipient signature/notes).
-    """
-    assignment = get_object_or_404(
-        DeliveryAssignment.objects.select_related('donation', 'donation__donor', 'request', 'request__ngo'),
-        pk=assignment_id,
-        volunteer=request.user
-    )
-
-    if request.method == 'POST':
-        form = DeliveryUpdateForm(request.POST, request.FILES, instance=assignment)
-        if form.is_valid():
-            deliv = form.save(commit=False)
-
-            # Check status updates
-            new_status = form.cleaned_data['status']
-            if new_status == DeliveryAssignment.STATUS_PICKED_UP:
-                deliv.picked_up_at = timezone.now()
-                assignment.donation.change_status(
-                    Donation.STATUS_PICKED_UP,
-                    user=request.user,
-                    remarks=f"Volunteer picked up items from donor. Notes: {deliv.delivery_notes}"
-                )
-                send_notification(
-                    assignment.request.ngo,
-                    "Donation Picked Up!",
-                    f"Volunteer {request.user.username} has picked up '{assignment.donation.title}' and is in transit.",
-                    "PICKED_UP"
-                )
-            elif new_status == DeliveryAssignment.STATUS_DELIVERED:
-                deliv.delivered_at = timezone.now()
-                deliv.status = DeliveryAssignment.STATUS_DELIVERED
-                assignment.donation.change_status(
-                    Donation.STATUS_DELIVERED,
-                    user=request.user,
-                    remarks=f"Delivered to NGO by {request.user.username}. Handed to: {deliv.recipient_confirmation_name or 'Staff'}. Notes: {deliv.delivery_notes}"
-                )
-                # Notify NGO to confirm receipt
-                send_notification(
-                    assignment.request.ngo,
-                    "Donation Delivered! Please Confirm Receipt",
-                    f"Volunteer {request.user.username} has delivered '{assignment.donation.title}'. Please confirm receipt in your portal.",
-                    "DELIVERED",
-                    link="/dashboard/ngo/"
-                )
-                # Notify donor
-                send_notification(
-                    assignment.donation.donor,
-                    "Donation Delivered to NGO",
-                    f"Your donation '{assignment.donation.title}' was delivered to the NGO by volunteer {request.user.username}.",
-                    "DELIVERED"
-                )
-            elif new_status == DeliveryAssignment.STATUS_COMPLETED:
-                deliv.delivered_at = deliv.delivered_at or timezone.now()
-                deliv.status = DeliveryAssignment.STATUS_COMPLETED
-                assignment.donation.change_status(
-                    Donation.STATUS_COMPLETED,
-                    user=request.user,
-                    remarks=f"Completed distribution. Handed to: {deliv.recipient_confirmation_name or 'NGO'}."
-                )
-                send_notification(
-                    assignment.donation.donor,
-                    "Donation Completed!",
-                    f"Your donation '{assignment.donation.title}' distribution has been fully completed! Thank you for your impact.",
-                    "COMPLETED"
-                )
-                send_notification(
-                    assignment.request.ngo,
-                    "Donation Completed",
-                    f"Donation '{assignment.donation.title}' distribution marked as completed.",
-                    "COMPLETED"
-                )
-
-            deliv.save()
-            messages.success(request, f"Delivery status updated to '{deliv.get_status_display()}'.")
-            return redirect('volunteer_dashboard')
-    else:
-        form = DeliveryUpdateForm(instance=assignment)
-
-    context = {
-        'assignment': assignment,
-        'form': form,
-    }
-    return render(request, 'donation_requests/delivery_update.html', context)
-
-
-@login_required
-def confirm_receipt(request, assignment_id):
-    """
-    Allows the recipient NGO to confirm receipt of delivered donation,
+    Allows the recipient NGO to confirm receipt of the approved donation,
     finalizing the distribution as COMPLETED.
     """
-    assignment = get_object_or_404(
-        DeliveryAssignment.objects.select_related('donation', 'donation__donor', 'volunteer', 'request'),
-        pk=assignment_id,
-        request__ngo=request.user
+    req_obj = get_object_or_404(
+        DonationRequest.objects.select_related('donation', 'donation__donor', 'ngo'),
+        pk=request_id,
+        ngo=request.user,
+        status=DonationRequest.STATUS_APPROVED
     )
 
     if request.method == 'POST':
         notes = request.POST.get('receipt_notes', 'Items received in good condition.')
-        assignment.status = DeliveryAssignment.STATUS_COMPLETED
-        if not assignment.delivered_at:
-            assignment.delivered_at = timezone.now()
-        assignment.delivery_notes += f"\n[NGO Confirmation]: {notes}"
-        assignment.save()
 
         # Update donation to COMPLETED
-        assignment.donation.change_status(
+        req_obj.donation.change_status(
             Donation.STATUS_COMPLETED,
             user=request.user,
             remarks=f"Receipt confirmed by NGO: {request.user.username}. Notes: {notes}"
         )
 
-        # Notify donor and volunteer
+        # Notify donor
         send_notification(
-            assignment.donation.donor,
+            req_obj.donation.donor,
             "Receipt Confirmed by NGO!",
-            f"{request.user.username} confirmed receipt of '{assignment.donation.title}'. Distribution is now Completed!",
-            "COMPLETED"
+            f"{request.user.username} confirmed receipt of '{req_obj.donation.title}'. Distribution is now Completed!",
+            "COMPLETED",
+            link=f"/donations/{req_obj.donation.id}/"
         )
-        if assignment.volunteer:
-            send_notification(
-                assignment.volunteer,
-                "Delivery Receipt Confirmed",
-                f"{request.user.username} confirmed receipt of the donation you delivered. Thank you!",
-                "COMPLETED"
-            )
 
-        messages.success(request, f"You have confirmed receipt of '{assignment.donation.title}'. Distribution is now marked as Completed!")
+        messages.success(request, f"You have confirmed receipt of '{req_obj.donation.title}'. Distribution is now marked as Completed!")
 
-    return redirect('ngo_dashboard')
+    return redirect('dashboard:ngo_dashboard')
 

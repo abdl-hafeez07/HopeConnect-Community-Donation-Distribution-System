@@ -64,8 +64,7 @@ class DonationRequest(models.Model):
     def approve(self, donor=None, notes=""):
         """
         Approves this request, updates the donation status,
-        rejects competing pending requests for this donation,
-        and initializes a DeliveryAssignment ready for volunteer pickup.
+        and rejects competing pending requests for this donation.
         """
         self.status = self.STATUS_APPROVED
         self.responded_at = timezone.now()
@@ -88,13 +87,7 @@ class DonationRequest(models.Model):
             responded_at=timezone.now(),
             donor_notes="Donation was awarded to another organization."
         )
-
-        # Create or fetch DeliveryAssignment
-        assignment, _ = DeliveryAssignment.objects.get_or_create(
-            donation=self.donation,
-            defaults={'request': self}
-        )
-        return assignment
+        return self
 
     def reject(self, donor=None, notes=""):
         """
@@ -112,88 +105,3 @@ class DonationRequest(models.Model):
                 user=donor,
                 remarks="All pending requests were rejected or cancelled."
             )
-
-
-class DeliveryAssignment(models.Model):
-    """
-    Manages the volunteer pickup, transit, delivery proof, and completion.
-    """
-    STATUS_ASSIGNED = 'ASSIGNED'
-    STATUS_PICKUP_SCHEDULED = 'PICKUP_SCHEDULED'
-    STATUS_PICKED_UP = 'PICKED_UP'
-    STATUS_DELIVERED = 'DELIVERED'
-    STATUS_COMPLETED = 'COMPLETED'
-
-    STATUS_CHOICES = [
-        (STATUS_ASSIGNED, 'Assigned / Awaiting Pickup Schedule'),
-        (STATUS_PICKUP_SCHEDULED, 'Pickup Scheduled'),
-        (STATUS_PICKED_UP, 'Picked Up from Donor'),
-        (STATUS_DELIVERED, 'Delivered to NGO'),
-        (STATUS_COMPLETED, 'Completed & Confirmed'),
-    ]
-
-    donation = models.OneToOneField(
-        'donations.Donation',
-        on_delete=models.CASCADE,
-        related_name='delivery'
-    )
-    request = models.ForeignKey(
-        DonationRequest,
-        on_delete=models.CASCADE,
-        related_name='deliveries'
-    )
-    volunteer = models.ForeignKey(
-        User,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='volunteer_deliveries',
-        help_text="Assigned volunteer driver/courier"
-    )
-    status = models.CharField(
-        max_length=30,
-        choices=STATUS_CHOICES,
-        default=STATUS_ASSIGNED
-    )
-    scheduled_pickup_time = models.DateTimeField(
-        null=True,
-        blank=True
-    )
-    picked_up_at = models.DateTimeField(
-        null=True,
-        blank=True
-    )
-    delivered_at = models.DateTimeField(
-        null=True,
-        blank=True
-    )
-    delivery_proof_image = models.ImageField(
-        upload_to='delivery_proofs/',
-        blank=True,
-        null=True,
-        help_text="Photo proof of handover to NGO"
-    )
-    delivery_notes = models.TextField(
-        blank=True,
-        help_text="Handover observations or recipient comments"
-    )
-    recipient_confirmation_name = models.CharField(
-        max_length=100,
-        blank=True,
-        help_text="Name of NGO staff member who received the items"
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
-
-    class Meta:
-        verbose_name = "Delivery Assignment"
-        verbose_name_plural = "Delivery Assignments"
-        ordering = ['-created_at']
-
-    def __str__(self):
-        vol = self.volunteer.username if self.volunteer else "Unassigned"
-        return f"Delivery for {self.donation.title} ({vol} - {self.get_status_display()})"

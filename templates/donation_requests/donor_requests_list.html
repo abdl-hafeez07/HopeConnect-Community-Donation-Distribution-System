@@ -57,9 +57,9 @@
                         <!-- Approval Form -->
                         <form method="post" action="{% url 'approve_request' req.id %}" class="d-inline-flex gap-2 align-items-center flex-grow-1">
                             {% csrf_token %}
-                            <input type="text" name="donor_notes" class="form-control form-control-sm" placeholder="Optional notes for the NGO / delivery volunteer...">
-                            <button type="submit" class="btn btn-success btn-sm px-4 fw-bold text-nowrap" onclick="return confirm('Approve this request? This will award the donation to this NGO and alert volunteers for pickup.');">
-                                <i class="bi bi-check-lg me-1"></i>Approve & Schedule Pickup
+                            <input type="text" name="donor_notes" class="form-control form-control-sm" placeholder="Optional notes for the NGO...">
+                            <button type="submit" class="btn btn-success btn-sm px-4 fw-bold text-nowrap" onclick="return confirm('Approve this request? This will award the donation to this NGO for direct handover.');">
+                                <i class="bi bi-check-lg me-1"></i>Approve Request
                             </button>
                         </form>
 

@@ -12,10 +12,10 @@ def hopeconnect_context(request):
     if request.user.is_authenticated:
         profile = getattr(request.user, 'profile', None)
         context['user_profile'] = profile
-        if profile:
-            context['user_role'] = profile.role
-        elif request.user.is_staff:
+        if request.user.is_staff or request.user.is_superuser:
             context['user_role'] = 'Admin'
+        elif profile:
+            context['user_role'] = 'Donor' if profile.role.upper() == 'DONOR' else 'NGO'
 
         context['unread_notifications_count'] = request.user.notifications.filter(is_read=False).count()
 
