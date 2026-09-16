@@ -6,12 +6,13 @@
 <div class="py-3">
     <!-- Header -->
     <div class="text-center mb-4">
-        <h2 class="fw-bold">Available Community Donations</h2>
-        <p class="text-muted">Verified NGOs and charities can request items for immediate community distribution.</p>
+        <span class="section-tag">Community Resource Directory</span>
+        <h2 class="fw-bold mb-1">Available Community Donations</h2>
+        <p class="text-muted small">Verified NGOs and charities can request items for direct community distribution.</p>
     </div>
 
     <!-- Filter Bar -->
-    <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 bg-white">
+    <div class="app-card mb-4 p-3 bg-white">
         <form method="get" class="row g-2 align-items-center">
             <div class="col-md-5">
                 <div class="input-group">
@@ -36,7 +37,7 @@
             </div>
 
             <div class="col-md-2 d-grid">
-                <button type="submit" class="btn btn-success fw-bold">Filter</button>
+                <button type="submit" class="btn-action">Filter Listings</button>
             </div>
         </form>
     </div>
@@ -46,18 +47,18 @@
     <div class="row g-4">
         {% for item in donations %}
         <div class="col-md-6 col-lg-4">
-            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column">
+            <div class="app-card h-100 p-0 overflow-hidden d-flex flex-column">
                 {% if item.image %}
                 <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}" style="height: 190px; object-fit: cover;">
                 {% else %}
-                <div class="bg-success-subtle text-success d-flex align-items-center justify-content-center" style="height: 160px;">
-                    <i class="bi bi-gift fs-1"></i>
+                <div class="bg-light text-secondary d-flex align-items-center justify-content-center" style="height: 170px;">
+                    <i class="bi bi-box-seam fs-1 opacity-50"></i>
                 </div>
                 {% endif %}
 
-                <div class="card-body p-4 d-flex flex-column">
+                <div class="p-4 d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                        <span class="badge bg-light text-secondary border px-2 py-1">
                             {{ item.category.name }}
                         </span>
                         <span class="small text-muted">
@@ -65,9 +66,13 @@
                         </span>
                     </div>
 
-                    <h5 class="fw-bold mb-1">{{ item.title }}</h5>
-                    <div class="fw-semibold text-success small mb-2">
-                        <i class="bi bi-box-seam me-1"></i>Quantity: {{ item.quantity }}
+                    <h5 class="fw-bold mb-1 fs-6">
+                        <a href="{% url 'donation_detail' item.id %}" class="text-decoration-none text-dark">
+                            {{ item.title }}
+                        </a>
+                    </h5>
+                    <div class="fw-semibold text-secondary small mb-2">
+                        <i class="bi bi-layers me-1"></i>Quantity: {{ item.quantity }}
                     </div>
 
                     <p class="text-muted small mb-3 flex-grow-1">
@@ -78,7 +83,7 @@
                     <div class="p-2 rounded-3 bg-light border mb-3 small">
                         <div class="d-flex justify-content-between">
                             <span><i class="bi bi-tag me-1"></i>{{ item.food_detail.food_type }}</span>
-                            <span class="badge {% if item.food_detail.dietary_type == 'Vegetarian' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                            <span class="badge {% if item.food_detail.dietary_type == 'Vegetarian' %}badge-available{% else %}badge-requested{% endif %}">
                                 {{ item.food_detail.dietary_type }}
                             </span>
                         </div>
@@ -88,9 +93,9 @@
                     </div>
                     {% endif %}
 
-                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                    <div class="d-flex justify-content-between align-items-center pt-3 mt-auto border-top">
                         <small class="text-muted">By {{ item.donor.username }}</small>
-                        <a href="{% url 'donation_detail' item.id %}" class="btn btn-outline-success btn-sm px-3 fw-bold">
+                        <a href="{% url 'donation_detail' item.id %}" class="btn-action btn-sm px-3">
                             View & Request &rarr;
                         </a>
                     </div>
@@ -100,11 +105,13 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="text-center py-5">
-        <i class="bi bi-inbox text-muted fs-1 d-block mb-3"></i>
-        <h4 class="text-muted">No donations found</h4>
-        <p class="text-muted">Try adjusting your category or city filters, or check back later.</p>
-        <a href="{% url 'donations_list' %}" class="btn btn-outline-success">Reset Filters</a>
+    <div class="empty-state-box border">
+        <div class="empty-state-icon">
+            <i class="bi bi-inbox"></i>
+        </div>
+        <h5 class="empty-state-title">No Donations Found</h5>
+        <p class="empty-state-desc mb-3">Try adjusting your search criteria, category or city filters.</p>
+        <a href="{% url 'donations_list' %}" class="btn-secondary-outline btn-sm">Reset Filters</a>
     </div>
     {% endif %}
 </div>

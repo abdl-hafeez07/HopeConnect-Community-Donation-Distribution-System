@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}About Us | HopeConnect - Bridge Surplus to Scarcity{% endblock %}
+{% block title %}About Us | HopeConnect - Humanitarian Trust Platform{% endblock %}
 
 {% block content %}
 
@@ -8,40 +8,40 @@
      About Header Banner
      ========================================================================== -->
 <div class="page-header">
-    <span class="section-tag">Our Story & Purpose</span>
+    <span class="section-tag">Humanitarian Trust & Mission</span>
     <h1>About HopeConnect</h1>
     <p>
-        Building a direct, trustworthy bridge between generous donors and verified NGOs to eliminate waste and nourish communities.
+        Building a direct, trustworthy bridge between community donors and verified non-profits to eliminate waste and nourish neighborhoods.
     </p>
 </div>
 
 <!-- ==========================================================================
      Mission & Vision Cards
      ========================================================================== -->
-<section class="section-wrapper pt-0">
+<section class="mb-5">
     <div class="row g-4 mb-5">
         <!-- Mission Card -->
         <div class="col-md-6">
-            <div class="custom-card">
-                <div class="card-icon-box">
+            <div class="app-card h-100">
+                <div class="category-icon-wrapper mb-3" style="background: var(--brand-accent-subtle); color: var(--brand-accent);">
                     <i class="bi bi-bullseye"></i>
                 </div>
-                <h3>Our Mission</h3>
-                <p>
-                    To drastically reduce food waste and mobilize donations of essential items like clothing, books, and household goods by providing an accessible, transparent, and technology-driven platform connecting local donors directly with verified grassroots organizations.
+                <h3 class="fw-bold fs-5 mb-2">Our Mission</h3>
+                <p class="text-muted small mb-0">
+                    To drastically reduce edible food loss and mobilize surplus essentials like clothing, books, and hygiene goods by providing an accessible, transparent, and technology-driven platform connecting local donors directly with verified grassroots organizations.
                 </p>
             </div>
         </div>
 
         <!-- Vision Card -->
         <div class="col-md-6">
-            <div class="custom-card">
-                <div class="card-icon-box" style="background-color: var(--color-terra-subtle); color: var(--color-terra);">
-                    <i class="bi bi-eye-fill"></i>
+            <div class="app-card h-100">
+                <div class="category-icon-wrapper mb-3" style="background: #EFF6FF; color: #1D4ED8;">
+                    <i class="bi bi-eye"></i>
                 </div>
-                <h3>Our Vision</h3>
-                <p>
-                    To foster an empathetic, zero-waste society where surplus resources are distributed equitably, ensuring that no nutritious meal or essential necessity goes to waste while someone in our community goes without.
+                <h3 class="fw-bold fs-5 mb-2">Our Vision</h3>
+                <p class="text-muted small mb-0">
+                    To foster a dignified, zero-waste society where surplus resources are distributed equitably, ensuring that no nutritious meal or daily essential goes to waste while an underserved neighbor goes without.
                 </p>
             </div>
         </div>
@@ -52,61 +52,53 @@
          ========================================================================== -->
     <div class="mb-5">
         <div class="text-center mb-4">
-            <span class="badge mb-2" style="background-color: var(--color-sage); color: var(--color-forest); font-weight: 700;">
-                OUR ECOSYSTEM
-            </span>
-            <h2 class="section-title">The 3-Role Community Model</h2>
-            <p class="section-subtitle">
-                HopeConnect is purposefully engineered to eliminate intermediate bottlenecks through a streamlined three-role platform.
+            <span class="section-tag">Our Architecture</span>
+            <h2 class="fw-bold mb-2">The 3-Role Community Model</h2>
+            <p class="text-muted small mb-0" style="max-width: 600px; margin: 0 auto;">
+                HopeConnect is purposefully engineered to eliminate intermediate bottlenecks through a streamlined, transparent three-role ecosystem.
             </p>
         </div>
 
         <div class="row g-4">
             <!-- Role 1: Donors -->
             <div class="col-md-4">
-                <div class="custom-card text-center p-4">
-                    <div class="card-icon-box mx-auto">
-                        <i class="bi bi-heart-fill"></i>
+                <div class="app-card text-center p-4 h-100">
+                    <div class="category-icon-wrapper mx-auto mb-3">
+                        <i class="bi bi-heart"></i>
                     </div>
-                    <h4 class="fw-bold">1. Community Donors</h4>
-                    <p class="text-secondary small">
-                        Households, restaurants, caterers, and corporate teams quickly list surplus food and goods with clear pickup times, photos, and safety details.
+                    <h5 class="fw-bold fs-6">1. Community Donors</h5>
+                    <p class="text-muted small mb-3">
+                        Households, restaurants, caterers, and corporate teams quickly publish surplus goods with photos, quantity, and safe pickup schedules.
                     </p>
-                    <div class="mt-3">
-                        <span class="badge" style="background-color: var(--color-sage); color: var(--color-forest);">Direct Listing</span>
-                    </div>
+                    <span class="badge bg-light text-secondary border">Direct Listing</span>
                 </div>
             </div>
 
             <!-- Role 2: Verified NGOs -->
             <div class="col-md-4">
-                <div class="custom-card text-center p-4">
-                    <div class="card-icon-box mx-auto" style="background-color: var(--color-terra-subtle); color: var(--color-terra);">
-                        <i class="bi bi-buildings-fill"></i>
+                <div class="app-card text-center p-4 h-100">
+                    <div class="category-icon-wrapper mx-auto mb-3" style="background: var(--brand-accent-subtle); color: var(--brand-accent);">
+                        <i class="bi bi-buildings"></i>
                     </div>
-                    <h4 class="fw-bold">2. Verified NGOs</h4>
-                    <p class="text-secondary small">
-                        Vetted social organizations claim donations matching their beneficiary needs and coordinate scheduled pickups directly with the donor.
+                    <h5 class="fw-bold fs-6">2. Verified NGOs</h5>
+                    <p class="text-muted small mb-3">
+                        Vetted grassroots non-profits claim items matching their beneficiary programs and coordinate pickup logistics directly with donors.
                     </p>
-                    <div class="mt-3">
-                        <span class="badge" style="background-color: var(--color-terra-subtle); color: var(--color-terra);">Vetted Partners</span>
-                    </div>
+                    <span class="badge badge-approved">Vetted Partners</span>
                 </div>
             </div>
 
             <!-- Role 3: Platform Admins -->
             <div class="col-md-4">
-                <div class="custom-card text-center p-4">
-                    <div class="card-icon-box mx-auto" style="background-color: #f1f5f9; color: #334155;">
+                <div class="app-card text-center p-4 h-100">
+                    <div class="category-icon-wrapper mx-auto mb-3" style="background: #F1F5F9; color: var(--brand-primary);">
                         <i class="bi bi-shield-check"></i>
                     </div>
-                    <h4 class="fw-bold">3. Trust & Governance</h4>
-                    <p class="text-secondary small">
-                        HopeConnect administrators verify NGO credentials, maintain food safety standards, and provide oversight across all community donation pipelines.
+                    <h5 class="fw-bold fs-6">3. Trust & Governance</h5>
+                    <p class="text-muted small mb-3">
+                        Platform administrators vet NGO credentials, ensure safety standards, and oversee lifecycle handovers across the community network.
                     </p>
-                    <div class="mt-3">
-                        <span class="badge" style="background-color: #f1f5f9; color: #334155;">100% Verified</span>
-                    </div>
+                    <span class="badge badge-completed">100% Verified</span>
                 </div>
             </div>
         </div>
@@ -116,52 +108,50 @@
          Our Core Values
          ========================================================================== -->
     <div class="text-center mb-5">
-        <span class="badge mb-2" style="background-color: var(--color-sage); color: var(--color-forest); font-weight: 700;">
-            WHAT GUIDES US
-        </span>
-        <h2 class="section-title">Our Core Values</h2>
-        <p class="section-subtitle">
-            These foundational principles shape every feature, partnership, and connection we build.
+        <span class="section-tag">Guiding Principles</span>
+        <h2 class="fw-bold mb-2">Our Core Values</h2>
+        <p class="text-muted small mb-4" style="max-width: 600px; margin: 0 auto;">
+            Foundational commitments that shape every connection, feature, and partnership we build.
         </p>
 
-        <div class="row g-4 text-start">
+        <div class="row g-3 text-start">
             <div class="col-md-6 col-lg-3">
-                <div class="custom-card">
-                    <div class="card-icon-box">
-                        <i class="bi bi-heart-pulse-fill"></i>
+                <div class="app-card h-100 p-4">
+                    <div class="category-icon-wrapper mb-3" style="width: 48px; height: 48px; font-size: 1.3rem;">
+                        <i class="bi bi-heart-pulse"></i>
                     </div>
-                    <h4 class="fw-bold fs-5">Compassion</h4>
-                    <p class="text-secondary small">Empathy sits at the heart of our platform, treating every donor and beneficiary with dignity and respect.</p>
+                    <h6 class="fw-bold mb-1">Compassion</h6>
+                    <p class="text-muted small mb-0">Empathy sits at the core of our platform, treating every donor and recipient with equal dignity.</p>
                 </div>
             </div>
 
             <div class="col-md-6 col-lg-3">
-                <div class="custom-card">
-                    <div class="card-icon-box" style="background-color: var(--color-terra-subtle); color: var(--color-terra);">
+                <div class="app-card h-100 p-4">
+                    <div class="category-icon-wrapper mb-3" style="width: 48px; height: 48px; font-size: 1.3rem; background: var(--brand-accent-subtle); color: var(--brand-accent);">
                         <i class="bi bi-check2-circle"></i>
                     </div>
-                    <h4 class="fw-bold fs-5">Transparency</h4>
-                    <p class="text-secondary small">Live status tracking and verified NGO partners give donors complete confidence in where their contributions go.</p>
+                    <h6 class="fw-bold mb-1">Transparency</h6>
+                    <p class="text-muted small mb-0">Live status tracking and verified partner records give donors complete confidence in their contribution impact.</p>
                 </div>
             </div>
 
             <div class="col-md-6 col-lg-3">
-                <div class="custom-card">
-                    <div class="card-icon-box">
+                <div class="app-card h-100 p-4">
+                    <div class="category-icon-wrapper mb-3" style="width: 48px; height: 48px; font-size: 1.3rem; background: #ECFDF5; color: #047857;">
                         <i class="bi bi-recycle"></i>
                     </div>
-                    <h4 class="fw-bold fs-5">Zero Waste</h4>
-                    <p class="text-secondary small">Championing sustainability by redirecting surplus food and usable goods before they enter municipal landfills.</p>
+                    <h6 class="fw-bold mb-1">Zero Waste</h6>
+                    <p class="text-muted small mb-0">Championing sustainability by redirecting surplus food and usable goods away from municipal landfills.</p>
                 </div>
             </div>
 
             <div class="col-md-6 col-lg-3">
-                <div class="custom-card">
-                    <div class="card-icon-box" style="background-color: var(--color-terra-subtle); color: var(--color-terra);">
-                        <i class="bi bi-people-fill"></i>
+                <div class="app-card h-100 p-4">
+                    <div class="category-icon-wrapper mb-3" style="width: 48px; height: 48px; font-size: 1.3rem;">
+                        <i class="bi bi-people"></i>
                     </div>
-                    <h4 class="fw-bold fs-5">Community</h4>
-                    <p class="text-secondary small">Fostering a resilient, collaborative network where local generosity powers grassroots social action.</p>
+                    <h6 class="fw-bold mb-1">Community</h6>
+                    <p class="text-muted small mb-0">Fostering a resilient, collaborative network where local generosity powers grassroots social action.</p>
                 </div>
             </div>
         </div>
@@ -170,27 +160,25 @@
     <!-- ==========================================================================
          Community Impact Story & CTA
          ========================================================================== -->
-    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+    <div class="app-card p-4 p-md-5">
         <div class="row align-items-center g-4">
             <div class="col-lg-8">
-                <span class="badge mb-2" style="background-color: var(--color-terra-subtle); color: var(--color-terra); font-weight: 700;">
-                    MAKING A DIFFERENCE
-                </span>
+                <span class="section-tag mb-2">Social Impact</span>
                 <h3 class="fw-bold mb-3">Bridging The Gap Across Communities</h3>
-                <p class="text-secondary mb-3">
-                    Every day, tons of wholesome food and valuable everyday items are discarded simply because there is no fast, trusted way to match them with organizations in need. HopeConnect transforms that surplus into immediate community relief.
+                <p class="text-muted small mb-3" style="line-height: 1.7;">
+                    Every day, wholesome food and usable everyday items are discarded simply because there is no fast, trusted mechanism to match surplus with urgent local need. HopeConnect replaces confusion and delay with direct, accountable handovers.
                 </p>
-                <p class="text-secondary mb-0">
-                    By partnering with verified NGOs, we ensure donations are claimed quickly, transported safely, and placed directly in the hands of people who need them most.
+                <p class="text-muted small mb-0" style="line-height: 1.7;">
+                    By partnering exclusively with verified social impact organizations, we guarantee donations are preserved safely, collected promptly, and placed directly in the hands of vulnerable families.
                 </p>
             </div>
             <div class="col-lg-4 text-center">
-                <div class="p-4 rounded-4" style="background-color: var(--color-sage); border: 1px solid var(--color-sage-dark);">
-                    <div class="metric-number text-dark mb-1">100%</div>
-                    <div class="metric-label mb-2">Verified Social Partners</div>
-                    <p class="small text-secondary mb-3">Every NGO on our platform is vetted for authentic community impact.</p>
-                    <a href="{% url 'register' %}" class="btn btn-forest btn-sm w-100 fw-bold">
-                        <i class="bi bi-buildings me-1"></i> Register as NGO
+                <div class="p-4 rounded-4 bg-light border">
+                    <div class="stat-badge mb-1">100%</div>
+                    <div class="stat-label mb-2">Verified Social Partners</div>
+                    <p class="small text-muted mb-3">Every NGO on our platform undergoes strict credential verification.</p>
+                    <a href="{% url 'register' %}" class="btn-action btn-sm w-100">
+                        <i class="bi bi-shield-check me-1"></i> Join as Partner NGO
                     </a>
                 </div>
             </div>

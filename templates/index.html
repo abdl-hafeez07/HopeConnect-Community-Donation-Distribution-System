@@ -5,37 +5,32 @@
 {% block content %}
 
 <!-- ==========================================================================
-     Hero Section (Warm Terra & Forest)
+     Hero Section (Midnight Navy #192335 Theme)
      ========================================================================== -->
-<section class="hero-forest text-center">
+<section class="hero-midnight">
     <div class="container position-relative" style="z-index: 2;">
-        <div class="d-flex flex-wrap justify-content-center gap-2 mb-3">
-            <span class="hero-badge-pill">
-                <i class="bi bi-patch-check-fill text-warning"></i> 100% Verified NGOs
-            </span>
-            <span class="hero-badge-pill">
-                <i class="bi bi-recycle"></i> Zero Waste Community Network
-            </span>
-            <span class="hero-badge-pill">
-                <i class="bi bi-geo-alt-fill"></i> Direct Local Handover
-            </span>
+        <!-- Inline Trust Ticker Badge -->
+        <div class="hero-ticker-badge">
+            <span class="pulse-dot"></span>
+            <span>Direct Handshakes &bull; Zero Middlemen &bull; 100% Verified NGOs</span>
         </div>
 
-        <h1 class="hero-title-bold">
-            Bridge Surplus to Scarcity
+        <h1 class="hero-title-main">
+            Bridge Surplus to Scarcity.<br>
+            <span class="accent-word">Direct Community Giving.</span>
         </h1>
 
-        <p class="hero-lead-text">
-            Connecting generous community donors with verified NGOs to rescue food, redistribute essentials, and fight hunger through a direct, transparent 4-stage pipeline.
+        <p class="hero-lead">
+            HopeConnect connects generous local donors directly with verified grassroots organizations to rescue surplus food, distribute clothing, and supply educational essentials without logistical delays.
         </p>
 
         <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a href="{% url 'create_donation' %}" class="btn btn-terra btn-lg text-white shadow-sm fw-bold px-4">
-                <i class="bi bi-plus-circle me-1"></i> Donate Food & Items
+            <a href="{% url 'create_donation' %}" class="btn-action btn-lg px-4 fs-6 shadow">
+                <i class="bi bi-box-seam me-1"></i> Donate Items Now
             </a>
 
-            <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg fw-bold px-4">
-                <i class="bi bi-buildings me-1"></i> Join as Partner NGO
+            <a href="{% url 'register' %}" class="btn-hero-outline btn-lg px-4 fs-6">
+                <i class="bi bi-shield-check me-1"></i> Register as NGO Partner
             </a>
         </div>
     </div>
@@ -47,104 +42,171 @@
 <section class="mb-5">
     <div class="row g-3">
         <div class="col-6 col-lg-3">
-            <div class="stat-card p-3 p-md-4 text-center">
-                <div class="stat-number text-dark">100%</div>
+            <div class="app-card p-3 p-md-4 text-center h-100">
+                <div class="stat-badge text-primary mb-1">100%</div>
                 <div class="stat-label">Verified NGO Partners</div>
             </div>
         </div>
 
         <div class="col-6 col-lg-3">
-            <div class="stat-card p-3 p-md-4 text-center">
-                <div class="stat-number text-dark">0%</div>
-                <div class="stat-label">Intermediary Overhead</div>
+            <div class="app-card p-3 p-md-4 text-center h-100">
+                <div class="stat-badge text-dark mb-1">0%</div>
+                <div class="stat-label">Middlemen Overhead</div>
             </div>
         </div>
 
         <div class="col-6 col-lg-3">
-            <div class="stat-card p-3 p-md-4 text-center">
-                <div class="stat-number text-dark">Direct</div>
-                <div class="stat-label">Donor &rarr; NGO Workflow</div>
+            <div class="app-card p-3 p-md-4 text-center h-100">
+                <div class="stat-badge mb-1" style="color: var(--brand-accent);">Direct</div>
+                <div class="stat-label">Donor &rarr; NGO Handover</div>
             </div>
         </div>
 
         <div class="col-6 col-lg-3">
-            <div class="stat-card p-3 p-md-4 text-center">
-                <div class="stat-number text-dark">Real-time</div>
-                <div class="stat-label">Lifecycle Tracking</div>
+            <div class="app-card p-3 p-md-4 text-center h-100">
+                <div class="stat-badge text-success mb-1">Live</div>
+                <div class="stat-label">Real-time Status Tracking</div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ==========================================================================
-     How It Works: 4-Stage Direct Pipeline
+     4-Step Interactive Visual Flow
      ========================================================================== -->
 <section class="mb-5">
     <div class="text-center mb-4">
-        <span class="badge mb-2" style="background-color: var(--color-sage); color: var(--color-forest); font-weight: 700;">
-            THE DIRECT PIPELINE
-        </span>
+        <span class="section-tag-light">Direct 4-Stage Pipeline</span>
         <h2 class="fw-bold mb-2">How HopeConnect Works</h2>
-        <p class="text-muted mb-0" style="max-width: 600px; margin: 0 auto;">
-            Our streamlined 4-stage process removes third-party delays and puts resources directly into the hands of local social workers.
+        <p class="text-muted mb-0" style="max-width: 600px; margin: 0 auto; font-size: 0.95rem;">
+            A streamlined, transparent workflow engineered to ensure every contribution reaches verified community beneficiaries.
         </p>
     </div>
 
-    <div class="row g-4">
-        <!-- Stage 1: Post -->
-        <div class="col-md-6 col-lg-3">
-            <div class="step-card">
-                <div class="step-icon-wrapper">
-                    <i class="bi bi-gift-fill"></i>
+    <div class="row g-3 position-relative">
+        <!-- Step 1 -->
+        <div class="col-md-6 col-lg-3 step-flow-col position-relative">
+            <div class="step-card-box">
+                <div class="step-number-chip">1</div>
+                <div class="step-icon-container">
+                    <i class="bi bi-gift"></i>
                 </div>
-                <div class="step-badge">Stage 1</div>
-                <h4 class="fw-bold fs-5 mb-2">1. Post</h4>
+                <h5 class="fw-bold fs-6 mb-2">1. Donor Lists Surplus</h5>
                 <p class="text-muted small mb-0">
-                    Donors list excess food, clothing, books, or essentials with pickup location, date, and safe expiry deadline.
+                    Donors list excess food, clothing, books, or essentials with pickup address, date, and safe expiry guidelines.
                 </p>
             </div>
         </div>
 
-        <!-- Stage 2: Request -->
-        <div class="col-md-6 col-lg-3">
-            <div class="step-card">
-                <div class="step-icon-wrapper">
-                    <i class="bi bi-send-fill"></i>
+        <!-- Step 2 -->
+        <div class="col-md-6 col-lg-3 step-flow-col position-relative">
+            <div class="step-card-box">
+                <div class="step-number-chip">2</div>
+                <div class="step-icon-container">
+                    <i class="bi bi-send-check"></i>
                 </div>
-                <div class="step-badge">Stage 2</div>
-                <h4 class="fw-bold fs-5 mb-2">2. Request</h4>
+                <h5 class="fw-bold fs-6 mb-2">2. Verified NGO Requests</h5>
                 <p class="text-muted small mb-0">
                     Verified local NGOs browse the active catalog and submit a direct application outlining their distribution plan.
                 </p>
             </div>
         </div>
 
-        <!-- Stage 3: Approve -->
-        <div class="col-md-6 col-lg-3">
-            <div class="step-card">
-                <div class="step-icon-wrapper">
-                    <i class="bi bi-check-circle-fill"></i>
+        <!-- Step 3 -->
+        <div class="col-md-6 col-lg-3 step-flow-col position-relative">
+            <div class="step-card-box">
+                <div class="step-number-chip">3</div>
+                <div class="step-icon-container">
+                    <i class="bi bi-shield-check"></i>
                 </div>
-                <div class="step-badge">Stage 3</div>
-                <h4 class="fw-bold fs-5 mb-2">3. Approve</h4>
+                <h5 class="fw-bold fs-6 mb-2">3. Donor Approves Location</h5>
                 <p class="text-muted small mb-0">
-                    The donor reviews incoming requests, selects the recipient NGO, and automatically unlocks direct pickup contact details.
+                    The donor reviews incoming requests, selects the recipient NGO, and automatically unlocks pickup contact details.
                 </p>
             </div>
         </div>
 
-        <!-- Stage 4: Collect -->
-        <div class="col-md-6 col-lg-3">
-            <div class="step-card">
-                <div class="step-icon-wrapper">
-                    <i class="bi bi-box-seam-fill"></i>
+        <!-- Step 4 -->
+        <div class="col-md-6 col-lg-3 step-flow-col position-relative">
+            <div class="step-card-box">
+                <div class="step-number-chip">4</div>
+                <div class="step-icon-container">
+                    <i class="bi bi-box-seam"></i>
                 </div>
-                <div class="step-badge">Stage 4</div>
-                <h4 class="fw-bold fs-5 mb-2">4. Collect</h4>
+                <h5 class="fw-bold fs-6 mb-2">4. Direct Pickup & Handover</h5>
                 <p class="text-muted small mb-0">
-                    The NGO coordinates directly with the donor, collects items at the scheduled time, and confirms final completion.
+                    The NGO coordinates directly with the donor, collects items at the scheduled time, and confirms final handover.
                 </p>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     Category Showcase Grid
+     ========================================================================== -->
+<section class="mb-5">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+        <div>
+            <span class="section-tag-light mb-1">Resource Categories</span>
+            <h3 class="fw-bold mb-0">Explore Community Needs</h3>
+        </div>
+        <a href="{% url 'donations_list' %}" class="btn-secondary-outline btn-sm">
+            Browse All Categories <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+    </div>
+
+    <div class="row g-3">
+        <!-- Category 1 -->
+        <div class="col-6 col-lg-3">
+            <a href="{% url 'donations_list' %}?q=food" class="text-decoration-none">
+                <div class="category-card-item">
+                    <div class="category-icon-box">
+                        <i class="bi bi-egg-fried"></i>
+                    </div>
+                    <h5 class="fw-bold fs-6 text-dark mb-1">Cooked Food & Meals</h5>
+                    <p class="small text-muted mb-0">Banquet & restaurant surplus</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Category 2 -->
+        <div class="col-6 col-lg-3">
+            <a href="{% url 'donations_list' %}?q=clothing" class="text-decoration-none">
+                <div class="category-card-item">
+                    <div class="category-icon-box">
+                        <i class="bi bi-handbag"></i>
+                    </div>
+                    <h5 class="fw-bold fs-6 text-dark mb-1">Clothes & Apparel</h5>
+                    <p class="small text-muted mb-0">Jackets, blankets, shoes</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Category 3 -->
+        <div class="col-6 col-lg-3">
+            <a href="{% url 'donations_list' %}?q=book" class="text-decoration-none">
+                <div class="category-card-item">
+                    <div class="category-icon-box">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h5 class="fw-bold fs-6 text-dark mb-1">Books & School Kits</h5>
+                    <p class="small text-muted mb-0">Textbooks, stationery, novels</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Category 4 -->
+        <div class="col-6 col-lg-3">
+            <a href="{% url 'donations_list' %}?q=supplies" class="text-decoration-none">
+                <div class="category-card-item">
+                    <div class="category-icon-box">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h5 class="fw-bold fs-6 text-dark mb-1">Medical & Essentials</h5>
+                    <p class="small text-muted mb-0">First aid, hygiene, rations</p>
+                </div>
+            </a>
         </div>
     </div>
 </section>
@@ -156,10 +218,10 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
         <div>
             <h3 class="fw-bold mb-1">Available Community Donations</h3>
-            <p class="text-muted mb-0">Live listings ready for request by verified NGOs.</p>
+            <p class="text-muted small mb-0">Real-time listings ready for request by verified social partners.</p>
         </div>
-        <a href="{% url 'donations_list' %}" class="btn btn-outline-forest btn-sm fw-bold">
-            View All Donations <i class="bi bi-arrow-right ms-1"></i>
+        <a href="{% url 'donations_list' %}" class="btn-secondary-outline btn-sm">
+            View All Listings <i class="bi bi-arrow-right ms-1"></i>
         </a>
     </div>
 
@@ -167,40 +229,41 @@
     <div class="row g-4">
         {% for donation in recent_donations %}
         <div class="col-md-6 col-lg-4">
-            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column">
+            <div class="app-card h-100 d-flex flex-column p-0 overflow-hidden">
                 {% if donation.image %}
-                <img src="{{ donation.image.url }}" class="card-img-top" alt="{{ donation.title }}" style="height: 190px; object-fit: cover;">
+                <img src="{{ donation.image.url }}" class="w-100" alt="{{ donation.title }}" style="height: 190px; object-fit: cover;">
                 {% else %}
-                <div class="d-flex align-items-center justify-content-center bg-light text-muted" style="height: 190px;">
-                    <i class="bi bi-gift fs-1 opacity-50"></i>
+                <div class="d-flex align-items-center justify-content-center bg-light text-secondary" style="height: 190px;">
+                    <i class="bi bi-box-seam fs-1 opacity-50"></i>
                 </div>
                 {% endif %}
 
-                <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                <div class="p-4 d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         {% if donation.category %}
-                        <span class="badge bg-light text-dark border">{{ donation.category.name }}</span>
+                        <span class="badge bg-light text-secondary border">{{ donation.category.name }}</span>
                         {% else %}
-                        <span class="badge bg-light text-muted border">Community Item</span>
+                        <span class="badge bg-light text-secondary border">Essential Item</span>
                         {% endif %}
-                        <span class="badge bg-success">Available</span>
+                        <span class="badge badge-available">Available</span>
                     </div>
 
-                    <h5 class="fw-bold mb-1">
+                    <h5 class="fw-bold mb-1 fs-6">
                         <a href="{% url 'donation_detail' donation.id %}" class="text-decoration-none text-dark">
                             {{ donation.title }}
                         </a>
                     </h5>
+
                     <p class="text-muted small mb-3 flex-grow-1 text-truncate">
                         {{ donation.description|default:"No special notes provided." }}
                     </p>
 
                     <div class="border-top pt-3 mt-auto">
-                        <div class="d-flex justify-content-between align-items-center small text-muted mb-2">
-                            <span><i class="bi bi-box-seam me-1"></i>{{ donation.quantity }}</span>
+                        <div class="d-flex justify-content-between align-items-center small text-muted mb-3">
+                            <span><i class="bi bi-layers me-1"></i>{{ donation.quantity }}</span>
                             <span><i class="bi bi-geo-alt me-1"></i>{{ donation.city|default:"Local" }}</span>
                         </div>
-                        <a href="{% url 'donation_detail' donation.id %}" class="btn btn-outline-forest btn-sm w-100 fw-bold">
+                        <a href="{% url 'donation_detail' donation.id %}" class="btn-action btn-sm w-100 text-center">
                             View & Request
                         </a>
                     </div>
@@ -210,34 +273,39 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="card border-0 shadow-sm rounded-4 p-5 text-center text-muted">
-        <i class="bi bi-box2 fs-1 d-block mb-2 text-muted"></i>
-        <h5 class="fw-bold">No Available Donations Right Now</h5>
-        <p class="small text-muted mb-3">Be the first to list surplus food or essentials for verified local NGOs.</p>
-        <div>
-            <a href="{% url 'create_donation' %}" class="btn btn-forest fw-bold">
-                <i class="bi bi-plus-circle me-1"></i> Post a Donation
-            </a>
+    <div class="empty-state-box border">
+        <div class="empty-state-icon">
+            <i class="bi bi-inbox"></i>
         </div>
+        <h5 class="empty-state-title">No Active Donations Currently Listed</h5>
+        <p class="empty-state-desc mb-3">
+            Be the first community member today to post excess food, supplies, or apparel.
+        </p>
+        <a href="{% url 'create_donation' %}" class="btn-action btn-sm">
+            <i class="bi bi-plus-circle me-1"></i> Make a Donation
+        </a>
     </div>
     {% endif %}
 </section>
 
 <!-- ==========================================================================
-     Call To Action Banner (Terra Accent)
+     Bottom Call to Action Banner
      ========================================================================== -->
-<section class="card border-0 shadow-sm rounded-4 p-4 p-md-5 text-center text-white mb-4" style="background: linear-gradient(135deg, #1A4D2E 0%, #133821 100%);">
+<section class="app-card p-4 p-md-5 text-center mb-4" style="background: linear-gradient(145deg, #101724 0%, #192335 100%); color: #FFFFFF;">
     <div class="container py-2">
-        <h2 class="fw-bold mb-2">Ready to Make an Immediate Difference?</h2>
-        <p class="mb-4 text-white-50" style="max-width: 600px; margin: 0 auto;">
-            Whether you have surplus banquet food, unneeded clothing, or surplus inventory, your donation directly empowers local communities.
+        <span class="badge mb-2" style="background: rgba(255, 255, 255, 0.12); color: #E2E8F0; border: 1px solid rgba(255, 255, 255, 0.2);">
+            Grassroots Impact
+        </span>
+        <h2 class="fw-bold text-white mb-2">Ready to Bridge Surplus to Scarcity?</h2>
+        <p class="mb-4 text-white-50" style="max-width: 600px; margin: 0 auto; font-size: 0.95rem;">
+            Join local restaurants, community members, and vetted grassroots initiatives building an accountable, zero-waste safety net.
         </p>
 
         <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a href="{% url 'create_donation' %}" class="btn btn-terra btn-lg text-white shadow-sm fw-bold px-4">
-                <i class="bi bi-plus-circle me-1"></i> List an Item Now
+            <a href="{% url 'create_donation' %}" class="btn-action btn-lg px-4 fs-6">
+                <i class="bi bi-box-seam me-1"></i> List Surplus Goods
             </a>
-            <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg fw-bold px-4">
+            <a href="{% url 'about' %}" class="btn-hero-outline btn-lg px-4 fs-6">
                 <i class="bi bi-info-circle me-1"></i> Learn About HopeConnect
             </a>
         </div>
