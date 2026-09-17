@@ -23,7 +23,7 @@
     <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
 
     <!-- Custom CSS (Hopper NGO Inspired Design System) -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1.1">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1.3">
 </head>
 
 <body>
@@ -245,7 +245,7 @@
     ====================================================================== -->
     <main class="{% if request.resolver_match.url_name == 'home' %}p-0 m-0 w-100{% else %}container py-3{% endif %}">
         {% if messages %}
-        <div class="{% if request.resolver_match.url_name == 'home' %}container pt-3{% endif %}">
+            {% if request.resolver_match.url_name != 'home' %}
             <div class="messages-container mb-4">
                 {% for message in messages %}
                 <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible fade show d-flex align-items-center justify-content-between shadow-sm border" role="alert">
@@ -265,7 +265,10 @@
                 </div>
                 {% endfor %}
             </div>
-        </div>
+            {% else %}
+                {# Silently consume messages on home page so no unwanted alert container or hero displacement occurs on logout #}
+                {% for message in messages %}{% endfor %}
+            {% endif %}
         {% endif %}
 
         {% block content %}

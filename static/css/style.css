@@ -1513,3 +1513,651 @@ h1, h2, h3, h4, h5, h6 {
 .app-card:hover img {
     transform: scale(1.03);
 }
+
+/* ==========================================================================
+   Redesigned Showcase Sections: Explore Needs & Available Donations
+   ========================================================================== */
+
+/* Section Spacing & Hierarchy */
+.showcase-section {
+    position: relative;
+    margin-bottom: 3.5rem;
+}
+
+.showcase-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.65rem;
+}
+
+.showcase-title-wrap {
+    max-width: 620px;
+}
+
+.showcase-heading {
+    font-family: 'Onest', sans-serif;
+    font-weight: 800;
+    font-size: 1.65rem;
+    color: #192335;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.25rem;
+    line-height: 1.25;
+}
+
+.showcase-subtext {
+    color: #64748B;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+.showcase-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.15rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(25, 35, 53, 0.12);
+    background: #FFFFFF;
+    color: #192335 !important;
+    font-family: 'Onest', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none !important;
+    box-shadow: 0 2px 6px rgba(25, 35, 53, 0.03);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.showcase-action-btn i {
+    transition: transform 0.25s ease;
+}
+
+.showcase-action-btn:hover {
+    border-color: rgba(57, 164, 107, 0.4);
+    background: #F8FAFC;
+    color: var(--hc-primary, #39A46B) !important;
+    box-shadow: 0 4px 14px rgba(57, 164, 107, 0.12);
+    transform: translateY(-1px);
+}
+
+.showcase-action-btn:hover i {
+    transform: translateX(3px);
+}
+
+/* Auto Slide Carousel for Explore Community Needs */
+.needs-carousel-viewport {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 0.5rem 0.25rem 1.25rem 0.25rem;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 2.5%, #000 97.5%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 2.5%, #000 97.5%, transparent 100%);
+}
+
+.needs-carousel-track {
+    display: flex;
+    gap: 1.25rem;
+    width: max-content;
+    animation: needs-auto-slide 24s linear infinite;
+    will-change: transform;
+}
+
+.needs-carousel-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes needs-auto-slide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        /* 4 original items + 4 duplicates. Translating by 50% loops seamlessly */
+        transform: translateX(calc(-50% - 0.625rem));
+    }
+}
+
+.needs-slide-item {
+    flex: 0 0 280px;
+    width: 280px;
+}
+
+@media (max-width: 576px) {
+    .needs-slide-item {
+        flex: 0 0 250px;
+        width: 250px;
+    }
+}
+
+.slider-nav-btns {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.slider-arrow-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(25, 35, 53, 0.12);
+    background: #FFFFFF;
+    color: #192335;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(25, 35, 53, 0.04);
+}
+
+.slider-arrow-btn:hover {
+    background: #192335;
+    color: #FFFFFF;
+    border-color: #192335;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(25, 35, 53, 0.15);
+}
+
+/* Category Need Cards */
+.needs-category-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(25, 35, 53, 0.08);
+    border-radius: 18px;
+    padding: 1.45rem 1.3rem;
+    transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px rgba(25, 35, 53, 0.03);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none !important;
+}
+
+.needs-category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    opacity: 0.85;
+    transition: opacity 0.25s ease, height 0.25s ease;
+}
+
+.needs-category-card:hover {
+    transform: translateY(-4px);
+}
+
+.needs-category-card:hover::before {
+    opacity: 1;
+    height: 4.5px;
+}
+
+.needs-category-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.15rem;
+}
+
+.needs-category-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    font-size: 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+}
+
+.needs-category-arrow {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #F8FAFC;
+    color: #94A3B8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.25s ease;
+}
+
+.needs-category-card:hover .needs-category-arrow {
+    transform: translateX(3px);
+}
+
+.needs-category-title {
+    font-family: 'Onest', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #192335;
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+}
+
+.needs-category-desc {
+    font-size: 0.85rem;
+    color: #64748B;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Distinct Vibrant Category Color Signatures
+   -------------------------------------------------------------------------- */
+
+/* 1. Food & Meals (Warm Amber) */
+.card-cat-food::before {
+    background: linear-gradient(90deg, #F59E0B, #FBBF24) !important;
+}
+.card-cat-food:hover {
+    border-color: rgba(245, 158, 11, 0.45) !important;
+    box-shadow: 0 12px 28px rgba(25, 35, 53, 0.08), 0 4px 14px rgba(245, 158, 11, 0.16) !important;
+}
+.icon-cat-food {
+    background: #FEF3C7 !important;
+    color: #D97706 !important;
+}
+.card-cat-food:hover .icon-cat-food {
+    background: #F59E0B !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35) !important;
+    transform: scale(1.06);
+}
+.card-cat-food:hover .arrow-cat-food {
+    background: #FEF3C7 !important;
+    color: #D97706 !important;
+}
+
+/* 2. Clothes & Apparel (Royal Indigo) */
+.card-cat-clothing::before {
+    background: linear-gradient(90deg, #4F46E5, #818CF8) !important;
+}
+.card-cat-clothing:hover {
+    border-color: rgba(79, 70, 229, 0.45) !important;
+    box-shadow: 0 12px 28px rgba(25, 35, 53, 0.08), 0 4px 14px rgba(79, 70, 229, 0.16) !important;
+}
+.icon-cat-clothing {
+    background: #EEF2FF !important;
+    color: #4F46E5 !important;
+}
+.card-cat-clothing:hover .icon-cat-clothing {
+    background: #4F46E5 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35) !important;
+    transform: scale(1.06);
+}
+.card-cat-clothing:hover .arrow-cat-clothing {
+    background: #EEF2FF !important;
+    color: #4F46E5 !important;
+}
+
+/* 3. Books & School Kits (Ocean Cyan) */
+.card-cat-books::before {
+    background: linear-gradient(90deg, #0284C7, #38BDF8) !important;
+}
+.card-cat-books:hover {
+    border-color: rgba(2, 132, 199, 0.45) !important;
+    box-shadow: 0 12px 28px rgba(25, 35, 53, 0.08), 0 4px 14px rgba(2, 132, 199, 0.16) !important;
+}
+.icon-cat-books {
+    background: #E0F2FE !important;
+    color: #0284C7 !important;
+}
+.card-cat-books:hover .icon-cat-books {
+    background: #0284C7 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35) !important;
+    transform: scale(1.06);
+}
+.card-cat-books:hover .arrow-cat-books {
+    background: #E0F2FE !important;
+    color: #0284C7 !important;
+}
+
+/* 4. Medical & Essentials (Vivid Rose) */
+.card-cat-medical::before {
+    background: linear-gradient(90deg, #E11D48, #FB7185) !important;
+}
+.card-cat-medical:hover {
+    border-color: rgba(225, 29, 72, 0.45) !important;
+    box-shadow: 0 12px 28px rgba(25, 35, 53, 0.08), 0 4px 14px rgba(225, 29, 72, 0.16) !important;
+}
+.icon-cat-medical {
+    background: #FFE4E6 !important;
+    color: #E11D48 !important;
+}
+.card-cat-medical:hover .icon-cat-medical {
+    background: #E11D48 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 16px rgba(225, 29, 72, 0.35) !important;
+    transform: scale(1.06);
+}
+.card-cat-medical:hover .arrow-cat-medical {
+    background: #FFE4E6 !important;
+    color: #E11D48 !important;
+}
+
+/* Subtle connecting flow line between sections */
+.community-flow-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2.75rem 0 2.25rem 0;
+}
+
+.flow-connector-line {
+    height: 1px;
+    flex-grow: 1;
+    background: linear-gradient(90deg, transparent, rgba(25, 35, 53, 0.12), transparent);
+}
+
+.flow-connector-badge {
+    padding: 0.32rem 1.15rem;
+    border-radius: var(--radius-pill);
+    background: #192335;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    font-family: 'Onest', sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 16px rgba(25, 35, 53, 0.16);
+}
+
+.pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4EC185;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(78, 193, 133, 0.8);
+    animation: pulse-ring 1.8s infinite;
+}
+
+@keyframes pulse-ring {
+    0% {
+        box-shadow: 0 0 0 0 rgba(78, 193, 133, 0.8);
+    }
+    70% {
+        box-shadow: 0 0 0 7px rgba(78, 193, 133, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(78, 193, 133, 0);
+    }
+}
+
+/* Redesigned Community Empty State Canvas */
+.community-empty-canvas {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FAFBFB 100%);
+    border: 1px solid rgba(25, 35, 53, 0.09);
+    border-radius: 22px;
+    padding: 3.5rem 1.8rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(25, 35, 53, 0.03);
+}
+
+.community-empty-canvas::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 240px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #39A46B, transparent);
+}
+
+.empty-radar-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.35rem;
+}
+
+.empty-radar-pulse {
+    position: absolute;
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background: rgba(57, 164, 107, 0.12);
+    animation: radar-expand 2.4s infinite ease-out;
+}
+
+@keyframes radar-expand {
+    0% {
+        transform: scale(0.85);
+        opacity: 0.85;
+    }
+    100% {
+        transform: scale(1.35);
+        opacity: 0;
+    }
+}
+
+.empty-radar-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #EEF7F2 0%, #E0F2E9 100%);
+    border: 1px solid rgba(57, 164, 107, 0.28);
+    color: #39A46B;
+    font-size: 1.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(57, 164, 107, 0.18);
+    position: relative;
+    z-index: 1;
+}
+
+.empty-canvas-title {
+    font-family: 'Onest', sans-serif;
+    font-weight: 800;
+    font-size: 1.32rem;
+    color: #192335;
+    margin-bottom: 0.45rem;
+    letter-spacing: -0.02em;
+}
+
+.empty-canvas-desc {
+    font-size: 0.94rem;
+    color: #64748B;
+    max-width: 460px;
+    margin: 0 auto 1.4rem auto;
+    line-height: 1.6;
+}
+
+.empty-connected-pills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    margin-bottom: 1.75rem;
+}
+
+.empty-need-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    background: #FFFFFF;
+    border: 1px solid rgba(25, 35, 53, 0.08);
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+}
+
+/* Matching Empty State Chips */
+.chip-cat-food {
+    color: #92400E !important;
+    background: #FFFBEB !important;
+    border-color: rgba(245, 158, 11, 0.25) !important;
+}
+.chip-cat-food:hover {
+    border-color: #F59E0B !important;
+    color: #D97706 !important;
+    background: #FEF3C7 !important;
+    transform: translateY(-1px);
+}
+
+.chip-cat-clothing {
+    color: #3730A3 !important;
+    background: #EEF2FF !important;
+    border-color: rgba(79, 70, 229, 0.25) !important;
+}
+.chip-cat-clothing:hover {
+    border-color: #4F46E5 !important;
+    color: #4338CA !important;
+    background: #E0E7FF !important;
+    transform: translateY(-1px);
+}
+
+.chip-cat-books {
+    color: #075985 !important;
+    background: #F0F9FF !important;
+    border-color: rgba(2, 132, 199, 0.25) !important;
+}
+.chip-cat-books:hover {
+    border-color: #0284C7 !important;
+    color: #0369A1 !important;
+    background: #E0F2FE !important;
+    transform: translateY(-1px);
+}
+
+.chip-cat-medical {
+    color: #9F1239 !important;
+    background: #FFF1F2 !important;
+    border-color: rgba(225, 29, 72, 0.25) !important;
+}
+.chip-cat-medical:hover {
+    border-color: #E11D48 !important;
+    color: #BE123C !important;
+    background: #FFE4E6 !important;
+    transform: translateY(-1px);
+}
+
+/* Redesigned Available Donation Cards (When Items Exist) */
+.donation-feed-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(25, 35, 53, 0.08);
+    border-radius: 18px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 16px rgba(25, 35, 53, 0.03);
+    transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.donation-feed-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(57, 164, 107, 0.32);
+    box-shadow: 0 14px 32px rgba(25, 35, 53, 0.08), 0 4px 12px rgba(57, 164, 107, 0.08);
+}
+
+.donation-feed-media {
+    position: relative;
+    overflow: hidden;
+    height: 195px;
+    background: #F1F5F9;
+}
+
+.donation-feed-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.donation-feed-card:hover .donation-feed-media img {
+    transform: scale(1.05);
+}
+
+.donation-feed-fallback {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #F8FAFC 0%, #EEF2F6 100%);
+    color: #94A3B8;
+}
+
+.donation-feed-badges {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+}
+
+.donation-category-pill {
+    background: rgba(25, 35, 53, 0.75);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.donation-feed-body {
+    padding: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.donation-feed-title {
+    font-family: 'Onest', sans-serif;
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: #192335;
+    margin-bottom: 0.35rem;
+    line-height: 1.35;
+}
+
+.donation-feed-card:hover .donation-feed-title a {
+    color: #39A46B !important;
+}
+
+.donation-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    color: #64748B;
+    margin-bottom: 1rem;
+}
+
+.donation-meta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.22rem 0.55rem;
+    background: #F8FAFC;
+    border: 1px solid rgba(25, 35, 53, 0.06);
+    border-radius: var(--radius-pill);
+}

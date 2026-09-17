@@ -154,84 +154,181 @@
 </section>
 
 <!-- ==========================================================================
-     Category Showcase Grid
+     Category Showcase Grid: Explore Community Needs
      ========================================================================== -->
-<section class="mb-5">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-        <div>
-            <span class="section-tag mb-1">Resource Categories</span>
-            <h3 class="fw-bold mb-0">Explore Community Needs</h3>
+<section class="showcase-section">
+    <div class="showcase-header">
+        <div class="showcase-title-wrap">
+            <span class="section-tag mb-2">Resource Categories</span>
+            <h3 class="showcase-heading">Explore Community Needs</h3>
+            <p class="showcase-subtext">Direct essential resources to where they create immediate local impact.</p>
         </div>
-        <a href="{% url 'donations_list' %}" class="btn-secondary-outline btn-sm">
-            Browse All Categories <i class="bi bi-arrow-right ms-1"></i>
-        </a>
+        <div class="d-flex align-items-center gap-3">
+            <div class="slider-nav-btns d-none d-sm-flex" aria-label="Slide navigation">
+                <button type="button" class="slider-arrow-btn" id="needsPrevBtn" aria-label="Previous slide">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button type="button" class="slider-arrow-btn" id="needsNextBtn" aria-label="Next slide">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+            <a href="{% url 'donations_list' %}" class="showcase-action-btn">
+                Browse All Categories <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
     </div>
 
-    <div class="row g-3">
-        <!-- Category 1 -->
-        <div class="col-6 col-lg-3">
-            <a href="{% url 'donations_list' %}?q=food" class="text-decoration-none">
-                <div class="category-card-item">
-                    <div class="category-icon-box">
-                        <i class="bi bi-egg-fried"></i>
+    <!-- Auto Slide Carousel Viewport -->
+    <div class="needs-carousel-viewport" id="needsCarouselViewport">
+        <div class="needs-carousel-track" id="needsCarouselTrack">
+            <!-- Category 1: Food & Meals (Amber) -->
+            <div class="needs-slide-item">
+                <a href="{% url 'donations_list' %}?q=food" class="needs-category-card card-cat-food">
+                    <div class="needs-category-top">
+                        <div class="needs-category-icon icon-cat-food">
+                            <i class="bi bi-egg-fried"></i>
+                        </div>
+                        <span class="needs-category-arrow arrow-cat-food">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
                     </div>
-                    <h5 class="fw-bold fs-6 text-dark mb-1">Cooked Food & Meals</h5>
-                    <p class="small text-muted mb-0">Banquet & restaurant surplus</p>
-                </div>
-            </a>
-        </div>
+                    <h5 class="needs-category-title">Cooked Food & Meals</h5>
+                    <p class="needs-category-desc">Banquet & restaurant surplus</p>
+                </a>
+            </div>
 
-        <!-- Category 2 -->
-        <div class="col-6 col-lg-3">
-            <a href="{% url 'donations_list' %}?q=clothing" class="text-decoration-none">
-                <div class="category-card-item">
-                    <div class="category-icon-box">
-                        <i class="bi bi-handbag"></i>
+            <!-- Category 2: Clothes & Apparel (Indigo) -->
+            <div class="needs-slide-item">
+                <a href="{% url 'donations_list' %}?q=clothing" class="needs-category-card card-cat-clothing">
+                    <div class="needs-category-top">
+                        <div class="needs-category-icon icon-cat-clothing">
+                            <i class="bi bi-handbag"></i>
+                        </div>
+                        <span class="needs-category-arrow arrow-cat-clothing">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
                     </div>
-                    <h5 class="fw-bold fs-6 text-dark mb-1">Clothes & Apparel</h5>
-                    <p class="small text-muted mb-0">Jackets, blankets, shoes</p>
-                </div>
-            </a>
-        </div>
+                    <h5 class="needs-category-title">Clothes & Apparel</h5>
+                    <p class="needs-category-desc">Jackets, blankets, shoes</p>
+                </a>
+            </div>
 
-        <!-- Category 3 -->
-        <div class="col-6 col-lg-3">
-            <a href="{% url 'donations_list' %}?q=book" class="text-decoration-none">
-                <div class="category-card-item">
-                    <div class="category-icon-box">
-                        <i class="bi bi-book"></i>
+            <!-- Category 3: Books & School Kits (Cyan) -->
+            <div class="needs-slide-item">
+                <a href="{% url 'donations_list' %}?q=book" class="needs-category-card card-cat-books">
+                    <div class="needs-category-top">
+                        <div class="needs-category-icon icon-cat-books">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <span class="needs-category-arrow arrow-cat-books">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
                     </div>
-                    <h5 class="fw-bold fs-6 text-dark mb-1">Books & School Kits</h5>
-                    <p class="small text-muted mb-0">Textbooks, stationery, novels</p>
-                </div>
-            </a>
-        </div>
+                    <h5 class="needs-category-title">Books & School Kits</h5>
+                    <p class="needs-category-desc">Textbooks, stationery, novels</p>
+                </a>
+            </div>
 
-        <!-- Category 4 -->
-        <div class="col-6 col-lg-3">
-            <a href="{% url 'donations_list' %}?q=supplies" class="text-decoration-none">
-                <div class="category-card-item">
-                    <div class="category-icon-box">
-                        <i class="bi bi-heart-pulse"></i>
+            <!-- Category 4: Medical & Essentials (Rose) -->
+            <div class="needs-slide-item">
+                <a href="{% url 'donations_list' %}?q=supplies" class="needs-category-card card-cat-medical">
+                    <div class="needs-category-top">
+                        <div class="needs-category-icon icon-cat-medical">
+                            <i class="bi bi-heart-pulse"></i>
+                        </div>
+                        <span class="needs-category-arrow arrow-cat-medical">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
                     </div>
-                    <h5 class="fw-bold fs-6 text-dark mb-1">Medical & Essentials</h5>
-                    <p class="small text-muted mb-0">First aid, hygiene, rations</p>
-                </div>
-            </a>
+                    <h5 class="needs-category-title">Medical & Essentials</h5>
+                    <p class="needs-category-desc">First aid, hygiene, rations</p>
+                </a>
+            </div>
+
+            <!-- Duplicate items for seamless continuous auto-slide loop -->
+            <div class="needs-slide-item" aria-hidden="true">
+                <a href="{% url 'donations_list' %}?q=food" class="needs-category-card card-cat-food" tabindex="-1">
+                    <div class="needs-category-top">
+                        <div class="needs-category-icon icon-cat-food">
+                            <i class="bi bi-egg-fried"></i>
+                        </div>
+                        <span class="needs-category-arrow arrow-cat-food">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
+                    </div>
+                    <h5 class="needs-category-title">Cooked Food & Meals</h5>
+                    <p class="needs-category-desc">Banquet & restaurant surplus</p>
+                </a>
+            </div>
+
+            <div class="needs-slide-item" aria-hidden="true">
+                <a href="{% url 'donations_list' %}?q=clothing" class="needs-category-card card-cat-clothing" tabindex="-1">
+                    <div class="needs-category-top">
+                        <div class="needs-category-icon icon-cat-clothing">
+                            <i class="bi bi-handbag"></i>
+                        </div>
+                        <span class="needs-category-arrow arrow-cat-clothing">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
+                    </div>
+                    <h5 class="needs-category-title">Clothes & Apparel</h5>
+                    <p class="needs-category-desc">Jackets, blankets, shoes</p>
+                </a>
+            </div>
+
+            <div class="needs-slide-item" aria-hidden="true">
+                <a href="{% url 'donations_list' %}?q=book" class="needs-category-card card-cat-books" tabindex="-1">
+                    <div class="needs-category-top">
+                        <div class="needs-category-icon icon-cat-books">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <span class="needs-category-arrow arrow-cat-books">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
+                    </div>
+                    <h5 class="needs-category-title">Books & School Kits</h5>
+                    <p class="needs-category-desc">Textbooks, stationery, novels</p>
+                </a>
+            </div>
+
+            <div class="needs-slide-item" aria-hidden="true">
+                <a href="{% url 'donations_list' %}?q=supplies" class="needs-category-card card-cat-medical" tabindex="-1">
+                    <div class="needs-category-top">
+                        <div class="needs-category-icon icon-cat-medical">
+                            <i class="bi bi-heart-pulse"></i>
+                        </div>
+                        <span class="needs-category-arrow arrow-cat-medical">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
+                    </div>
+                    <h5 class="needs-category-title">Medical & Essentials</h5>
+                    <p class="needs-category-desc">First aid, hygiene, rations</p>
+                </a>
+            </div>
         </div>
     </div>
 </section>
 
+<!-- Visual Flow Connector Bridging Needs to Live Donations -->
+<div class="community-flow-connector">
+    <div class="flow-connector-line"></div>
+    <div class="flow-connector-badge">
+        <span class="pulse-dot"></span>
+        <span>Verified Handshake Pipeline</span>
+    </div>
+    <div class="flow-connector-line"></div>
+</div>
+
 <!-- ==========================================================================
      Recent Available Community Donations
      ========================================================================== -->
-<section class="mb-5">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-        <div>
-            <h3 class="fw-bold mb-1">Available Community Donations</h3>
-            <p class="text-muted small mb-0">Real-time listings ready for request by verified social partners.</p>
+<section class="showcase-section">
+    <div class="showcase-header">
+        <div class="showcase-title-wrap">
+            <h3 class="showcase-heading">Available Community Donations</h3>
+            <p class="showcase-subtext">Real-time listings ready for request by verified social partners.</p>
         </div>
-        <a href="{% url 'donations_list' %}" class="btn-secondary-outline btn-sm">
+        <a href="{% url 'donations_list' %}" class="showcase-action-btn">
             View All Listings <i class="bi bi-arrow-right ms-1"></i>
         </a>
     </div>
@@ -240,26 +337,28 @@
     <div class="row g-4">
         {% for donation in recent_donations %}
         <div class="col-md-6 col-lg-4">
-            <div class="app-card h-100 d-flex flex-column p-0 overflow-hidden">
-                {% if donation.image %}
-                <img src="{{ donation.image.url }}" class="w-100" alt="{{ donation.title }}" style="height: 190px; object-fit: cover;">
-                {% else %}
-                <div class="d-flex align-items-center justify-content-center bg-light text-secondary" style="height: 190px;">
-                    <i class="bi bi-box-seam fs-1 opacity-50"></i>
-                </div>
-                {% endif %}
+            <div class="donation-feed-card">
+                <div class="donation-feed-media">
+                    {% if donation.image %}
+                    <img src="{{ donation.image.url }}" alt="{{ donation.title }}">
+                    {% else %}
+                    <div class="donation-feed-fallback">
+                        <i class="bi bi-box-seam fs-1 opacity-50"></i>
+                    </div>
+                    {% endif %}
 
-                <div class="p-4 d-flex flex-column flex-grow-1">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="donation-feed-badges">
                         {% if donation.category %}
-                        <span class="badge bg-light text-secondary border">{{ donation.category.name }}</span>
+                        <span class="donation-category-pill">{{ donation.category.name }}</span>
                         {% else %}
-                        <span class="badge bg-light text-secondary border">Essential Item</span>
+                        <span class="donation-category-pill">Essential Item</span>
                         {% endif %}
                         <span class="badge badge-available">Available</span>
                     </div>
+                </div>
 
-                    <h5 class="fw-bold mb-1 fs-6">
+                <div class="donation-feed-body">
+                    <h5 class="donation-feed-title">
                         <a href="{% url 'donation_detail' donation.id %}" class="text-decoration-none text-dark">
                             {{ donation.title }}
                         </a>
@@ -270,9 +369,9 @@
                     </p>
 
                     <div class="border-top pt-3 mt-auto">
-                        <div class="d-flex justify-content-between align-items-center small text-muted mb-3">
-                            <span><i class="bi bi-layers me-1"></i>{{ donation.quantity }}</span>
-                            <span><i class="bi bi-geo-alt me-1"></i>{{ donation.city|default:"Local" }}</span>
+                        <div class="donation-meta-row">
+                            <span class="donation-meta-tag"><i class="bi bi-layers text-success"></i>{{ donation.quantity }}</span>
+                            <span class="donation-meta-tag"><i class="bi bi-geo-alt text-danger"></i>{{ donation.city|default:"Local" }}</span>
                         </div>
                         <a href="{% url 'donation_detail' donation.id %}" class="btn-action btn-sm w-100 text-center">
                             View & Request
@@ -284,15 +383,32 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="empty-state-box border">
-        <div class="empty-state-icon">
-            <i class="bi bi-inbox"></i>
+    <div class="community-empty-canvas">
+        <div class="empty-radar-wrapper">
+            <div class="empty-radar-pulse"></div>
+            <div class="empty-radar-icon">
+                <i class="bi bi-inbox"></i>
+            </div>
         </div>
-        <h5 class="empty-state-title">No Active Donations Currently Listed</h5>
-        <p class="empty-state-desc mb-3">
+        <h5 class="empty-canvas-title">No Active Donations Currently Listed</h5>
+        <p class="empty-canvas-desc">
             Be the first community member today to post excess food, supplies, or apparel.
         </p>
-        <a href="{% url 'create_donation' %}" class="btn-action btn-sm">
+        <div class="empty-connected-pills">
+            <a href="{% url 'donations_list' %}?q=food" class="empty-need-chip chip-cat-food">
+                <i class="bi bi-egg-fried"></i> Cooked Meals
+            </a>
+            <a href="{% url 'donations_list' %}?q=clothing" class="empty-need-chip chip-cat-clothing">
+                <i class="bi bi-handbag"></i> Clothes & Apparel
+            </a>
+            <a href="{% url 'donations_list' %}?q=book" class="empty-need-chip chip-cat-books">
+                <i class="bi bi-book"></i> School Kits
+            </a>
+            <a href="{% url 'donations_list' %}?q=supplies" class="empty-need-chip chip-cat-medical">
+                <i class="bi bi-heart-pulse"></i> Medical Essentials
+            </a>
+        </div>
+        <a href="{% url 'create_donation' %}" class="btn-action btn-sm px-4 py-2">
             <i class="bi bi-plus-circle me-1"></i> Make a Donation
         </a>
     </div>
@@ -324,4 +440,49 @@
 </section>
 </div>
 
+<!-- Community Needs Carousel Navigation and Touch Handling -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const track = document.getElementById('needsCarouselTrack');
+        const prevBtn = document.getElementById('needsPrevBtn');
+        const nextBtn = document.getElementById('needsNextBtn');
+        if (!track) return;
+
+        // Mobile touch pause & resume
+        track.addEventListener('touchstart', function() {
+            track.style.animationPlayState = 'paused';
+        }, { passive: true });
+        track.addEventListener('touchend', function() {
+            track.style.animationPlayState = 'running';
+        }, { passive: true });
+
+        // Manual Navigation Arrows
+        if (prevBtn && nextBtn) {
+            const step = 300; // card width (280) + gap (20)
+            nextBtn.addEventListener('click', function() {
+                const matrix = new DOMMatrixReadOnly(window.getComputedStyle(track).transform);
+                const currentX = matrix.m41;
+                track.style.animation = 'none';
+                track.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
+                track.style.transform = `translateX(${currentX - step}px)`;
+                setTimeout(() => {
+                    track.style.transition = '';
+                    track.style.animation = '';
+                }, 360);
+            });
+
+            prevBtn.addEventListener('click', function() {
+                const matrix = new DOMMatrixReadOnly(window.getComputedStyle(track).transform);
+                const currentX = matrix.m41;
+                track.style.animation = 'none';
+                track.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
+                track.style.transform = `translateX(${Math.min(0, currentX + step)}px)`;
+                setTimeout(() => {
+                    track.style.transition = '';
+                    track.style.animation = '';
+                }, 360);
+            });
+        }
+    });
+</script>
 {% endblock %}
