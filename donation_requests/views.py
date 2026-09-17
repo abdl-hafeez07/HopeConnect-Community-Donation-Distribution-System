@@ -49,13 +49,24 @@ def submit_request(request, donation_id):
         return redirect('donation_detail', pk=donation.id)
 
     if request.method == 'POST':
-        form = DonationRequestForm(request.POST)
+        form = DonationRequestForm(request.POST, user=request.user)
         if form.is_valid():
             with transaction.atomic():
                 req_obj = form.save(commit=False)
                 req_obj.donation = donation
                 req_obj.ngo = request.user
                 req_obj.status = 'PENDING'
+
+                # If contact fields were omitted in submission, populate with registered NGO profile details
+                if not req_obj.contact_person:
+                    req_obj.contact_person = (ngo_profile and ngo_profile.contact_person) or request.user.get_full_name() or request.user.username
+                if not req_obj.contact_phone and profile and profile.phone:
+                    req_obj.contact_phone = profile.phone
+                if not req_obj.contact_email:
+                    req_obj.contact_email = request.user.email or ''
+                if not req_obj.pickup_notes and profile and profile.address:
+                    req_obj.pickup_notes = f"Organization Address: {profile.address}"
+
                 req_obj.save()
 
                 donation.status = 'REQUESTED'
@@ -74,17 +85,32 @@ def submit_request(request, donation_id):
             messages.success(request, f"Your request for '{donation.title}' has been submitted to the donor.")
             return redirect('donation_detail', pk=donation.id)
     else:
-        form = DonationRequestForm()
+        form = DonationRequestForm(user=request.user)
 
     context = {
         'donation': donation,
         'form': form,
+        'ngo_profile': ngo_profile,
+        'profile': profile,
     }
     return render(request, 'donation_requests/request_form.html', context)
 
 
-# Alias for backward compatibility
+# Aliases for backward compatibility and semantic workflow naming
 request_donation = submit_request
+
+
+def accept_request(request, donation_id=None, request_id=None):
+    """
+    Accept-request handler supporting both:
+    - NGO accepting a donor's donation listing (donation_id)
+    - Donor approving an NGO's request (request_id)
+    """
+    if donation_id is not None:
+        return submit_request(request, donation_id=donation_id)
+    if request_id is not None:
+        return manage_request(request, request_id=request_id, action='approve')
+    return redirect('dashboard:dashboard_home')
 
 
 @login_required

@@ -5,11 +5,11 @@
 {% block content %}
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
-        <h2 class="fw-bold mb-1">Administrative Control Center</h2>
-        <p class="text-muted mb-0">Review pending verifications, monitor donations, and govern the HopeConnect platform.</p>
+        <h2 class="fw-bold mb-1" style="color: var(--hc-navy);">Administrative Control Center</h2>
+        <p class="text-muted small mb-0">Review pending verifications, monitor donations, and govern the HopeConnect platform.</p>
     </div>
     <div>
-        <a href="/admin/" class="btn btn-outline-dark fw-bold" target="_blank">
+        <a href="/admin/" class="btn-secondary-outline btn-sm px-3" target="_blank">
             <i class="bi bi-shield-lock me-1"></i>Open Django Admin
         </a>
     </div>
@@ -18,52 +18,52 @@
 <!-- System Metrics -->
 <div class="row g-3 mb-4">
     <div class="col-md-2 col-6">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted small text-uppercase">Total Users</span>
-            <h3 class="fw-bold text-dark mt-1 mb-0">{{ total_users }}</h3>
+        <div class="app-card p-3 text-center h-100">
+            <span class="stat-label">Total Users</span>
+            <h3 class="stat-badge mt-1 mb-0">{{ total_users }}</h3>
         </div>
     </div>
     <div class="col-md-2 col-6">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted small text-uppercase">Donors</span>
-            <h3 class="fw-bold text-success mt-1 mb-0">{{ donor_count }}</h3>
+        <div class="app-card p-3 text-center h-100">
+            <span class="stat-label">Donors</span>
+            <h3 class="stat-badge mt-1 mb-0" style="color: var(--hc-green);">{{ donor_count }}</h3>
         </div>
     </div>
     <div class="col-md-2 col-6">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted small text-uppercase">NGOs</span>
-            <h3 class="fw-bold text-primary mt-1 mb-0">{{ ngo_count }}</h3>
+        <div class="app-card p-3 text-center h-100">
+            <span class="stat-label">NGOs</span>
+            <h3 class="stat-badge mt-1 mb-0 text-primary">{{ ngo_count }}</h3>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted small text-uppercase">Donations</span>
-            <h3 class="fw-bold text-info mt-1 mb-0">{{ total_donations }}</h3>
+        <div class="app-card p-3 text-center h-100">
+            <span class="stat-label">Donations</span>
+            <h3 class="stat-badge mt-1 mb-0 text-dark">{{ total_donations }}</h3>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted small text-uppercase">Completed</span>
-            <h3 class="fw-bold text-success mt-1 mb-0">{{ completed_donations }}</h3>
+        <div class="app-card p-3 text-center h-100">
+            <span class="stat-label">Completed</span>
+            <h3 class="stat-badge mt-1 mb-0" style="color: var(--hc-green);">{{ completed_donations }}</h3>
         </div>
     </div>
 </div>
 
 <!-- Pending NGO Verifications -->
-<div class="card border-0 shadow-sm rounded-4 mb-4">
-    <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+<div class="app-card p-0 overflow-hidden mb-4">
+    <div class="py-3 px-4 border-bottom bg-white d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-2">
-            <i class="bi bi-building-check text-primary fs-4"></i>
-            <h5 class="mb-0 fw-bold">NGO Verification Requests</h5>
+            <i class="bi bi-building-check fs-5" style="color: var(--hc-green);"></i>
+            <h5 class="mb-0 fw-bold fs-6" style="color: var(--hc-navy);">NGO Verification Requests</h5>
         </div>
-        <span class="badge bg-primary">{{ pending_ngos.count }} Pending</span>
+        <span class="badge badge-requested">{{ pending_ngos.count }} Pending</span>
     </div>
 
-    <div class="card-body p-0">
+    <div class="p-0">
         {% if pending_ngos %}
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th class="ps-4">Organization & User</th>
                         <th>Reg. Number</th>
@@ -77,24 +77,24 @@
                     <tr>
                         <td class="ps-4">
                             <div class="fw-bold text-dark">{{ ngo.organization_name }}</div>
-                            <div class="text-muted small">@{{ ngo.user.username }} | {{ ngo.user.email }}</div>
+                            <div class="text-muted small">@{{ ngo.user.username }} &bull; {{ ngo.user.email }}</div>
                         </td>
-                        <td><code>{{ ngo.registration_number }}</code></td>
+                        <td><code class="text-dark bg-light px-2 py-1 rounded">{{ ngo.registration_number }}</code></td>
                         <td>{{ ngo.contact_person }}</td>
                         <td>
                             {% if ngo.verification_document %}
-                            <a href="{{ ngo.verification_document.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-file-earmark-text"></i> View Doc
+                            <a href="{{ ngo.verification_document.url }}" target="_blank" class="btn-secondary-outline btn-sm py-1 px-2">
+                                <i class="bi bi-file-earmark-text me-1"></i> View Doc
                             </a>
                             {% else %}
                             <span class="text-muted small">No document</span>
                             {% endif %}
                         </td>
                         <td class="text-end pe-4">
-                            <a href="{% url 'verify_ngo_action' ngo.id 'approve' %}" class="btn btn-sm btn-success fw-bold me-1">
+                            <a href="{% url 'verify_ngo_action' ngo.id 'approve' %}" class="btn-action btn-sm py-1 px-3 me-1">
                                 <i class="bi bi-check-lg"></i> Approve
                             </a>
-                            <a href="{% url 'verify_ngo_action' ngo.id 'reject' %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Reject this NGO verification?');">
+                            <a href="{% url 'verify_ngo_action' ngo.id 'reject' %}" class="btn btn-sm btn-outline-danger py-1 px-2" onclick="return confirm('Reject this NGO verification?');">
                                 <i class="bi bi-x-lg"></i> Reject
                             </a>
                         </td>
@@ -104,20 +104,20 @@
             </table>
         </div>
         {% else %}
-        <div class="p-4 text-center text-muted">No pending NGO verification requests.</div>
+        <div class="p-4 text-center text-muted small">No pending NGO verification requests.</div>
         {% endif %}
     </div>
 </div>
 
 <!-- System-Wide Recent Donations -->
-<div class="card border-0 shadow-sm rounded-4 mb-4">
-    <div class="card-header bg-white py-3 px-4 border-bottom">
-        <h5 class="mb-0 fw-bold">Recent Donations Across HopeConnect</h5>
+<div class="app-card p-0 overflow-hidden mb-4">
+    <div class="py-3 px-4 border-bottom bg-white">
+        <h5 class="mb-0 fw-bold fs-6" style="color: var(--hc-navy);">Recent Donations Across HopeConnect</h5>
     </div>
-    <div class="card-body p-0">
+    <div class="p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th class="ps-4">Title</th>
                         <th>Donor</th>
@@ -131,14 +131,40 @@
                 <tbody>
                     {% for item in recent_donations %}
                     <tr>
-                        <td class="ps-4 fw-semibold">{{ item.title }}</td>
+                        <td class="ps-4 fw-semibold">
+                            <a href="{% url 'donation_detail' item.id %}" class="text-dark text-decoration-none">
+                                {{ item.title }}
+                            </a>
+                        </td>
                         <td>{{ item.donor.username }}</td>
-                        <td>{{ item.category.name }}</td>
+                        <td>
+                            <span class="badge bg-light text-secondary border">{{ item.category.name }}</span>
+                        </td>
                         <td>{{ item.city }}</td>
-                        <td><span class="badge bg-secondary">{{ item.get_status_display }}</span></td>
+                        <td>
+                            {% if item.status == 'AVAILABLE' %}
+                            <span class="badge badge-available">Available</span>
+                            {% elif item.status == 'REQUESTED' %}
+                            <span class="badge badge-requested">Requested</span>
+                            {% elif item.status == 'APPROVED' %}
+                            <span class="badge badge-approved">Approved</span>
+                            {% elif item.status == 'COLLECTED' %}
+                            <span class="badge badge-collected">Collected</span>
+                            {% elif item.status == 'COMPLETED' %}
+                            <span class="badge badge-completed">Completed</span>
+                            {% elif item.status == 'CANCELLED' %}
+                            <span class="badge badge-cancelled"><i class="bi bi-slash-circle me-1"></i>Cancelled</span>
+                            {% elif item.status == 'REJECTED' %}
+                            <span class="badge badge-rejected">Rejected</span>
+                            {% elif item.status == 'EXPIRED' %}
+                            <span class="badge badge-expired">Expired</span>
+                            {% else %}
+                            <span class="badge bg-light text-secondary">{{ item.get_status_display }}</span>
+                            {% endif %}
+                        </td>
                         <td class="text-muted small">{{ item.created_at|date:"M d, Y" }}</td>
                         <td class="text-end pe-4">
-                            <a href="{% url 'donation_detail' item.id %}" class="btn btn-sm btn-light border">Inspect</a>
+                            <a href="{% url 'donation_detail' item.id %}" class="btn-secondary-outline btn-sm py-1 px-2">Inspect &rarr;</a>
                         </td>
                     </tr>
                     {% endfor %}

@@ -7,10 +7,10 @@
     <!-- Breadcrumb & Header -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h2 class="fw-bold mb-1">Incoming Requests</h2>
-            <p class="text-muted mb-0">For Donation: <strong>{{ donation.title }}</strong> ({{ donation.quantity }})</p>
+            <h2 class="fw-bold mb-1" style="color: var(--hc-navy);">Incoming Requests</h2>
+            <p class="text-muted small mb-0">For Donation: <strong>{{ donation.title }}</strong> ({{ donation.quantity }})</p>
         </div>
-        <a href="{% url 'donation_detail' donation.id %}" class="btn btn-outline-secondary">
+        <a href="{% url 'donation_detail' donation.id %}" class="btn-secondary-outline btn-sm px-3">
             &larr; Back to Donation
         </a>
     </div>
@@ -19,87 +19,123 @@
     <div class="row g-4">
         {% for req in requests %}
         <div class="col-12">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden {% if req.status == 'APPROVED' %}border-start border-success border-4{% elif req.status == 'REJECTED' %}border-start border-danger border-4{% endif %}">
-                <div class="card-body p-4">
-                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
-                        <div>
-                            <span class="badge bg-primary me-2">NGO Request</span>
-                            <h4 class="fw-bold text-dark d-inline">{{ req.ngo.ngo_profile.organization_name|default:req.ngo.username }}</h4>
-                            <div class="small text-muted mt-1">
-                                Reg No: <code>{{ req.ngo.ngo_profile.registration_number|default:"Verified" }}</code> &bull;
-                                Contact: <strong>{{ req.ngo.ngo_profile.contact_person|default:req.ngo.username }}</strong> &bull;
-                                Requested on {{ req.requested_at|date:"M d, Y H:i" }}
-                            </div>
-                        </div>
-
-                        <div>
-                            {% if req.status == 'PENDING' %}
-                            <span class="badge bg-warning text-dark px-3 py-2 fs-6">Pending Review</span>
-                            {% elif req.status == 'APPROVED' %}
-                            <span class="badge bg-success px-3 py-2 fs-6"><i class="bi bi-check-circle me-1"></i>Approved by You</span>
-                            {% elif req.status == 'REJECTED' %}
-                            <span class="badge bg-danger px-3 py-2 fs-6">Rejected</span>
-                            {% else %}
-                            <span class="badge bg-secondary px-3 py-2 fs-6">{{ req.status }}</span>
-                            {% endif %}
+            <div class="app-card p-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                    <div>
+                        <span class="badge bg-light text-secondary border me-2">NGO Request</span>
+                        <h4 class="fw-bold text-dark d-inline fs-5">{{ req.ngo.ngo_profile.organization_name|default:req.ngo.username }}</h4>
+                        <div class="small text-muted mt-1">
+                            Reg No: <code class="text-dark bg-light px-1 py-0.5 rounded">{{ req.ngo.ngo_profile.registration_number|default:"Verified" }}</code> &bull;
+                            Requested on {{ req.requested_at|date:"M d, Y H:i" }}
                         </div>
                     </div>
 
-                    <div class="bg-light p-3 rounded-3 mb-3">
-                        {% if req.beneficiaries_count %}
-                        <div class="fw-bold text-success small text-uppercase mb-1">
-                            <i class="bi bi-people-fill me-1"></i>Beneficiaries to be served: {{ req.beneficiaries_count }} individuals
-                        </div>
+                    <div>
+                        {% if req.status == 'PENDING' %}
+                        <span class="badge badge-requested px-3 py-1">Pending Review</span>
+                        {% elif req.status == 'APPROVED' %}
+                        <span class="badge badge-approved px-3 py-1"><i class="bi bi-check-circle me-1"></i>Approved by You</span>
+                        {% elif req.status == 'COLLECTED' %}
+                        <span class="badge badge-collected px-3 py-1"><i class="bi bi-box-seam me-1"></i>Collected</span>
+                        {% elif req.status == 'COMPLETED' %}
+                        <span class="badge badge-completed px-3 py-1"><i class="bi bi-patch-check-fill me-1"></i>Completed</span>
+                        {% elif req.status == 'CANCELLED' %}
+                        <span class="badge badge-cancelled px-3 py-1"><i class="bi bi-slash-circle me-1"></i>Cancelled</span>
+                        {% elif req.status == 'REJECTED' %}
+                        <span class="badge badge-rejected px-3 py-1">Rejected</span>
+                        {% else %}
+                        <span class="badge bg-light text-secondary px-3 py-1">{{ req.status }}</span>
                         {% endif %}
-                        <p class="mb-0 text-dark">{{ req.message }}</p>
                     </div>
+                </div>
 
-                    {% if req.status == 'PENDING' and donation.status in 'AVAILABLE,REQUESTED' %}
-                    <div class="d-flex flex-wrap gap-2 pt-2 border-top align-items-center">
-                        <!-- Approval Form -->
-                        <form method="post" action="{% url 'approve_request' req.id %}" class="d-inline-flex gap-2 align-items-center flex-grow-1">
-                            {% csrf_token %}
-                            <input type="text" name="donor_notes" class="form-control form-control-sm" placeholder="Optional notes for the NGO...">
-                            <button type="submit" class="btn btn-success btn-sm px-4 fw-bold text-nowrap" onclick="return confirm('Approve this request? This will award the donation to this NGO for direct handover.');">
-                                <i class="bi bi-check-lg me-1"></i>Approve Request
-                            </button>
-                        </form>
-
-                        <!-- Reject Form -->
-                        <form method="post" action="{% url 'reject_request' req.id %}" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Decline this request?');">
-                                <i class="bi bi-x-lg me-1"></i>Decline
-                            </button>
-                        </form>
-                    </div>
-                    {% elif req.status in 'APPROVED,COLLECTED' %}
-                    <div class="d-flex flex-wrap gap-2 pt-2 border-top align-items-center">
-                        <span class="badge bg-success-subtle text-success border border-success px-3 py-2">
-                            <i class="bi bi-info-circle me-1"></i>Awarded to this NGO
-                        </span>
-                        <form method="post" action="{% url 'mark_completed' req.id %}" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-success btn-sm px-4 fw-bold shadow-sm" onclick="return confirm('Confirm completion and handoff of this donation?');">
-                                <i class="bi bi-check2-circle me-1"></i>Confirm Donation Completed
-                            </button>
-                        </form>
-                    </div>
-                    {% elif req.status == 'COMPLETED' %}
-                    <div class="small text-success fw-bold border-top pt-2">
-                        <i class="bi bi-patch-check-fill me-1"></i>Distribution has been completed successfully.
+                <div class="p-3 rounded-3 mb-3 border" style="background-color: var(--hc-slate-50);">
+                    {% if req.beneficiaries_count %}
+                    <div class="fw-bold small text-uppercase mb-1" style="color: var(--hc-green);">
+                        <i class="bi bi-people-fill me-1"></i>Beneficiaries to be served: {{ req.beneficiaries_count }} individuals
                     </div>
                     {% endif %}
+                    <p class="mb-0 text-dark small">{{ req.message }}</p>
                 </div>
+
+                {% if req.status == 'PENDING' %}
+                <!-- Privacy Protected Notice (Before Acceptance) -->
+                <div class="d-flex align-items-center gap-2 p-2 mb-3 rounded-3 bg-light border text-muted small">
+                    <i class="bi bi-shield-lock-fill text-secondary"></i>
+                    <span>Private NGO contact information is safeguarded and will unlock once you accept this request.</span>
+                </div>
+                {% elif req.status in 'APPROVED,COLLECTED,COMPLETED' %}
+                <!-- Confirmed NGO Contact Details (Unlocked Upon Acceptance) -->
+                <div class="p-3 rounded-3 border mb-3" style="background-color: #F0FDF4; border-color: var(--hc-primary-border) !important;">
+                    <h6 class="fw-bold small mb-2 text-dark">
+                        <i class="bi bi-person-check-fill me-1" style="color: var(--hc-green);"></i>Confirmed NGO Contact Information:
+                    </h6>
+                    <div class="row g-2 small">
+                        <div class="col-md-4 col-sm-6">
+                            <strong>Contact Person:</strong> {{ req.confirmed_contact_person }}
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <strong>Phone:</strong> <a href="tel:{{ req.confirmed_phone }}" class="text-decoration-none fw-semibold" style="color: var(--hc-green);"><i class="bi bi-telephone me-1"></i>{{ req.confirmed_phone|default:"Not provided" }}</a>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <strong>Email:</strong> <a href="mailto:{{ req.confirmed_email }}" class="text-decoration-none" style="color: var(--hc-green);"><i class="bi bi-envelope me-1"></i>{{ req.confirmed_email }}</a>
+                        </div>
+                        {% if req.pickup_notes %}
+                        <div class="col-12 mt-1">
+                            <strong>Pickup Logistics / Notes:</strong> <span class="text-secondary">{{ req.pickup_notes }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if req.status == 'PENDING' and donation.status in 'AVAILABLE,REQUESTED' %}
+                <div class="d-flex flex-wrap gap-2 pt-3 border-top align-items-center">
+                    <!-- Approval Form -->
+                    <form method="post" action="{% url 'approve_request' req.id %}" class="d-inline-flex gap-2 align-items-center flex-grow-1">
+                        {% csrf_token %}
+                        <input type="text" name="donor_notes" class="form-control form-control-sm" placeholder="Optional notes for the NGO regarding pickup...">
+                        <button type="submit" class="btn-action btn-sm px-4 text-nowrap" onclick="return confirm('Approve this request? This will award the donation to this NGO and share mutual contact details.');">
+                            <i class="bi bi-check-lg me-1"></i>Approve Request
+                        </button>
+                    </form>
+
+                    <!-- Reject Form -->
+                    <form method="post" action="{% url 'reject_request' req.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger px-3" onclick="return confirm('Decline this request?');">
+                            <i class="bi bi-x-lg me-1"></i>Decline
+                        </button>
+                    </form>
+                </div>
+                {% elif req.status in 'APPROVED,COLLECTED' %}
+                <div class="d-flex flex-wrap gap-2 pt-3 border-top align-items-center justify-content-between">
+                    <span class="badge badge-approved px-3 py-1">
+                        <i class="bi bi-info-circle me-1"></i>Awarded to this NGO
+                    </span>
+                    <form method="post" action="{% url 'mark_completed' req.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-action btn-sm px-4" onclick="return confirm('Confirm completion and handoff of this donation?');">
+                            <i class="bi bi-check2-circle me-1"></i>Confirm Donation Completed
+                        </button>
+                    </form>
+                </div>
+                {% elif req.status == 'COMPLETED' %}
+                <div class="small fw-bold border-top pt-3" style="color: var(--hc-green);">
+                    <i class="bi bi-patch-check-fill me-1"></i>Distribution has been completed successfully.
+                </div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
     </div>
     {% else %}
-    <div class="card border-0 shadow-sm rounded-4 p-5 text-center text-muted">
-        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-        <h5>No requests received for this donation yet.</h5>
-        <p class="mb-0">When local NGOs submit a distribution application, you can review and accept it here.</p>
+    <div class="empty-state-box">
+        <div class="empty-state-icon">
+            <i class="bi bi-inbox"></i>
+        </div>
+        <h6 class="empty-state-title">No Requests Received Yet</h6>
+        <p class="empty-state-desc mb-0">Verified NGOs will appear here once they apply for your listed donation.</p>
     </div>
     {% endif %}
 </div>

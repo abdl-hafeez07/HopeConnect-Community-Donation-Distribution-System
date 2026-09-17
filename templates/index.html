@@ -1,78 +1,89 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}HopeConnect | Bridge Surplus to Scarcity{% endblock %}
 
 {% block content %}
 
 <!-- ==========================================================================
-     Hero Section (Midnight Navy #192335 Theme)
+     Hopper-Inspired Hero Section (Main Background #192335)
      ========================================================================== -->
-<section class="hero-midnight">
-    <div class="container position-relative" style="z-index: 2;">
-        <!-- Inline Trust Ticker Badge -->
-        <div class="hero-ticker-badge">
-            <span class="pulse-dot"></span>
-            <span>Direct Handshakes &bull; Zero Middlemen &bull; 100% Verified NGOs</span>
+<section class="hero-hopper-section">
+    <div class="container">
+        <!-- Centered Main Hero Copy -->
+        <div class="hero-hopper-content text-center">
+            <!-- Trust Ticker Badge -->
+            <div class="hero-hopper-badge mb-3">
+                <span class="pulse-dot"></span>
+                <span>Direct Handshakes &bull; Zero Middlemen &bull; 100% Verified NGOs</span>
+            </div>
+
+            <h1 class="hero-hopper-title">
+                Bridge Surplus to Scarcity,<br>
+                Direct Community Giving
+            </h1>
+
+            <p class="hero-hopper-subtitle">
+                HopeConnect connects generous local donors directly with verified grassroots organizations to rescue surplus food, distribute clothing, and supply educational essentials without logistical delays.
+            </p>
+
+            <div class="hero-hopper-actions d-flex flex-wrap justify-content-center align-items-center gap-3">
+                <a href="{% url 'create_donation' %}" class="btn-hopper-primary">
+                    <span class="btn-hopper-dot"></span>
+                    Donate Items Now
+                </a>
+
+                <a href="{% url 'register' %}" class="btn-hopper-secondary">
+                    <i class="bi bi-shield-check me-1"></i>
+                    Register as NGO Partner
+                </a>
+            </div>
         </div>
 
-        <h1 class="hero-title-main">
-            Bridge Surplus to Scarcity.<br>
-            <span class="accent-word">Direct Community Giving.</span>
-        </h1>
+        <!-- Hopper 3 Bottom Peek Cards Row -->
+        <div class="hero-hopper-cards-row">
+            <div class="row g-4 align-items-stretch">
+                <!-- Left Photo Card: Volunteers with Donation Boxes -->
+                <div class="col-12 col-lg-4">
+                    <div class="hero-image-card h-100">
+                        <img src="{% static 'images/hero_volunteers.jpg' %}" alt="Community volunteers distributing food and essential supplies" class="hero-card-img" />
+                    </div>
+                </div>
 
-        <p class="hero-lead">
-            HopeConnect connects generous local donors directly with verified grassroots organizations to rescue surplus food, distribute clothing, and supply educational essentials without logistical delays.
-        </p>
+                <!-- Center Stacked Stat Cards: 100% Verified Partners & Direct Handshakes -->
+                <div class="col-12 col-lg-4 d-flex flex-column gap-3 justify-content-between">
+                    <!-- Top White Stat Card -->
+                    <div class="hero-stat-card-white flex-fill">
+                        <div class="hero-stat-value">100%</div>
+                        <div class="hero-stat-title">Verified NGO Partners</div>
+                        <div class="hero-stat-desc">Zero middlemen overhead. Transparent grassroots delivery.</div>
+                    </div>
+                    <!-- Bottom Green Stat Card -->
+                    <div class="hero-stat-card-green flex-fill">
+                        <div class="hero-stat-value">Direct</div>
+                        <div class="hero-stat-title">Donor &rarr; NGO Handover</div>
+                        <div class="hero-stat-desc">Live real-time status tracking & verified handshakes.</div>
+                    </div>
+                </div>
 
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a href="{% url 'create_donation' %}" class="btn-action btn-lg px-4 fs-6 shadow">
-                <i class="bi bi-box-seam me-1"></i> Donate Items Now
-            </a>
-
-            <a href="{% url 'register' %}" class="btn-hero-outline btn-lg px-4 fs-6">
-                <i class="bi bi-shield-check me-1"></i> Register as NGO Partner
-            </a>
+                <!-- Right Photo Card: Volunteer with Grocery Donation Bag -->
+                <div class="col-12 col-lg-4">
+                    <div class="hero-image-card h-100">
+                        <img src="{% static 'images/hero_volunteer_bag.jpg' %}" alt="Volunteer packaging food bank donations" class="hero-card-img" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ==========================================================================
-     Impact & Trust Metrics
+     Homepage Main Content Container
      ========================================================================== -->
-<section class="mb-5">
-    <div class="row g-3">
-        <div class="col-6 col-lg-3">
-            <div class="app-card p-3 p-md-4 text-center h-100">
-                <div class="stat-badge text-primary mb-1">100%</div>
-                <div class="stat-label">Verified NGO Partners</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-lg-3">
-            <div class="app-card p-3 p-md-4 text-center h-100">
-                <div class="stat-badge text-dark mb-1">0%</div>
-                <div class="stat-label">Middlemen Overhead</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-lg-3">
-            <div class="app-card p-3 p-md-4 text-center h-100">
-                <div class="stat-badge mb-1" style="color: var(--brand-accent);">Direct</div>
-                <div class="stat-label">Donor &rarr; NGO Handover</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-lg-3">
-            <div class="app-card p-3 p-md-4 text-center h-100">
-                <div class="stat-badge text-success mb-1">Live</div>
-                <div class="stat-label">Real-time Status Tracking</div>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="container py-5">
 
 <!-- ==========================================================================
-     4-Step Interactive Visual Flow
+     4-Step Visual Flow
      ========================================================================== -->
 <section class="mb-5">
     <div class="text-center mb-4">
@@ -85,7 +96,7 @@
 
     <div class="row g-3 position-relative">
         <!-- Step 1 -->
-        <div class="col-md-6 col-lg-3 step-flow-col position-relative">
+        <div class="col-md-6 col-lg-3">
             <div class="step-card-box">
                 <div class="step-number-chip">1</div>
                 <div class="step-icon-container">
@@ -99,7 +110,7 @@
         </div>
 
         <!-- Step 2 -->
-        <div class="col-md-6 col-lg-3 step-flow-col position-relative">
+        <div class="col-md-6 col-lg-3">
             <div class="step-card-box">
                 <div class="step-number-chip">2</div>
                 <div class="step-icon-container">
@@ -113,7 +124,7 @@
         </div>
 
         <!-- Step 3 -->
-        <div class="col-md-6 col-lg-3 step-flow-col position-relative">
+        <div class="col-md-6 col-lg-3">
             <div class="step-card-box">
                 <div class="step-number-chip">3</div>
                 <div class="step-icon-container">
@@ -127,13 +138,13 @@
         </div>
 
         <!-- Step 4 -->
-        <div class="col-md-6 col-lg-3 step-flow-col position-relative">
+        <div class="col-md-6 col-lg-3">
             <div class="step-card-box">
                 <div class="step-number-chip">4</div>
                 <div class="step-icon-container">
                     <i class="bi bi-box-seam"></i>
                 </div>
-                <h5 class="fw-bold fs-6 mb-2">4. Direct Pickup & Handover</h5>
+                <h5 class="fw-bold fs-6 mb-2">4. Direct Handover</h5>
                 <p class="text-muted small mb-0">
                     The NGO coordinates directly with the donor, collects items at the scheduled time, and confirms final handover.
                 </p>
@@ -148,7 +159,7 @@
 <section class="mb-5">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
         <div>
-            <span class="section-tag-light mb-1">Resource Categories</span>
+            <span class="section-tag mb-1">Resource Categories</span>
             <h3 class="fw-bold mb-0">Explore Community Needs</h3>
         </div>
         <a href="{% url 'donations_list' %}" class="btn-secondary-outline btn-sm">
@@ -289,15 +300,15 @@
 </section>
 
 <!-- ==========================================================================
-     Bottom Call to Action Banner
+     Bottom Call to Action Banner (Hopper Theme)
      ========================================================================== -->
-<section class="app-card p-4 p-md-5 text-center mb-4" style="background: linear-gradient(145deg, #101724 0%, #192335 100%); color: #FFFFFF;">
+<section class="app-card p-4 p-md-5 text-center mb-4" style="background: linear-gradient(135deg, #192335 0%, #101724 100%); color: #FFFFFF; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: var(--radius-xl);">
     <div class="container py-2">
-        <span class="badge mb-2" style="background: rgba(255, 255, 255, 0.12); color: #E2E8F0; border: 1px solid rgba(255, 255, 255, 0.2);">
+        <span class="badge mb-2" style="background: rgba(57, 164, 107, 0.2); color: #4EC185; border: 1px solid rgba(57, 164, 107, 0.35); font-family: 'Onest', sans-serif; font-size: 0.8rem; letter-spacing: 0.05em; padding: 0.35rem 0.8rem; border-radius: var(--radius-pill);">
             Grassroots Impact
         </span>
         <h2 class="fw-bold text-white mb-2">Ready to Bridge Surplus to Scarcity?</h2>
-        <p class="mb-4 text-white-50" style="max-width: 600px; margin: 0 auto; font-size: 0.95rem;">
+        <p class="mb-4" style="max-width: 600px; margin: 0 auto; font-size: 0.95rem; color: #A4B3A8;">
             Join local restaurants, community members, and vetted grassroots initiatives building an accountable, zero-waste safety net.
         </p>
 
@@ -305,11 +316,12 @@
             <a href="{% url 'create_donation' %}" class="btn-action btn-lg px-4 fs-6">
                 <i class="bi bi-box-seam me-1"></i> List Surplus Goods
             </a>
-            <a href="{% url 'about' %}" class="btn-hero-outline btn-lg px-4 fs-6">
+            <a href="{% url 'about' %}" class="btn-hero-outline btn-lg px-4 fs-6" style="background: rgba(255, 255, 255, 0.08); color: #FFFFFF !important; border-color: rgba(255, 255, 255, 0.2);">
                 <i class="bi bi-info-circle me-1"></i> Learn About HopeConnect
             </a>
         </div>
     </div>
 </section>
+</div>
 
 {% endblock %}

@@ -37,6 +37,25 @@ class DonationRequest(models.Model):
     message = models.TextField(
         blank=True
     )
+    # Confirmed contact details shared with donor upon request acceptance
+    contact_person = models.CharField(
+        max_length=150,
+        blank=True,
+        help_text="Confirmed NGO contact person name"
+    )
+    contact_phone = models.CharField(
+        max_length=30,
+        blank=True,
+        help_text="Confirmed NGO contact phone number"
+    )
+    contact_email = models.EmailField(
+        blank=True,
+        help_text="Confirmed NGO contact email"
+    )
+    pickup_notes = models.TextField(
+        blank=True,
+        help_text="Confirmed logistics, pickup preference, or address notes"
+    )
     status = models.CharField(
         max_length=25,
         choices=STATUS_CHOICES,
@@ -72,6 +91,42 @@ class DonationRequest(models.Model):
     @property
     def donor_notes(self):
         return ""
+
+    @property
+    def confirmed_organization(self):
+        ngo_profile = getattr(self.ngo, 'ngo_profile', None)
+        if ngo_profile and ngo_profile.organization_name:
+            return ngo_profile.organization_name
+        return self.ngo.username
+
+    @property
+    def confirmed_contact_person(self):
+        if self.contact_person:
+            return self.contact_person
+        ngo_profile = getattr(self.ngo, 'ngo_profile', None)
+        if ngo_profile and ngo_profile.contact_person:
+            return ngo_profile.contact_person
+        return self.ngo.get_full_name() or self.ngo.username
+
+    @property
+    def confirmed_phone(self):
+        if self.contact_phone:
+            return self.contact_phone
+        profile = getattr(self.ngo, 'profile', None)
+        return getattr(profile, 'phone', '') or ''
+
+    @property
+    def confirmed_email(self):
+        if self.contact_email:
+            return self.contact_email
+        return self.ngo.email or ''
+
+    @property
+    def confirmed_address(self):
+        if self.pickup_notes:
+            return self.pickup_notes
+        profile = getattr(self.ngo, 'profile', None)
+        return getattr(profile, 'address', '') or ''
 
     def approve(self, donor=None, notes=""):
         """

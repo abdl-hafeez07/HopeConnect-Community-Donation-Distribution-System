@@ -65,6 +65,14 @@ def donor_dashboard(request):
 
     recent_donations = my_donations.select_related('category').order_by('-created_at')[:5]
 
+    # Confirmed handovers with assigned NGOs (Approved/Collected)
+    approved_requests = DonationRequest.objects.filter(
+        donation__donor=request.user,
+        status__in=['APPROVED', 'COLLECTED']
+    ).select_related(
+        'donation', 'donation__category', 'ngo', 'ngo__profile', 'ngo__ngo_profile'
+    ).order_by('-updated_at')
+
     context = {
         'total_donations': total_donations,
         'available_count': available_count,
@@ -72,6 +80,7 @@ def donor_dashboard(request):
         'approved_count': approved_count,
         'completed_count': completed_count,
         'active_requests': active_requests,
+        'approved_requests': approved_requests,
         'recent_donations': recent_donations,
         # Backward-compatibility aliases for templates
         'pending_requests': active_requests,

@@ -6,7 +6,7 @@
 <!-- Top Header & Primary Quick Action -->
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
-        <h2 class="fw-bold mb-1">Welcome back, {{ request.user.first_name|default:request.user.username }}!</h2>
+        <h2 class="fw-bold mb-1" style="color: var(--hc-navy);">Welcome back, {{ request.user.first_name|default:request.user.username }}!</h2>
         <p class="text-muted mb-0 small">Track your contributions, review NGO requests, and follow direct collection handshakes.</p>
     </div>
     <div>
@@ -25,7 +25,7 @@
                     <span class="stat-label">Total Listings</span>
                     <h3 class="stat-badge mb-0 mt-1">{{ total_donations }}</h3>
                 </div>
-                <div class="rounded-circle bg-light text-secondary d-flex align-items-center justify-content-center" style="width: 46px; height: 46px;">
+                <div class="rounded-circle bg-light text-secondary d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
                     <i class="bi bi-gift fs-5"></i>
                 </div>
             </div>
@@ -37,9 +37,9 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <span class="stat-label">Available</span>
-                    <h3 class="stat-badge text-success mb-0 mt-1">{{ available_count }}</h3>
+                    <h3 class="stat-badge mb-0 mt-1" style="color: var(--hc-green);">{{ available_count }}</h3>
                 </div>
-                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; background-color: #ECFDF5; color: #047857;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background-color: var(--hc-green-subtle); color: var(--hc-green);">
                     <i class="bi bi-check-circle fs-5"></i>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                     <span class="stat-label">Pending Requests</span>
                     <h3 class="stat-badge text-warning mb-0 mt-1">{{ pending_requests_count }}</h3>
                 </div>
-                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; background-color: #FFFBEB; color: #B45309;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background-color: #FFFBEB; color: #B45309;">
                     <i class="bi bi-hourglass-split fs-5"></i>
                 </div>
             </div>
@@ -67,7 +67,7 @@
                     <span class="stat-label">Approved Handover</span>
                     <h3 class="stat-badge text-primary mb-0 mt-1">{{ approved_count }}</h3>
                 </div>
-                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; background-color: #EFF6FF; color: #1D4ED8;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background-color: #F0F5FA; color: #1E4E7A;">
                     <i class="bi bi-hand-thumbs-up fs-5"></i>
                 </div>
             </div>
@@ -79,9 +79,9 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <span class="stat-label">Completed</span>
-                    <h3 class="stat-badge mb-0 mt-1" style="color: #6D28D9;">{{ completed_count }}</h3>
+                    <h3 class="stat-badge mb-0 mt-1" style="color: var(--hc-green);">{{ completed_count }}</h3>
                 </div>
-                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; background-color: #F5F3FF; color: #6D28D9;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background-color: var(--hc-green-subtle); color: var(--hc-green);">
                     <i class="bi bi-patch-check fs-5"></i>
                 </div>
             </div>
@@ -91,15 +91,15 @@
 
 <!-- Incoming Requests Table with Direct Inline Actions -->
 <div class="app-card p-0 overflow-hidden mb-4">
-    <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+    <div class="py-3 px-4 border-bottom bg-white d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-2">
             <i class="bi bi-inbox-fill text-warning fs-5"></i>
-            <h5 class="mb-0 fw-bold fs-6">Incoming Requests Awaiting Approval</h5>
+            <h5 class="mb-0 fw-bold fs-6" style="color: var(--hc-navy);">Incoming Requests Awaiting Approval</h5>
         </div>
         <span class="badge badge-requested">{{ pending_requests_count }} Pending</span>
     </div>
 
-    <div class="card-body p-0">
+    <div class="p-0">
         {% if active_requests %}
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
@@ -123,9 +123,9 @@
                         </td>
                         <td class="py-3">
                             <div class="fw-semibold text-dark">{{ req.ngo.ngo_profile.organization_name|default:req.ngo.username }}</div>
-                            <small class="text-muted">
-                                <i class="bi bi-telephone me-1"></i>{{ req.ngo.ngo_profile.contact_person|default:req.ngo.profile.phone|default:req.ngo.email }}
-                            </small>
+                            <span class="badge bg-light text-muted border small" style="font-size: 0.72rem;">
+                                <i class="bi bi-shield-lock me-1"></i>Contact unlocked on approval
+                            </span>
                         </td>
                         <td class="py-3 small text-secondary" style="max-width: 280px;">
                             <div class="text-truncate">{{ req.message|default:"No special notes specified." }}</div>
@@ -136,7 +136,7 @@
                         <td class="text-end pe-4 py-3 text-nowrap">
                             <form method="post" action="{% url 'manage_request' req.id 'approve' %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-success px-3 fw-bold me-1" onclick="return confirm('Approve request from {{ req.ngo.username }}? This will unlock direct contact and pickup details.');">
+                                <button type="submit" class="btn-action btn-sm px-3 me-1" onclick="return confirm('Approve request from {{ req.ngo.username }}? This will unlock direct contact and pickup details.');">
                                     <i class="bi bi-check-lg me-1"></i>Approve
                                 </button>
                             </form>
@@ -153,12 +153,12 @@
             </table>
         </div>
         {% else %}
-        <div class="empty-state-box">
+        <div class="empty-state-box border-0">
             <div class="empty-state-icon">
                 <i class="bi bi-inbox"></i>
             </div>
             <h6 class="empty-state-title">No Pending Requests</h6>
-            <p class="empty-state-desc">
+            <p class="empty-state-desc mb-0">
                 When verified local NGOs apply for your donations, you can review their distribution plans and accept handovers directly here.
             </p>
         </div>
@@ -166,14 +166,88 @@
     </div>
 </div>
 
+<!-- Approved Handovers & Confirmed NGO Contacts (Unlocked After Acceptance) -->
+{% if approved_requests %}
+<div class="app-card p-0 overflow-hidden mb-4 border-start border-4" style="border-left-color: var(--hc-green) !important;">
+    <div class="py-3 px-4 border-bottom bg-white d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person-check-fill fs-5" style="color: var(--hc-green);"></i>
+            <h5 class="mb-0 fw-bold fs-6" style="color: var(--hc-navy);">Approved Handovers & Confirmed NGO Contacts</h5>
+        </div>
+        <span class="badge badge-approved">{{ approved_requests.count }} Confirmed Handover{{ approved_requests.count|pluralize }}</span>
+    </div>
+
+    <div class="p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4 py-3">Donation Item</th>
+                        <th class="py-3">Assigned NGO</th>
+                        <th class="py-3">Confirmed Contact Details</th>
+                        <th class="py-3">Pickup Notes / Address</th>
+                        <th class="text-end pe-4 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in approved_requests %}
+                    <tr>
+                        <td class="ps-4 py-3 fw-semibold">
+                            <a href="{% url 'donation_detail' req.donation.id %}" class="text-decoration-none text-dark">
+                                {{ req.donation.title }}
+                            </a>
+                            <div class="small text-muted">{{ req.donation.quantity }}</div>
+                        </td>
+                        <td class="py-3">
+                            <div class="fw-semibold text-dark">{{ req.confirmed_organization }}</div>
+                            <small class="text-muted">
+                                <i class="bi bi-person me-1"></i>{{ req.confirmed_contact_person }}
+                            </small>
+                        </td>
+                        <td class="py-3 small">
+                            {% if req.confirmed_phone %}
+                            <div>
+                                <a href="tel:{{ req.confirmed_phone }}" class="text-decoration-none fw-semibold" style="color: var(--hc-green);">
+                                    <i class="bi bi-telephone me-1"></i>{{ req.confirmed_phone }}
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% if req.confirmed_email %}
+                            <div class="mt-0.5">
+                                <a href="mailto:{{ req.confirmed_email }}" class="text-decoration-none text-muted">
+                                    <i class="bi bi-envelope me-1"></i>{{ req.confirmed_email }}
+                                </a>
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 small text-secondary" style="max-width: 240px;">
+                            <div class="text-truncate">{{ req.pickup_notes|default:req.donation.pickup_address }}</div>
+                        </td>
+                        <td class="text-end pe-4 py-3 text-nowrap">
+                            <a href="{% url 'donation_detail' req.donation.id %}" class="btn-action btn-sm py-1 px-3 me-1">
+                                View Item
+                            </a>
+                            <a href="{% url 'review_requests' req.donation.id %}" class="btn-secondary-outline btn-sm py-1 px-2">
+                                Review Page
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Recent Donations Table with Status Badges -->
 <div class="app-card p-0 overflow-hidden mb-4">
-    <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
-        <h5 class="mb-0 fw-bold fs-6">Recent Donations</h5>
+    <div class="py-3 px-4 border-bottom bg-white d-flex align-items-center justify-content-between">
+        <h5 class="mb-0 fw-bold fs-6" style="color: var(--hc-navy);">Recent Donations</h5>
         <a href="{% url 'my_donations' %}" class="btn-secondary-outline btn-sm">View All Items</a>
     </div>
 
-    <div class="card-body p-0">
+    <div class="p-0">
         {% if recent_donations %}
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
@@ -197,11 +271,7 @@
                             </a>
                         </td>
                         <td class="py-3">
-                            {% if don.category %}
-                            <span class="badge bg-light text-secondary border">{{ don.category.name }}</span>
-                            {% else %}
-                            <span class="badge bg-light text-secondary border">General</span>
-                            {% endif %}
+                            <span class="badge bg-light text-secondary border">{{ don.category.name|default:"General" }}</span>
                         </td>
                         <td class="py-3 small text-dark">{{ don.quantity }}</td>
                         <td class="py-3 small text-muted text-truncate" style="max-width: 200px;">
@@ -221,7 +291,7 @@
                             {% elif don.status == 'REJECTED' %}
                             <span class="badge badge-rejected">Rejected</span>
                             {% elif don.status == 'CANCELLED' %}
-                            <span class="badge badge-cancelled">Cancelled</span>
+                            <span class="badge badge-cancelled"><i class="bi bi-slash-circle me-1"></i>Cancelled</span>
                             {% elif don.status == 'EXPIRED' %}
                             <span class="badge badge-expired">Expired</span>
                             {% else %}
@@ -240,7 +310,7 @@
             </table>
         </div>
         {% else %}
-        <div class="empty-state-box">
+        <div class="empty-state-box border-0">
             <div class="empty-state-icon">
                 <i class="bi bi-gift"></i>
             </div>

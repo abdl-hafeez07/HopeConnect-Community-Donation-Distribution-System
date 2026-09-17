@@ -6,91 +6,109 @@
 <div class="py-3">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h2 class="fw-bold mb-1">My Donations</h2>
-            <p class="text-muted mb-0">Manage items you have listed and monitor their distribution.</p>
+            <h2 class="fw-bold mb-1" style="color: var(--hc-navy);">My Donations</h2>
+            <p class="text-muted small mb-0">Manage items you have listed and monitor their distribution lifecycle.</p>
         </div>
         <div>
-            <a href="{% url 'create_donation' %}" class="btn btn-success fw-bold">
-                <i class="bi bi-plus-circle-fill me-1"></i>List Another Donation
+            <a href="{% url 'create_donation' %}" class="btn-action">
+                <i class="bi bi-plus-circle me-1"></i>List Another Donation
             </a>
         </div>
     </div>
 
     <!-- Status Tabs -->
     <div class="mb-4">
-        <ul class="nav nav-pills bg-light p-1 rounded-3 d-inline-flex border">
+        <ul class="nav nav-pills p-1 rounded-3 d-inline-flex border" style="background-color: var(--hc-slate-100);">
             <li class="nav-item">
-                <a class="nav-link {% if status_filter == 'ALL' %}active bg-success{% else %}text-dark{% endif %}" href="?status=ALL">All</a>
+                <a class="nav-link {% if status_filter == 'ALL' %}active text-white{% else %}text-dark{% endif %}" style="{% if status_filter == 'ALL' %}background-color: var(--hc-primary);{% endif %}" href="?status=ALL">All</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if status_filter == 'AVAILABLE' %}active bg-success{% else %}text-dark{% endif %}" href="?status=AVAILABLE">Available</a>
+                <a class="nav-link {% if status_filter == 'AVAILABLE' %}active text-white{% else %}text-dark{% endif %}" style="{% if status_filter == 'AVAILABLE' %}background-color: var(--hc-primary);{% endif %}" href="?status=AVAILABLE">Available</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if status_filter == 'REQUESTED' %}active bg-success{% else %}text-dark{% endif %}" href="?status=REQUESTED">Requested</a>
+                <a class="nav-link {% if status_filter == 'REQUESTED' %}active text-white{% else %}text-dark{% endif %}" style="{% if status_filter == 'REQUESTED' %}background-color: var(--hc-primary);{% endif %}" href="?status=REQUESTED">Requested</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if status_filter == 'APPROVED' %}active bg-success{% else %}text-dark{% endif %}" href="?status=APPROVED">Approved</a>
+                <a class="nav-link {% if status_filter == 'APPROVED' %}active text-white{% else %}text-dark{% endif %}" style="{% if status_filter == 'APPROVED' %}background-color: var(--hc-primary);{% endif %}" href="?status=APPROVED">Approved</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if status_filter == 'COMPLETED' %}active bg-success{% else %}text-dark{% endif %}" href="?status=COMPLETED">Completed</a>
+                <a class="nav-link {% if status_filter == 'COMPLETED' %}active text-white{% else %}text-dark{% endif %}" style="{% if status_filter == 'COMPLETED' %}background-color: var(--hc-primary);{% endif %}" href="?status=COMPLETED">Completed</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'CANCELLED' %}active text-white{% else %}text-dark{% endif %}" style="{% if status_filter == 'CANCELLED' %}background-color: #DC2626;{% endif %}" href="?status=CANCELLED">Cancelled</a>
             </li>
         </ul>
     </div>
 
     <!-- Donations Table -->
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="card-body p-0">
+    <div class="app-card p-0 overflow-hidden mb-4">
+        <div class="p-0">
             {% if donations %}
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
-                            <th class="ps-4">Item</th>
-                            <th>Category</th>
-                            <th>Quantity</th>
-                            <th>Status</th>
-                            <th>Requests</th>
-                            <th>Created On</th>
-                            <th class="text-end pe-4">Actions</th>
+                            <th class="ps-4 py-3">Item</th>
+                            <th class="py-3">Category</th>
+                            <th class="py-3">Quantity</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3">Requests</th>
+                            <th class="py-3">Created On</th>
+                            <th class="text-end pe-4 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in donations %}
                         <tr>
-                            <td class="ps-4 fw-semibold">
+                            <td class="ps-4 py-3 fw-semibold">
                                 <a href="{% url 'donation_detail' item.id %}" class="text-dark text-decoration-none">
                                     {{ item.title }}
                                 </a>
                             </td>
-                            <td><span class="badge bg-light text-dark border">{{ item.category.name }}</span></td>
-                            <td>{{ item.quantity }}</td>
-                            <td>
+                            <td class="py-3"><span class="badge bg-light text-secondary border">{{ item.category.name|default:"General" }}</span></td>
+                            <td class="py-3 small text-dark">{{ item.quantity }}</td>
+                            <td class="py-3">
                                 {% if item.status == 'AVAILABLE' %}
-                                <span class="badge bg-success">Available</span>
+                                <span class="badge badge-available">Available</span>
                                 {% elif item.status == 'REQUESTED' %}
-                                <span class="badge bg-warning text-dark">Requested</span>
+                                <span class="badge badge-requested">Requested</span>
                                 {% elif item.status == 'APPROVED' %}
-                                <span class="badge bg-primary">Approved</span>
+                                <span class="badge badge-approved">Approved</span>
+                                {% elif item.status == 'COLLECTED' %}
+                                <span class="badge badge-collected">Collected</span>
                                 {% elif item.status == 'COMPLETED' %}
-                                <span class="badge bg-success-subtle text-success border border-success">Completed</span>
+                                <span class="badge badge-completed">Completed</span>
+                                {% elif item.status == 'CANCELLED' %}
+                                <span class="badge badge-cancelled"><i class="bi bi-slash-circle me-1"></i>Cancelled</span>
+                                {% elif item.status == 'REJECTED' %}
+                                <span class="badge badge-rejected"><i class="bi bi-x-circle me-1"></i>Rejected</span>
                                 {% else %}
-                                <span class="badge bg-secondary">{{ item.get_status_display }}</span>
+                                <span class="badge bg-light text-secondary">{{ item.get_status_display }}</span>
                                 {% endif %}
                             </td>
-                            <td>
-                                {% if item.requests.count > 0 %}
-                                <a href="{% url 'review_requests' item.id %}" class="badge bg-danger text-decoration-none">
+                            <td class="py-3">
+                                {% if item.status == 'APPROVED' or item.status == 'COLLECTED' or item.status == 'COMPLETED' %}
+                                <a href="{% url 'donation_detail' item.id %}" class="badge badge-approved text-decoration-none">
+                                    <i class="bi bi-person-check-fill me-1"></i>NGO Confirmed
+                                </a>
+                                {% elif item.requests.count > 0 %}
+                                <a href="{% url 'review_requests' item.id %}" class="badge badge-requested text-decoration-none">
                                     {{ item.requests.count }} Pending Review
                                 </a>
                                 {% else %}
                                 <span class="text-muted small">None</span>
                                 {% endif %}
                             </td>
-                            <td class="text-muted small">{{ item.created_at|date:"M d, Y" }}</td>
-                            <td class="text-end pe-4">
-                                <a href="{% url 'donation_detail' item.id %}" class="btn btn-sm btn-outline-secondary me-1">View</a>
+                            <td class="text-muted small py-3">{{ item.created_at|date:"M d, Y" }}</td>
+                            <td class="text-end pe-4 py-3">
+                                <a href="{% url 'donation_detail' item.id %}" class="btn-secondary-outline btn-sm py-1 px-2 me-1">View</a>
+                                {% if item.status == 'APPROVED' or item.status == 'COLLECTED' %}
+                                <a href="{% url 'donation_detail' item.id %}" class="btn btn-sm btn-outline-success py-1 px-2 me-1" title="View Confirmed NGO Contact">
+                                    <i class="bi bi-telephone me-1"></i>Contact
+                                </a>
+                                {% endif %}
                                 {% if item.requests.count > 0 %}
-                                <a href="{% url 'review_requests' item.id %}" class="btn btn-sm btn-primary">Review</a>
+                                <a href="{% url 'review_requests' item.id %}" class="btn-action btn-sm py-1 px-3">Review</a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -99,11 +117,21 @@
                 </table>
             </div>
             {% else %}
-            <div class="p-5 text-center text-muted">
-                <i class="bi bi-gift text-muted fs-1 d-block mb-3"></i>
-                <h5>No donations found in this category.</h5>
-                <p class="mb-3">Start sharing resources to help individuals and families across the community.</p>
-                <a href="{% url 'create_donation' %}" class="btn btn-success fw-bold">Post a Donation</a>
+            <div class="empty-state-box border-0">
+                <div class="empty-state-icon">
+                    <i class="bi bi-inbox"></i>
+                </div>
+                <h6 class="empty-state-title">No Donations Found</h6>
+                <p class="empty-state-desc mb-3">
+                    {% if status_filter != 'ALL' %}
+                    No donations matching status filter "{{ status_filter }}".
+                    {% else %}
+                    You haven't listed any donations yet.
+                    {% endif %}
+                </p>
+                <a href="{% url 'create_donation' %}" class="btn-action btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i> List a Donation
+                </a>
             </div>
             {% endif %}
         </div>

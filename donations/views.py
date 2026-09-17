@@ -122,9 +122,16 @@ def donation_detail(request, pk):
             is_verified_ngo = bool(getattr(profile, 'is_verified', False) or (ngo_profile and ngo_profile.is_approved))
             user_request = donation.requests.filter(ngo=request.user).first()
 
+    approved_request = None
+    if donation.status in ['APPROVED', 'COLLECTED', 'COMPLETED']:
+        approved_request = donation.requests.filter(
+            status__in=['APPROVED', 'COLLECTED', 'COMPLETED']
+        ).select_related('ngo', 'ngo__profile', 'ngo__ngo_profile').first()
+
     context = {
         'donation': donation,
         'user_request': user_request,
+        'approved_request': approved_request,
         'is_ngo': is_ngo,
         'is_verified_ngo': is_verified_ngo,
     }

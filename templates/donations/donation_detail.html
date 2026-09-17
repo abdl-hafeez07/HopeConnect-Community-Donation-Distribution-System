@@ -7,23 +7,23 @@
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'donations_list' %}" class="text-success text-decoration-none">Donations</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ donation.title }}</li>
+            <li class="breadcrumb-item"><a href="{% url 'donations_list' %}" class="text-decoration-none" style="color: var(--hc-navy);">Donations</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">{{ donation.title }}</li>
         </ol>
     </nav>
 
     <div class="row g-4">
         <!-- Main Content -->
         <div class="col-lg-8">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+            <div class="app-card p-0 overflow-hidden mb-4">
                 {% if donation.image %}
                 <img src="{{ donation.image.url }}" class="w-100" alt="{{ donation.title }}" style="max-height: 400px; object-fit: cover;">
                 {% endif %}
 
-                <div class="card-body p-4 p-md-5">
+                <div class="p-4 p-md-5">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
                         {% if donation.category %}
-                        <span class="badge bg-success-subtle text-success border border-success px-3 py-2 fs-6">
+                        <span class="badge bg-light text-secondary border px-3 py-2 fs-6">
                             {{ donation.category.name }}
                         </span>
                         {% endif %}
@@ -50,43 +50,43 @@
                         {% endif %}
                     </div>
 
-                    <h2 class="fw-bold mb-2">{{ donation.title }}</h2>
-                    <h5 class="text-success fw-bold mb-3"><i class="bi bi-box-seam me-1"></i>Quantity: {{ donation.quantity }}</h5>
+                    <h2 class="fw-bold mb-2" style="color: var(--hc-navy);">{{ donation.title }}</h2>
+                    <h5 class="fw-bold mb-3" style="color: var(--hc-green);"><i class="bi bi-box-seam me-1"></i>Quantity: {{ donation.quantity }}</h5>
 
                     {% if donation.description %}
                     <h6 class="fw-bold text-muted text-uppercase small mt-4">Description</h6>
-                    <p class="lead fs-6 text-secondary mb-4">{{ donation.description }}</p>
+                    <p class="fs-6 text-secondary mb-4">{{ donation.description }}</p>
                     {% endif %}
 
                     <!-- Expiry Date (if perishable) -->
                     {% if donation.expiry_date %}
-                    <div class="card border-0 bg-warning-subtle rounded-4 p-3 mb-4">
+                    <div class="p-3 mb-4 rounded-3 border" style="background-color: var(--status-requested-bg); border-color: var(--status-requested-border) !important;">
                         <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-clock-history text-warning-emphasis fs-4"></i>
+                            <i class="bi bi-clock-history text-warning fs-4"></i>
                             <div>
-                                <strong class="text-warning-emphasis">Safe Consumption / Expiry Deadline:</strong>
-                                <span class="ms-1 text-dark fw-bold">{{ donation.expiry_date|date:"M d, Y H:i" }}</span>
+                                <strong class="text-dark">Safe Consumption / Expiry Deadline:</strong>
+                                <span class="ms-1 fw-bold" style="color: var(--status-requested-text);">{{ donation.expiry_date|date:"M d, Y H:i" }}</span>
                             </div>
                         </div>
                     </div>
                     {% endif %}
 
                     <!-- Pickup Location -->
-                    <div class="card border-0 bg-light rounded-4 p-4 mb-4">
-                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Pickup Location & Schedule</h5>
-                        <p class="mb-1"><strong>Address:</strong> {{ donation.pickup_address }}</p>
+                    <div class="p-4 mb-4 rounded-3 border" style="background-color: var(--hc-slate-50);">
+                        <h5 class="fw-bold mb-3 fs-6" style="color: var(--hc-navy);"><i class="bi bi-geo-alt-fill me-2 text-danger"></i>Pickup Location & Schedule</h5>
+                        <p class="mb-1 small"><strong>Address:</strong> {{ donation.pickup_address }}</p>
                         {% if donation.pickup_date %}
-                        <p class="mb-1"><strong>Pickup Date:</strong> {{ donation.pickup_date|date:"M d, Y" }}</p>
+                        <p class="mb-1 small"><strong>Pickup Date:</strong> {{ donation.pickup_date|date:"M d, Y" }}</p>
                         {% endif %}
                         {% if donation.pickup_time %}
-                        <p class="mb-0"><strong>Pickup Time:</strong> {{ donation.pickup_time|time:"H:i" }}</p>
+                        <p class="mb-0 small"><strong>Pickup Time:</strong> {{ donation.pickup_time|time:"H:i" }}</p>
                         {% endif %}
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="d-flex flex-wrap gap-2 pt-3 border-top">
                         {% if request.user == donation.donor %}
-                            <a href="{% url 'review_requests' donation.id %}" class="btn btn-primary px-4 fw-bold">
+                            <a href="{% url 'review_requests' donation.id %}" class="btn-action px-4">
                                 <i class="bi bi-inbox-fill me-1"></i>Review Requests ({{ donation.requests.count }})
                             </a>
                             {% if donation.status == 'AVAILABLE' or donation.status == 'REQUESTED' %}
@@ -101,13 +101,13 @@
                                     <i class="bi bi-check2 me-1"></i>Request Submitted (Pending Review)
                                 </button>
                                 {% elif is_verified_ngo %}
-                                <a href="{% url 'submit_request' donation.id %}" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">
-                                    <i class="bi bi-send-fill me-1"></i>Request Donation
+                                <a href="{% url 'submit_request' donation.id %}" class="btn-action btn-lg px-5 fs-6">
+                                    <i class="bi bi-shield-check me-1"></i>Accept & Request Donation
                                 </a>
                                 {% else %}
                                 <div class="alert alert-warning d-flex align-items-center mb-0 py-2 px-3 rounded-3" role="alert">
                                     <i class="bi bi-shield-exclamation fs-5 me-2"></i>
-                                    <span class="fw-semibold">Admin verification required to request items.</span>
+                                    <span class="fw-semibold small">Admin verification required to request items.</span>
                                 </div>
                                 {% endif %}
                             {% elif user_request %}
@@ -115,13 +115,13 @@
                                 <div class="d-flex flex-wrap gap-2">
                                     <form method="post" action="{% url 'mark_collected' user_request.id %}" class="d-inline">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-info px-4 fw-bold text-dark">
+                                        <button type="submit" class="btn-secondary-outline px-4">
                                             <i class="bi bi-box-seam me-1"></i>Mark Collected
                                         </button>
                                     </form>
                                     <form method="post" action="{% url 'mark_completed' user_request.id %}" class="d-inline">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-success px-4 fw-bold" onclick="return confirm('Confirm receipt of these items?');">
+                                        <button type="submit" class="btn-action px-4" onclick="return confirm('Confirm receipt of these items?');">
                                             <i class="bi bi-check2-circle me-1"></i>Confirm Completed
                                         </button>
                                     </form>
@@ -129,12 +129,12 @@
                                 {% elif user_request.status == 'COLLECTED' %}
                                 <form method="post" action="{% url 'mark_completed' user_request.id %}" class="d-inline">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-success px-4 fw-bold" onclick="return confirm('Confirm completion of donation?');">
+                                    <button type="submit" class="btn-action px-4" onclick="return confirm('Confirm completion of donation?');">
                                         <i class="bi bi-check2-circle me-1"></i>Confirm Completed
                                     </button>
                                 </form>
                                 {% elif user_request.status == 'COMPLETED' %}
-                                <button class="btn btn-success px-4" disabled>
+                                <button class="btn btn-action px-4" disabled>
                                     <i class="bi bi-patch-check-fill me-1"></i>Donation Completed
                                 </button>
                                 {% else %}
@@ -144,7 +144,7 @@
                                 <button class="btn btn-secondary px-4" disabled>Not Available for New Requests</button>
                             {% endif %}
                         {% elif not user.is_authenticated %}
-                            <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-success px-4 fw-bold">
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-action px-4">
                                 Log in as NGO to Request
                             </a>
                         {% endif %}
@@ -156,17 +156,17 @@
         <!-- Sidebar: Donor details -->
         <div class="col-lg-4">
             <!-- Donor Card -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <div class="app-card p-4 mb-4">
                 <h6 class="fw-bold text-muted text-uppercase small mb-3">Posted By</h6>
                 <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold" style="width: 50px; height: 50px; font-size: 20px;">
+                    <div class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width: 48px; height: 48px; font-size: 1.1rem; background-color: var(--hc-navy);">
                         {{ donation.donor.username|make_list|first|upper }}
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-0">{{ donation.donor.username }}</h6>
+                        <h6 class="fw-bold mb-0 text-dark">{{ donation.donor.username }}</h6>
                         <small class="text-muted">Community Donor</small>
                         {% if donation.city %}
-                        <div class="small text-muted"><i class="bi bi-geo-alt"></i> {{ donation.city }}</div>
+                        <div class="small text-muted"><i class="bi bi-geo-alt me-1"></i>{{ donation.city }}</div>
                         {% endif %}
                     </div>
                 </div>
@@ -174,19 +174,39 @@
 
             <!-- Direct Handover Details (if approved) -->
             {% if donation.status == 'APPROVED' or donation.status == 'COLLECTED' or donation.status == 'COMPLETED' %}
-            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 border-start border-success border-4">
-                <h6 class="fw-bold text-success text-uppercase small mb-3">
+            <div class="app-card p-4 mb-4 border-start border-4" style="border-left-color: var(--hc-green) !important;">
+                <h6 class="fw-bold text-uppercase small mb-3" style="color: var(--hc-green);">
                     <i class="bi bi-box-seam me-1"></i>Direct Handover Details
                 </h6>
-                <p class="mb-2"><strong>Status:</strong> <span class="badge bg-success text-white">{{ donation.get_status_display }}</span></p>
-                <p class="mb-2"><strong>Pickup Address:</strong> {{ donation.pickup_address }}</p>
+                <p class="mb-2 small"><strong>Status:</strong> <span class="badge badge-approved">{{ donation.get_status_display }}</span></p>
+                <p class="mb-2 small"><strong>Pickup Address:</strong> {{ donation.pickup_address }}</p>
                 {% if donation.pickup_date %}
-                <p class="mb-2"><strong>Pickup Date:</strong> {{ donation.pickup_date|date:"M d, Y" }}</p>
+                <p class="mb-2 small"><strong>Pickup Date:</strong> {{ donation.pickup_date|date:"M d, Y" }}</p>
                 {% endif %}
                 {% if donation.pickup_time %}
-                <p class="mb-2"><strong>Pickup Time:</strong> {{ donation.pickup_time|time:"H:i" }}</p>
+                <p class="mb-2 small"><strong>Pickup Time:</strong> {{ donation.pickup_time|time:"H:i" }}</p>
                 {% endif %}
-                <p class="mb-0"><strong>Donor Contact:</strong> {{ donation.donor.profile.phone|default:donation.donor.email }}</p>
+
+                {% if request.user == donation.donor or request.user.is_staff %}
+                    {% if approved_request %}
+                    <div class="pt-3 mt-3 border-top">
+                        <h6 class="fw-bold text-dark small mb-2"><i class="bi bi-building-check me-1" style="color: var(--hc-green);"></i>Confirmed NGO Contact</h6>
+                        <p class="mb-1 small"><strong>Organization:</strong> {{ approved_request.ngo.ngo_profile.organization_name|default:approved_request.ngo.username }}</p>
+                        <p class="mb-1 small"><strong>Contact Person:</strong> {{ approved_request.confirmed_contact_person }}</p>
+                        {% if approved_request.confirmed_phone %}
+                        <p class="mb-1 small"><strong>Phone:</strong> <a href="tel:{{ approved_request.confirmed_phone }}" class="text-decoration-none fw-semibold" style="color: var(--hc-green);"><i class="bi bi-telephone me-1"></i>{{ approved_request.confirmed_phone }}</a></p>
+                        {% endif %}
+                        {% if approved_request.confirmed_email %}
+                        <p class="mb-1 small"><strong>Email:</strong> <a href="mailto:{{ approved_request.confirmed_email }}" class="text-decoration-none" style="color: var(--hc-green);"><i class="bi bi-envelope me-1"></i>{{ approved_request.confirmed_email }}</a></p>
+                        {% endif %}
+                        {% if approved_request.pickup_notes %}
+                        <p class="mb-0 small text-secondary"><strong>Logistics / Notes:</strong> {{ approved_request.pickup_notes }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <p class="mb-0 small"><strong>Donor Contact:</strong> <a href="tel:{{ donation.donor.profile.phone|default:'' }}" class="text-decoration-none fw-semibold" style="color: var(--hc-green);"><i class="bi bi-telephone me-1"></i>{{ donation.donor.profile.phone|default:donation.donor.email }}</a></p>
+                {% endif %}
             </div>
             {% endif %}
         </div>

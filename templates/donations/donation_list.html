@@ -6,8 +6,8 @@
 <div class="py-3">
     <!-- Header -->
     <div class="text-center mb-4">
-        <span class="section-tag">Community Resource Directory</span>
-        <h2 class="fw-bold mb-1">Available Community Donations</h2>
+        <span class="section-tag-light">Community Resource Directory</span>
+        <h2 class="fw-bold mb-1" style="color: var(--hc-navy);">Available Community Donations</h2>
         <p class="text-muted small">Verified NGOs and charities can request items for direct community distribution.</p>
     </div>
 
@@ -49,7 +49,7 @@
         <div class="col-md-6 col-lg-4">
             <div class="app-card h-100 p-0 overflow-hidden d-flex flex-column">
                 {% if item.image %}
-                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}" style="height: 190px; object-fit: cover;">
+                <img src="{{ item.image.url }}" class="w-100" alt="{{ item.title }}" style="height: 190px; object-fit: cover;">
                 {% else %}
                 <div class="bg-light text-secondary d-flex align-items-center justify-content-center" style="height: 170px;">
                     <i class="bi bi-box-seam fs-1 opacity-50"></i>
@@ -59,10 +59,10 @@
                 <div class="p-4 d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <span class="badge bg-light text-secondary border px-2 py-1">
-                            {{ item.category.name }}
+                            {{ item.category.name|default:"General" }}
                         </span>
                         <span class="small text-muted">
-                            <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ item.city }}
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ item.city|default:"Local" }}
                         </span>
                     </div>
 
@@ -71,7 +71,7 @@
                             {{ item.title }}
                         </a>
                     </h5>
-                    <div class="fw-semibold text-secondary small mb-2">
+                    <div class="fw-semibold small mb-2" style="color: var(--hc-green);">
                         <i class="bi bi-layers me-1"></i>Quantity: {{ item.quantity }}
                     </div>
 
@@ -105,13 +105,15 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="empty-state-box border">
+    <div class="empty-state-box">
         <div class="empty-state-icon">
-            <i class="bi bi-inbox"></i>
+            <i class="bi bi-search"></i>
         </div>
-        <h5 class="empty-state-title">No Donations Found</h5>
-        <p class="empty-state-desc mb-3">Try adjusting your search criteria, category or city filters.</p>
-        <a href="{% url 'donations_list' %}" class="btn-secondary-outline btn-sm">Reset Filters</a>
+        <h6 class="empty-state-title">No Matching Donations Found</h6>
+        <p class="empty-state-desc mb-3">
+            Try adjusting your search criteria or clear filters to see all available community items.
+        </p>
+        <a href="{% url 'donations_list' %}" class="btn-secondary-outline btn-sm">Clear Filters</a>
     </div>
     {% endif %}
 </div>

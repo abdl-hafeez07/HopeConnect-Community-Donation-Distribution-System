@@ -5,23 +5,25 @@
 {% block content %}
 <div class="row justify-content-center my-4">
     <div class="col-lg-9 col-md-11">
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-header bg-success text-white py-3 px-4 rounded-top-4">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="bi bi-gift-fill fs-3"></i>
+        <div class="app-card p-0 overflow-hidden">
+            <div class="p-4 text-white" style="background: linear-gradient(135deg, #1C261F 0%, #141C16 100%);">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: rgba(57, 164, 107, 0.2); color: #4EC185;">
+                        <i class="bi bi-gift-fill fs-4"></i>
+                    </div>
                     <div>
-                        <h4 class="mb-0 fw-bold">List a Donation</h4>
-                        <small class="text-white-50">Offer food, clothes, books, or essentials to verified local NGOs</small>
+                        <h4 class="mb-0 fw-bold text-white">List a Donation</h4>
+                        <small style="color: #A4B3A8;">Offer food, clothes, books, or essentials to verified local NGOs</small>
                     </div>
                 </div>
             </div>
 
-            <div class="card-body p-4 p-md-5">
+            <div class="p-4 p-md-5">
                 <form method="post" enctype="multipart/form-data" id="donationForm">
                     {% csrf_token %}
 
                     {% if form.errors %}
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger mb-4 py-2 px-3 small">
                         <p class="fw-bold mb-1">Please correct the errors below:</p>
                         <ul class="mb-0 small">
                             {% for field in form %}
@@ -34,68 +36,68 @@
                     {% endif %}
 
                     <!-- General Details -->
-                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3">
-                        <i class="bi bi-info-circle me-1"></i> General Details
+                    <h5 class="fw-bold border-bottom pb-2 mb-3 fs-6" style="color: var(--hc-navy);">
+                        <i class="bi bi-info-circle me-1" style="color: var(--hc-green);"></i> General Details
                     </h5>
 
                     <div class="row g-3 mb-4">
                         <div class="col-md-8">
-                            <label class="form-label fw-semibold">Donation Title <span class="text-danger">*</span></label>
+                            <label class="form-label">Donation Title <span class="text-danger">*</span></label>
                             {{ form.title }}
                             <div class="form-text">e.g. 50 Fresh Meal Packets / 15 Winter Blankets</div>
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label fw-semibold">Category</label>
+                            <label class="form-label">Category</label>
                             {{ form.category }}
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Quantity / Amount <span class="text-danger">*</span></label>
+                            <label class="form-label">Quantity / Amount <span class="text-danger">*</span></label>
                             {{ form.quantity }}
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Photo of Item(s)</label>
+                            <label class="form-label">Photo of Item(s)</label>
                             {{ form.image }}
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label fw-semibold">Description & Notes</label>
+                            <label class="form-label">Description & Notes</label>
                             {{ form.description }}
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Expiry Date / Best Before (if perishable)</label>
+                            <label class="form-label">Expiry Date / Best Before (if perishable)</label>
                             {{ form.expiry_date }}
                         </div>
                     </div>
 
                     <!-- Pickup Location & Schedule -->
-                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3">
-                        <i class="bi bi-geo-alt me-1"></i> Pickup Location & Schedule
+                    <h5 class="fw-bold border-bottom pb-2 mb-3 fs-6" style="color: var(--hc-navy);">
+                        <i class="bi bi-geo-alt me-1" style="color: var(--hc-green);"></i> Pickup Location & Schedule
                     </h5>
 
                     <div class="row g-3 mb-4">
                         <div class="col-12">
-                            <label class="form-label fw-semibold">Pickup Address <span class="text-danger">*</span></label>
+                            <label class="form-label">Pickup Address <span class="text-danger">*</span></label>
                             {{ form.pickup_address }}
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Pickup Date</label>
+                            <label class="form-label">Pickup Date</label>
                             {{ form.pickup_date }}
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Pickup Time</label>
+                            <label class="form-label">Pickup Time</label>
                             {{ form.pickup_time }}
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                        <a href="{% url 'dashboard:dashboard_home' %}" class="btn btn-outline-secondary px-4">Cancel</a>
-                        <button type="submit" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">
+                        <a href="{% url 'dashboard:dashboard_home' %}" class="btn-secondary-outline px-4">Cancel</a>
+                        <button type="submit" class="btn-action btn-lg px-5 fs-6">
                             <i class="bi bi-check2-circle me-1"></i> Publish Donation
                         </button>
                     </div>

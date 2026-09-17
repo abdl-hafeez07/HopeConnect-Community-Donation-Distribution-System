@@ -5,23 +5,25 @@
 {% block content %}
 <div class="row justify-content-center my-5">
     <div class="col-lg-8 col-md-10">
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-header bg-success text-white py-3 px-4 rounded-top-4">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="bi bi-person-plus-fill fs-4"></i>
+        <div class="app-card p-0 overflow-hidden shadow-sm">
+            <div class="p-4 text-white" style="background: linear-gradient(135deg, #1C261F 0%, #141C16 100%);">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: rgba(57, 164, 107, 0.2); color: #4EC185;">
+                        <i class="bi bi-person-plus-fill fs-4"></i>
+                    </div>
                     <div>
-                        <h4 class="mb-0 fw-bold">Join HopeConnect</h4>
-                        <small class="text-white-50">Create an account to start sharing or distributing resources</small>
+                        <h4 class="mb-0 fw-bold text-white">Join HopeConnect</h4>
+                        <small style="color: #A4B3A8;">Create an account to start sharing or distributing resources</small>
                     </div>
                 </div>
             </div>
 
-            <div class="card-body p-4 p-md-5">
+            <div class="p-4 p-md-5">
                 <form method="post" enctype="multipart/form-data" id="registrationForm">
                     {% csrf_token %}
 
                     {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger mb-4 py-2 px-3 small">
                         {% for error in form.non_field_errors %}
                         <p class="mb-0">{{ error }}</p>
                         {% endfor %}
@@ -29,7 +31,7 @@
                     {% endif %}
 
                     <!-- Step 1: Role Selection -->
-                    <div class="mb-4">
+                    <div class="mb-4 p-3 rounded-3 border" style="background-color: var(--hc-slate-50);">
                         <label for="{{ form.role.id_for_label }}" class="form-label fw-bold">
                             {{ form.role.label }} <span class="text-danger">*</span>
                         </label>
@@ -40,83 +42,83 @@
                         <div class="form-text">Choose the primary way you want to participate in the HopeConnect network.</div>
                     </div>
 
-                    <h5 class="border-bottom pb-2 mb-3 text-muted fw-bold">Account Credentials</h5>
+                    <h5 class="border-bottom pb-2 mb-3 fw-bold fs-6" style="color: var(--hc-navy);">Account Credentials</h5>
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
+                            <label class="form-label">Username <span class="text-danger">*</span></label>
                             {{ form.username }}
                             {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>{% endif %}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                            <label class="form-label">Email Address <span class="text-danger">*</span></label>
                             {{ form.email }}
                             {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                            <label class="form-label">Password <span class="text-danger">*</span></label>
                             {{ form.password }}
                             {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>{% endif %}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                            <label class="form-label">Confirm Password <span class="text-danger">*</span></label>
                             {{ form.confirm_password }}
                             {% if form.confirm_password.errors %}<div class="text-danger small mt-1">{{ form.confirm_password.errors.0 }}</div>{% endif %}
                         </div>
                     </div>
 
-                    <h5 class="border-bottom pb-2 mb-3 text-muted fw-bold">Contact & Location</h5>
+                    <h5 class="border-bottom pb-2 mb-3 fw-bold fs-6" style="color: var(--hc-navy);">Contact & Location</h5>
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Phone Number <span class="text-danger">*</span></label>
+                            <label class="form-label">Phone Number <span class="text-danger">*</span></label>
                             {{ form.phone }}
                             {% if form.phone.errors %}<div class="text-danger small mt-1">{{ form.phone.errors.0 }}</div>{% endif %}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">City / District <span class="text-danger">*</span></label>
+                            <label class="form-label">City / District <span class="text-danger">*</span></label>
                             {{ form.city }}
                             {% if form.city.errors %}<div class="text-danger small mt-1">{{ form.city.errors.0 }}</div>{% endif %}
                         </div>
                         <div class="col-12">
-                            <label class="form-label fw-semibold">Street Address / Locality</label>
+                            <label class="form-label">Street Address / Locality</label>
                             {{ form.address }}
                             {% if form.address.errors %}<div class="text-danger small mt-1">{{ form.address.errors.0 }}</div>{% endif %}
                         </div>
                     </div>
 
                     <!-- NGO Specific Section -->
-                    <div id="ngoFieldsSection" class="p-3 mb-4 rounded-3 border bg-light" style="display: none;">
-                        <h5 class="text-success fw-bold mb-3">
-                            <i class="bi bi-building-check me-2"></i>NGO Organization Details
+                    <div id="ngoFieldsSection" class="p-3 mb-4 rounded-3 border" style="background-color: var(--hc-slate-50); display: none;">
+                        <h5 class="fw-bold mb-2 fs-6" style="color: var(--hc-navy);">
+                            <i class="bi bi-building-check me-2" style="color: var(--hc-green);"></i>NGO Organization Details
                         </h5>
-                        <p class="small text-muted mb-3">NGO accounts require verification by our team before requesting donations.</p>
+                        <p class="small text-muted mb-3">NGO accounts require verification by our administrative team before requesting donations.</p>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Organization / Trust Name <span class="text-danger">*</span></label>
+                                <label class="form-label">Organization / Trust Name <span class="text-danger">*</span></label>
                                 {{ form.organization_name }}
                                 {% if form.organization_name.errors %}<div class="text-danger small mt-1">{{ form.organization_name.errors.0 }}</div>{% endif %}
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Registration Number <span class="text-danger">*</span></label>
+                                <label class="form-label">Registration Number <span class="text-danger">*</span></label>
                                 {{ form.registration_number }}
                                 {% if form.registration_number.errors %}<div class="text-danger small mt-1">{{ form.registration_number.errors.0 }}</div>{% endif %}
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Contact Person / Representative <span class="text-danger">*</span></label>
+                                <label class="form-label">Contact Person / Representative <span class="text-danger">*</span></label>
                                 {{ form.contact_person }}
                                 {% if form.contact_person.errors %}<div class="text-danger small mt-1">{{ form.contact_person.errors.0 }}</div>{% endif %}
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Website (Optional)</label>
+                                <label class="form-label">Website (Optional)</label>
                                 {{ form.website }}
                                 {% if form.website.errors %}<div class="text-danger small mt-1">{{ form.website.errors.0 }}</div>{% endif %}
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Mission Statement / Causes Supported</label>
+                                <label class="form-label">Mission Statement / Causes Supported</label>
                                 {{ form.mission }}
                                 {% if form.mission.errors %}<div class="text-danger small mt-1">{{ form.mission.errors.0 }}</div>{% endif %}
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Verification Document (Certificate/Letter)</label>
+                                <label class="form-label">Verification Document (Certificate/Letter)</label>
                                 {{ form.verification_document }}
                                 {% if form.verification_document.errors %}<div class="text-danger small mt-1">{{ form.verification_document.errors.0 }}</div>{% endif %}
                             </div>
@@ -124,14 +126,14 @@
                     </div>
 
                     <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-success btn-lg py-3 fw-bold">
+                        <button type="submit" class="btn-action btn-lg py-2 fs-6">
                             <i class="bi bi-check-circle-fill me-2"></i>Create Account
                         </button>
                     </div>
 
-                    <div class="text-center mt-4">
-                        <span class="text-muted">Already have an account?</span>
-                        <a href="{% url 'login' %}" class="fw-bold text-success text-decoration-none ms-1">Log in here</a>
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <span class="text-muted small">Already have an account?</span>
+                        <a href="{% url 'login' %}" class="fw-bold text-decoration-none ms-1 small" style="color: var(--hc-navy);">Log in here &rarr;</a>
                     </div>
                 </form>
             </div>
@@ -145,6 +147,7 @@
         const ngoSection = document.getElementById('ngoFieldsSection');
 
         function toggleSections() {
+            if (!roleSelect || !ngoSection) return;
             const val = roleSelect.value;
             if (val === 'NGO') {
                 ngoSection.style.display = 'block';
@@ -153,8 +156,10 @@
             }
         }
 
-        roleSelect.addEventListener('change', toggleSections);
-        toggleSections();
+        if (roleSelect) {
+            roleSelect.addEventListener('change', toggleSections);
+            toggleSections();
+        }
     });
 </script>
 {% endblock %}
