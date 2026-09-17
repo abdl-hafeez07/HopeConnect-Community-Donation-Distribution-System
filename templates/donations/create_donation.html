@@ -73,24 +73,83 @@
                         </div>
                     </div>
 
+                    <!-- Micro-donation Advisory Banner -->
+                    <div class="alert alert-info border d-flex align-items-start gap-2 mb-4 p-3 rounded-3" style="background-color: #F0FDF4; border-color: var(--hc-primary-border) !important;">
+                        <i class="bi bi-lightbulb-fill text-success fs-5 mt-0.5"></i>
+                        <div class="small">
+                            <strong class="text-dark d-block mb-1">Hyperlocal & Micro-Donation Friendly</strong>
+                            For very small donations (such as 1–2 books or 1 meal), choosing <strong>Donor delivery/drop-off</strong> or local walk-in collection helps nearby shelters, reading rooms, and community hubs receive resources without dispatching heavy transport.
+                        </div>
+                    </div>
+
+                    <!-- Transfer & Delivery Options -->
+                    <h5 class="fw-bold border-bottom pb-2 mb-3 fs-6" style="color: var(--hc-navy);">
+                        <i class="bi bi-truck me-1" style="color: var(--hc-green);"></i> Delivery & Transfer Method <span class="text-danger">*</span>
+                    </h5>
+
+                    <div class="p-3 rounded-3 border mb-4" style="background-color: var(--hc-slate-50);">
+                        <label class="form-label fw-bold small text-dark mb-2">How will this donation be transferred?</label>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-check p-3 rounded-3 border bg-white h-100 delivery-choice-box" style="cursor: pointer;">
+                                    <input class="form-check-input" type="radio" name="delivery_option" id="delivery_ngo_pickup" value="NGO_PICKUP" {% if form.delivery_option.value != 'DONOR_DELIVERY' %}checked{% endif %}>
+                                    <label class="form-check-label fw-semibold text-dark ps-2" for="delivery_ngo_pickup" style="cursor: pointer;">
+                                        <i class="bi bi-truck text-warning fs-5 d-block mb-1"></i>
+                                        NGO / Organization will pick up
+                                        <div class="text-muted fw-normal small mt-1">A verified local NGO dispatches staff or vehicle to collect items from your address.</div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-check p-3 rounded-3 border bg-white h-100 delivery-choice-box" style="cursor: pointer;">
+                                    <input class="form-check-input" type="radio" name="delivery_option" id="delivery_donor_delivery" value="DONOR_DELIVERY" {% if form.delivery_option.value == 'DONOR_DELIVERY' %}checked{% endif %}>
+                                    <label class="form-check-label fw-semibold text-dark ps-2" for="delivery_donor_delivery" style="cursor: pointer;">
+                                        <i class="bi bi-box-arrow-in-down text-primary fs-5 d-block mb-1"></i>
+                                        Donor will deliver / drop off
+                                        <div class="text-muted fw-normal small mt-1">You will drop off the items at the NGO center, reading room, or community partner hub.</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Drop-off Location Input (Visible if Donor Delivery) -->
+                        <div id="dropoff_location_group" class="mt-3 {% if form.delivery_option.value != 'DONOR_DELIVERY' %}d-none{% endif %}">
+                            <label class="form-label small fw-semibold text-dark">
+                                Designated Drop-off Location / Partner Hub <span class="text-danger">*</span>
+                            </label>
+                            {{ form.dropoff_location }}
+                            {% if form.dropoff_location.errors %}
+                            <div class="text-danger small mt-1">{{ form.dropoff_location.errors.0 }}</div>
+                            {% endif %}
+                            <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
+                                <span class="small text-muted">Quick Presets:</span>
+                                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 rounded-pill preset-hub" data-hub="NGO Center / Office">NGO Center</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 rounded-pill preset-hub" data-hub="Community Partner Hub">Community Partner Hub</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 rounded-pill preset-hub" data-hub="Local Reading Room / Shelter Desk">Reading Room / Shelter Desk</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Pickup Location & Schedule -->
                     <h5 class="fw-bold border-bottom pb-2 mb-3 fs-6" style="color: var(--hc-navy);">
-                        <i class="bi bi-geo-alt me-1" style="color: var(--hc-green);"></i> Pickup Location & Schedule
+                        <i class="bi bi-geo-alt me-1" style="color: var(--hc-green);"></i> <span id="addressSectionTitle">Pickup Location & Schedule</span>
                     </h5>
 
                     <div class="row g-3 mb-4">
                         <div class="col-12">
-                            <label class="form-label">Pickup Address <span class="text-danger">*</span></label>
+                            <label class="form-label" id="pickupAddressLabel">Pickup Address <span class="text-danger">*</span></label>
                             {{ form.pickup_address }}
+                            <div class="form-text" id="pickupAddressHelp">Full street address where the items are currently located.</div>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Pickup Date</label>
+                            <label class="form-label">Available / Handover Date</label>
                             {{ form.pickup_date }}
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Pickup Time</label>
+                            <label class="form-label">Preferred Time Window</label>
                             {{ form.pickup_time }}
                         </div>
                     </div>
@@ -106,4 +165,46 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ngoRadio = document.getElementById('delivery_ngo_pickup');
+    const donorRadio = document.getElementById('delivery_donor_delivery');
+    const dropoffGroup = document.getElementById('dropoff_location_group');
+    const dropoffInput = document.getElementById('id_dropoff_location');
+    const addressSectionTitle = document.getElementById('addressSectionTitle');
+    const pickupAddressLabel = document.getElementById('pickupAddressLabel');
+    const pickupAddressHelp = document.getElementById('pickupAddressHelp');
+
+    function updateDeliveryMode() {
+        if (donorRadio && donorRadio.checked) {
+            if (dropoffGroup) dropoffGroup.classList.remove('d-none');
+            if (addressSectionTitle) addressSectionTitle.textContent = "Your Origin & Schedule";
+            if (pickupAddressLabel) pickupAddressLabel.innerHTML = 'Your Address (Donor Origin) <span class="text-danger">*</span>';
+            if (pickupAddressHelp) pickupAddressHelp.textContent = "Your location for hyperlocal community matching.";
+        } else {
+            if (dropoffGroup) dropoffGroup.classList.add('d-none');
+            if (addressSectionTitle) addressSectionTitle.textContent = "Pickup Location & Schedule";
+            if (pickupAddressLabel) pickupAddressLabel.innerHTML = 'Pickup Address <span class="text-danger">*</span>';
+            if (pickupAddressHelp) pickupAddressHelp.textContent = "Full street address where the items will be collected by the NGO.";
+        }
+    }
+
+    if (ngoRadio && donorRadio) {
+        ngoRadio.addEventListener('change', updateDeliveryMode);
+        donorRadio.addEventListener('change', updateDeliveryMode);
+        updateDeliveryMode();
+    }
+
+    document.querySelectorAll('.preset-hub').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (dropoffInput) {
+                dropoffInput.value = this.getAttribute('data-hub');
+                dropoffInput.focus();
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

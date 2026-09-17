@@ -120,6 +120,15 @@
                                 {{ req.donation.title }}
                             </a>
                             <div class="small text-muted">{{ req.donation.quantity }}</div>
+                            {% if req.donation.delivery_option == 'DONOR_DELIVERY' %}
+                            <span class="badge bg-primary-subtle text-primary border" style="font-size: 0.68rem;">
+                                <i class="bi bi-box-arrow-in-down me-1"></i>Donor Drop-off
+                            </span>
+                            {% else %}
+                            <span class="badge bg-warning-subtle text-dark border" style="font-size: 0.68rem;">
+                                <i class="bi bi-truck me-1"></i>NGO Pickup
+                            </span>
+                            {% endif %}
                         </td>
                         <td class="py-3">
                             <div class="fw-semibold text-dark">{{ req.ngo.ngo_profile.organization_name|default:req.ngo.username }}</div>
@@ -197,6 +206,15 @@
                                 {{ req.donation.title }}
                             </a>
                             <div class="small text-muted">{{ req.donation.quantity }}</div>
+                            {% if req.donation.delivery_option == 'DONOR_DELIVERY' %}
+                            <span class="badge bg-primary-subtle text-primary border" style="font-size: 0.68rem;">
+                                <i class="bi bi-box-arrow-in-down me-1"></i>Donor Drop-off
+                            </span>
+                            {% else %}
+                            <span class="badge bg-warning-subtle text-dark border" style="font-size: 0.68rem;">
+                                <i class="bi bi-truck me-1"></i>NGO Pickup
+                            </span>
+                            {% endif %}
                         </td>
                         <td class="py-3">
                             <div class="fw-semibold text-dark">{{ req.confirmed_organization }}</div>

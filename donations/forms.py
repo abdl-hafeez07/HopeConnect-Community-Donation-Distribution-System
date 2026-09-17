@@ -18,6 +18,24 @@ class DonationForm(forms.ModelForm):
         widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
         label="Expiry Date / Best Before"
     )
+    delivery_option = forms.ChoiceField(
+        choices=Donation.DELIVERY_CHOICES,
+        required=False,
+        initial='NGO_PICKUP',
+        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+        label="Delivery & Transfer Method"
+    )
+    dropoff_location = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'e.g. NGO Center / Community Partner Hub / Local Reading Room Desk'
+        }),
+        label="Drop-off Location / Community Hub"
+    )
+
+    def clean_delivery_option(self):
+        return self.cleaned_data.get('delivery_option') or 'NGO_PICKUP'
 
     class Meta:
         model = Donation
@@ -26,6 +44,8 @@ class DonationForm(forms.ModelForm):
             'category',
             'description',
             'quantity',
+            'delivery_option',
+            'dropoff_location',
             'pickup_address',
             'pickup_date',
             'pickup_time',

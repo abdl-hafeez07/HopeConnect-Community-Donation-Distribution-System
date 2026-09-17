@@ -45,6 +45,14 @@ class Donation(models.Model):
         ('EXPIRED', 'Expired'),
     ]
 
+    DELIVERY_NGO_PICKUP = 'NGO_PICKUP'
+    DELIVERY_DONOR_DELIVERY = 'DONOR_DELIVERY'
+
+    DELIVERY_CHOICES = [
+        ('NGO_PICKUP', 'NGO/organization will pick up'),
+        ('DONOR_DELIVERY', 'Donor will deliver/drop off'),
+    ]
+
     donor = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -64,6 +72,17 @@ class Donation(models.Model):
     )
     quantity = models.CharField(
         max_length=100
+    )
+    delivery_option = models.CharField(
+        max_length=25,
+        choices=DELIVERY_CHOICES,
+        default='NGO_PICKUP',
+        help_text="Transfer method: Donor drop-off vs NGO pickup"
+    )
+    dropoff_location = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Designated drop-off point, e.g. NGO center or community partner hub"
     )
     pickup_address = models.TextField()
     pickup_date = models.DateField(
@@ -111,6 +130,36 @@ class Donation(models.Model):
     def city(self):
         profile = getattr(self.donor, 'profile', None)
         return getattr(profile, 'city', '') or ''
+
+    @property
+    def is_donor_delivery(self):
+        return self.delivery_option == self.DELIVERY_DONOR_DELIVERY
+
+    @property
+    def is_ngo_pickup(self):
+        return self.delivery_option == self.DELIVERY_NGO_PICKUP
+
+    @property
+    def is_small_donation(self):
+        """
+        Detects if donation is a micro-donation (e.g. 1-2 books, single meal packet, small parcel)
+        where local walking pickup or donor drop-off is prioritized over vehicle collection.
+        """
+        import re
+        text = f"{self.title or ''} {self.quantity or ''}".lower().strip()
+        micro_patterns = [
+            r'\b1\s*meal\b', r'\b2\s*meals?\b', r'\b1\s*book\b', r'\b2\s*books?\b',
+            r'\b1-2\s*books?\b', r'\b1-2\s*meals?\b', r'\b1\s*packet\b', r'\b2\s*packets?\b',
+            r'\b1\s*plate\b', r'\b2\s*plates?\b', r'\b1\s*item\b', r'\b2\s*items?\b',
+            r'\bsingle\s*(meal|book|item|packet)\b', r'\bmicro\b'
+        ]
+        for pattern in micro_patterns:
+            if re.search(pattern, text):
+                return True
+        q = (self.quantity or "").lower().strip()
+        if re.match(r'^(1|2)\s*$', q):
+            return True
+        return False
 
     def change_status(self, new_status, user=None, remarks=""):
         self.status = new_status

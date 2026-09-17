@@ -8,6 +8,7 @@ from accounts.models import UserProfile, NGOProfile
 from accounts.decorators import admin_required
 from donations.models import Donation
 from donation_requests.models import DonationRequest
+from donations.views import check_and_expire_donations
 from core.utils import send_notification
 
 
@@ -38,6 +39,7 @@ def donor_dashboard(request):
       approved_count, completed_count.
     - Query lists: active_requests, recent_donations.
     """
+    check_and_expire_donations()
     profile = getattr(request.user, 'profile', None)
     user_role = getattr(profile, 'role', '').upper() if profile else ''
 
@@ -98,6 +100,7 @@ def ngo_dashboard(request):
     - Query lists: pickup_queue, recent_requests.
     - is_verified: boolean flag from request.user.profile.is_verified.
     """
+    check_and_expire_donations()
     profile = getattr(request.user, 'profile', None)
     user_role = getattr(profile, 'role', '').upper() if profile else ''
 

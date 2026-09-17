@@ -10,8 +10,25 @@
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <span class="badge badge-available mb-2">{{ donation.category.name|default:"General Resource" }}</span>
+                    {% if donation.delivery_option == 'DONOR_DELIVERY' %}
+                    <span class="badge bg-primary-subtle text-primary border mb-2 ms-1">
+                        <i class="bi bi-box-arrow-in-down me-1"></i>Donor Drop-off
+                    </span>
+                    {% else %}
+                    <span class="badge bg-warning-subtle text-dark border mb-2 ms-1">
+                        <i class="bi bi-truck me-1"></i>NGO Pickup
+                    </span>
+                    {% endif %}
                     <h4 class="fw-bold mb-1" style="color: var(--hc-navy);">{{ donation.title }}</h4>
-                    <p class="mb-0 text-muted small"><strong>Quantity:</strong> {{ donation.quantity }} &bull; <strong>City:</strong> {{ donation.city|default:"Local" }} &bull; <strong>Pickup Address:</strong> {{ donation.pickup_address }}</p>
+                    <p class="mb-0 text-muted small">
+                        <strong>Quantity:</strong> {{ donation.quantity }} &bull; 
+                        <strong>City:</strong> {{ donation.city|default:"Local" }} &bull;
+                        {% if donation.delivery_option == 'DONOR_DELIVERY' %}
+                        <strong>Drop-off Hub:</strong> {{ donation.dropoff_location|default:"Community Partner Hub" }}
+                        {% else %}
+                        <strong>Pickup Address:</strong> {{ donation.pickup_address }}
+                        {% endif %}
+                    </p>
                 </div>
                 <a href="{% url 'donation_detail' donation.id %}" class="btn-secondary-outline btn-sm">View Details</a>
             </div>
@@ -87,12 +104,24 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label class="form-label small fw-semibold">Pickup Logistics / Address Notes</label>
+                                <label class="form-label small fw-semibold">
+                                    {% if donation.delivery_option == 'DONOR_DELIVERY' %}
+                                    Drop-off Reception / Hub Operating Notes
+                                    {% else %}
+                                    Pickup Logistics / Vehicle & Capacity Notes
+                                    {% endif %}
+                                </label>
                                 {{ form.pickup_notes }}
                                 {% if form.pickup_notes.errors %}
                                 <div class="text-danger small mt-1">{{ form.pickup_notes.errors.0 }}</div>
                                 {% endif %}
-                                <div class="form-text" style="font-size: 0.78rem;">Optional: preferred pickup window, vehicle type, or local warehouse details.</div>
+                                <div class="form-text" style="font-size: 0.78rem;">
+                                    {% if donation.delivery_option == 'DONOR_DELIVERY' %}
+                                    Instructions for donor drop-off, receiving desk hours, or specific contact person on site.
+                                    {% else %}
+                                    Vehicle arrangement, pickup window, or cargo capacity notes.
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>

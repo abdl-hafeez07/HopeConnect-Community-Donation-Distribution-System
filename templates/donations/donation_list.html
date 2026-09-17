@@ -14,14 +14,14 @@
     <!-- Filter Bar -->
     <div class="app-card mb-4 p-3 bg-white">
         <form method="get" class="row g-2 align-items-center">
-            <div class="col-md-5">
+            <div class="col-md-3">
                 <div class="input-group">
                     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" name="q" value="{{ search_query|default:'' }}" class="form-control border-start-0" placeholder="Search by title, description, or location...">
+                    <input type="text" name="q" value="{{ search_query|default:'' }}" class="form-control border-start-0" placeholder="Title, description, hub...">
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <select name="category" class="form-select">
                     <option value="">All Categories</option>
                     {% for cat in categories %}
@@ -33,12 +33,43 @@
             </div>
 
             <div class="col-md-2">
+                <select name="delivery_option" class="form-select">
+                    <option value="">All Delivery Options</option>
+                    <option value="DONOR_DELIVERY" {% if selected_delivery_option == 'DONOR_DELIVERY' %}selected{% endif %}>Donor Drop-off</option>
+                    <option value="NGO_PICKUP" {% if selected_delivery_option == 'NGO_PICKUP' %}selected{% endif %}>NGO Pickup Required</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <select name="scale" class="form-select">
+                    <option value="">All Item Scales</option>
+                    <option value="micro" {% if scale_filter == 'micro' %}selected{% endif %}>Micro (1-2 items / Walking)</option>
+                    <option value="standard" {% if scale_filter == 'standard' %}selected{% endif %}>Standard / Bulk</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
                 <input type="text" name="city" value="{{ selected_city|default:'' }}" class="form-control" placeholder="City...">
             </div>
 
-            <div class="col-md-2 d-grid">
-                <button type="submit" class="btn-action">Filter Listings</button>
+            <div class="col-md-1 d-grid">
+                <button type="submit" class="btn-action">Filter</button>
             </div>
+
+            <!-- Hyperlocal Quick Filter Chips for Logged-In Users -->
+            {% if user_city %}
+            <div class="col-12 pt-2 border-top mt-2 d-flex flex-wrap gap-2 align-items-center">
+                <span class="small text-muted fw-semibold"><i class="bi bi-geo-alt text-danger me-1"></i>Hyperlocal Matching:</span>
+                <a href="?hyperlocal={% if hyperlocal_active %}0{% else %}1{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_delivery_option %}&delivery_option={{ selected_delivery_option }}{% endif %}" class="btn btn-sm {% if hyperlocal_active %}btn-success text-white{% else %}btn-outline-success{% endif %} py-0 px-3 rounded-pill">
+                    <i class="bi bi-compass me-1"></i>{% if hyperlocal_active %}Showing Nearby Only ({{ user_city }}) &times;{% else %}Filter Nearby in {{ user_city }}{% endif %}
+                </a>
+                {% if selected_delivery_option or selected_category or search_query or selected_city or hyperlocal_active or scale_filter %}
+                <a href="{% url 'donations_list' %}" class="small text-muted text-decoration-none ms-auto">
+                    <i class="bi bi-x-circle me-1"></i>Clear All Filters
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
         </form>
     </div>
 
@@ -57,13 +88,38 @@
                 {% endif %}
 
                 <div class="p-4 d-flex flex-column flex-grow-1">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex flex-wrap gap-1 justify-content-between align-items-start mb-2">
                         <span class="badge bg-light text-secondary border px-2 py-1">
                             {{ item.category.name|default:"General" }}
                         </span>
                         <span class="small text-muted">
                             <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ item.city|default:"Local" }}
                         </span>
+                    </div>
+
+                    <!-- Delivery & Hyperlocal Badges -->
+                    <div class="d-flex flex-wrap gap-1 mb-2">
+                        {% if item.delivery_option == 'DONOR_DELIVERY' %}
+                        <span class="badge bg-primary-subtle text-primary border" style="font-size: 0.72rem;">
+                            <i class="bi bi-box-arrow-in-down me-1"></i>Donor Drop-off
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning-subtle text-dark border" style="font-size: 0.72rem;">
+                            <i class="bi bi-truck me-1"></i>NGO Pickup
+                        </span>
+                        {% endif %}
+
+                        {% if user_city and item.city and user_city|lower == item.city|lower %}
+                        <span class="badge bg-success-subtle text-success border" style="font-size: 0.72rem;">
+                            <i class="bi bi-geo-alt-fill me-1"></i>Hyperlocal Match
+                        </span>
+                        {% endif %}
+
+                        {% if item.is_small_donation %}
+                        <span class="badge bg-info-subtle text-info border" style="font-size: 0.72rem;">
+                            <i class="bi bi-pin-map me-1"></i>Micro (Local/Walking)
+                        </span>
+                        {% endif %}
                     </div>
 
                     <h5 class="fw-bold mb-1 fs-6">
@@ -75,8 +131,14 @@
                         <i class="bi bi-layers me-1"></i>Quantity: {{ item.quantity }}
                     </div>
 
+                    {% if item.delivery_option == 'DONOR_DELIVERY' and item.dropoff_location %}
+                    <div class="small p-2 mb-2 rounded bg-light border text-truncate">
+                        <i class="bi bi-building text-primary me-1"></i>Drop-off Hub: <strong class="text-dark">{{ item.dropoff_location }}</strong>
+                    </div>
+                    {% endif %}
+
                     <p class="text-muted small mb-3 flex-grow-1">
-                        {{ item.description|truncatewords:20 }}
+                        {{ item.description|truncatewords:18 }}
                     </p>
 
                     {% if item.food_detail %}

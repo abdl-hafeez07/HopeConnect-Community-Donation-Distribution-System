@@ -8,7 +8,14 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
             <h2 class="fw-bold mb-1" style="color: var(--hc-navy);">Incoming Requests</h2>
-            <p class="text-muted small mb-0">For Donation: <strong>{{ donation.title }}</strong> ({{ donation.quantity }})</p>
+            <p class="text-muted small mb-0">
+                For Donation: <strong>{{ donation.title }}</strong> ({{ donation.quantity }}) &bull;
+                {% if donation.delivery_option == 'DONOR_DELIVERY' %}
+                <span class="badge bg-primary-subtle text-primary border ms-1"><i class="bi bi-box-arrow-in-down me-1"></i>Donor Drop-off Hub: {{ donation.dropoff_location|default:"Community Partner Hub" }}</span>
+                {% else %}
+                <span class="badge bg-warning-subtle text-dark border ms-1"><i class="bi bi-truck me-1"></i>NGO Pickup Required</span>
+                {% endif %}
+            </p>
         </div>
         <a href="{% url 'donation_detail' donation.id %}" class="btn-secondary-outline btn-sm px-3">
             &larr; Back to Donation
