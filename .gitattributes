@@ -1,0 +1,7 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# Explicitly declare scripts to have LF line endings (required for Linux/Render execution)
+*.sh text eol=lf
+build.sh text eol=lf
+Procfile text eol=lf
